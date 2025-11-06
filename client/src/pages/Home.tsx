@@ -1,33 +1,234 @@
-import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
-import { APP_LOGO, APP_TITLE, getLoginUrl } from "@/const";
-import { Streamdown } from 'streamdown';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ArrowRight, BookOpen, ShoppingCart, Wrench, Users, Leaf, TrendingUp, Globe, ChevronDown } from "lucide-react";
+import { Link } from "wouter";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { getLoginUrl } from "@/const";
 
-/**
- * All content in this page are only for example, replace with your own feature implementation
- * When building pages, remember your instructions in Frontend Workflow, Frontend Best Practices, Design Guide and Common Pitfalls
- */
 export default function Home() {
-  // The userAuth hooks provides authentication state
-  // To implement login/logout functionality, simply call logout() or redirect to getLoginUrl()
-  let { user, loading, error, isAuthenticated, logout } = useAuth();
+  const { isAuthenticated } = useAuth();
 
-  // If theme is switchable in App.tsx, we can implement theme toggling like this:
-  // const { theme, toggleTheme } = useTheme();
-
-  // Use APP_LOGO (as image src) and APP_TITLE if needed
+  const scrollToContent = () => {
+    document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <main>
-        {/* Example: lucide-react for icons */}
-        <Loader2 className="animate-spin" />
-        Example Page
-        {/* Example: Streamdown for markdown rendering */}
-        <Streamdown>Any **markdown** content</Streamdown>
-        <Button variant="default">Example Button</Button>
-      </main>
+    <div className="min-h-screen">
+      {/* Hero Section with Background Image */}
+      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+        {/* Background Image with Overlay */}
+        <div 
+          className="absolute inset-0 z-0"
+          style={{
+            backgroundImage: 'url(https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=2070)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/90 via-primary/70 to-blue-900/80" />
+        </div>
+
+        {/* Hero Content */}
+        <div className="container relative z-10 text-center text-white animate-fade-in">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full mb-6 animate-scale-in">
+            <Leaf className="w-5 h-5" />
+            <span className="text-sm font-medium">Segurança Alimentar & Desenvolvimento Sustentável</span>
+          </div>
+          
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-slide-up">
+            SustainHub
+          </h1>
+          
+          <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto text-white/90 animate-slide-up" style={{ animationDelay: '0.2s' }}>
+            Plataforma completa para transformar sistemas alimentares e promover práticas sustentáveis em Moçambique e além
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-slide-up" style={{ animationDelay: '0.4s' }}>
+            {isAuthenticated ? (
+              <Link href="/knowledge">
+                <Button size="lg" className="bg-white text-primary hover:bg-white/90 text-lg px-8 py-6 h-auto group">
+                  Explorar Plataforma
+                  <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </Link>
+            ) : (
+              <a href={getLoginUrl()}>
+                <Button size="lg" className="bg-white text-primary hover:bg-white/90 text-lg px-8 py-6 h-auto group">
+                  Começar Agora
+                  <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </a>
+            )}
+          </div>
+
+          {/* Scroll Indicator */}
+          <button 
+            onClick={scrollToContent}
+            className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce cursor-pointer"
+            aria-label="Scroll down"
+          >
+            <ChevronDown className="w-8 h-8 text-white" />
+          </button>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section id="features" className="py-20 bg-gradient-to-b from-white to-blue-50">
+        <div className="container">
+          <div className="text-center mb-16 animate-fade-in">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-primary">
+              Tudo Que Você Precisa
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Uma plataforma integrada com ferramentas, conhecimento e recursos para impulsionar a sustentabilidade
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Knowledge Center Card */}
+            <Link href="/knowledge">
+              <Card className="hover-lift hover-glow cursor-pointer h-full group border-2 hover:border-primary transition-all">
+                <div className="relative h-48 overflow-hidden rounded-t-lg">
+                  <img 
+                    src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=800" 
+                    alt="Centro de Conhecimento"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                  <BookOpen className="absolute bottom-4 left-4 w-10 h-10 text-white" />
+                </div>
+                <CardHeader>
+                  <CardTitle className="text-2xl group-hover:text-primary transition-colors">
+                    Centro de Conhecimento
+                  </CardTitle>
+                  <CardDescription className="text-base">
+                    Biblioteca digital com artigos, vídeos, guias e pesquisas sobre agricultura sustentável
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </Link>
+
+            {/* Marketplace Card */}
+            <Link href="/marketplace">
+              <Card className="hover-lift hover-glow cursor-pointer h-full group border-2 hover:border-primary transition-all">
+                <div className="relative h-48 overflow-hidden rounded-t-lg">
+                  <img 
+                    src="https://images.unsplash.com/photo-1488459716781-31db52582fe9?q=80&w=800" 
+                    alt="Marketplace"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                  <ShoppingCart className="absolute bottom-4 left-4 w-10 h-10 text-white" />
+                </div>
+                <CardHeader>
+                  <CardTitle className="text-2xl group-hover:text-primary transition-colors">
+                    Marketplace
+                  </CardTitle>
+                  <CardDescription className="text-base">
+                    Produtos locais e sustentáveis com indicadores de impacto ambiental
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </Link>
+
+            {/* Services Card */}
+            <Link href="/services">
+              <Card className="hover-lift hover-glow cursor-pointer h-full group border-2 hover:border-primary transition-all">
+                <div className="relative h-48 overflow-hidden rounded-t-lg">
+                  <img 
+                    src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=800" 
+                    alt="Serviços"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                  <Users className="absolute bottom-4 left-4 w-10 h-10 text-white" />
+                </div>
+                <CardHeader>
+                  <CardTitle className="text-2xl group-hover:text-primary transition-colors">
+                    Consultoria
+                  </CardTitle>
+                  <CardDescription className="text-base">
+                    Suporte técnico especializado e consultoria para projetos sustentáveis
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </Link>
+
+            {/* Tools Card */}
+            <Link href="/tools">
+              <Card className="hover-lift hover-glow cursor-pointer h-full group border-2 hover:border-primary transition-all">
+                <div className="relative h-48 overflow-hidden rounded-t-lg">
+                  <img 
+                    src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800" 
+                    alt="Ferramentas"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                  <Wrench className="absolute bottom-4 left-4 w-10 h-10 text-white" />
+                </div>
+                <CardHeader>
+                  <CardTitle className="text-2xl group-hover:text-primary transition-colors">
+                    Ferramentas Digitais
+                  </CardTitle>
+                  <CardDescription className="text-base">
+                    Calculadoras e dashboards para análise de sustentabilidade e custos
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="py-20 bg-primary text-white">
+        <div className="container">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+            <div className="animate-scale-in">
+              <TrendingUp className="w-12 h-12 mx-auto mb-4" />
+              <div className="text-5xl font-bold mb-2">500+</div>
+              <div className="text-xl opacity-90">Recursos Disponíveis</div>
+            </div>
+            <div className="animate-scale-in" style={{ animationDelay: '0.1s' }}>
+              <Users className="w-12 h-12 mx-auto mb-4" />
+              <div className="text-5xl font-bold mb-2">1000+</div>
+              <div className="text-xl opacity-90">Usuários Ativos</div>
+            </div>
+            <div className="animate-scale-in" style={{ animationDelay: '0.2s' }}>
+              <Globe className="w-12 h-12 mx-auto mb-4" />
+              <div className="text-5xl font-bold mb-2">50+</div>
+              <div className="text-xl opacity-90">Projetos Apoiados</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-gradient-to-br from-blue-50 to-white">
+        <div className="container text-center">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-primary animate-fade-in">
+            Pronto Para Começar?
+          </h2>
+          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto animate-fade-in">
+            Junte-se à nossa comunidade e faça parte da transformação sustentável
+          </p>
+          {!isAuthenticated && (
+            <a href={getLoginUrl()}>
+              <Button size="lg" className="bg-primary hover:bg-primary/90 text-white text-lg px-8 py-6 h-auto group animate-scale-in">
+                Criar Conta Gratuita
+                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </a>
+          )}
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-8 text-center text-muted-foreground" style={{ backgroundColor: '#0084B6' }}>
+        <div className="container">
+          <p className="text-white">&copy; 2025 SustainHub. Todos os direitos reservados.</p>
+        </div>
+      </footer>
     </div>
   );
 }

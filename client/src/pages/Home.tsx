@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowRight, BookOpen, ShoppingCart, Wrench, Users, Leaf, TrendingUp, Globe, ChevronDown } from "lucide-react";
+import { ArrowRight, BookOpen, ShoppingCart, Wrench, Users, Leaf, TrendingUp, Globe, ChevronDown, Star } from "lucide-react";
 import { Link } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
@@ -199,6 +199,106 @@ export default function Home() {
               <div className="text-5xl font-bold mb-2">50+</div>
               <div className="text-xl opacity-90">Projetos Apoiados</div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-20 bg-white">
+        <div className="container">
+          <div className="text-center mb-16 animate-fade-in">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-primary">
+              O Que Nossos Clientes Dizem
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Histórias reais de transformação e sucesso sustentável
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Testimonial 1 */}
+            <Card className="hover-lift hover-glow">
+              <CardHeader>
+                <div className="flex items-center gap-4 mb-4">
+                  <img 
+                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150" 
+                    alt="João Machado"
+                    className="w-16 h-16 rounded-full object-cover"
+                  />
+                  <div>
+                    <CardTitle className="text-lg">João Machado</CardTitle>
+                    <CardDescription>Agricultor em Nampula</CardDescription>
+                  </div>
+                </div>
+                <div className="flex gap-1 mb-3">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground italic">
+                  "A plataforma transformou minha produção. Com as ferramentas de cálculo de carbono, 
+                  consegui reduzir custos em 30% e aumentar a sustentabilidade da minha fazenda."
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* Testimonial 2 */}
+            <Card className="hover-lift hover-glow">
+              <CardHeader>
+                <div className="flex items-center gap-4 mb-4">
+                  <img 
+                    src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150" 
+                    alt="Maria Santos"
+                    className="w-16 h-16 rounded-full object-cover"
+                  />
+                  <div>
+                    <CardTitle className="text-lg">Maria Santos</CardTitle>
+                    <CardDescription>Cooperativa em Maputo</CardDescription>
+                  </div>
+                </div>
+                <div className="flex gap-1 mb-3">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground italic">
+                  "O marketplace conectou nossa cooperativa diretamente aos consumidores. 
+                  Nossas vendas triplicaram e conseguimos preços mais justos para nossos produtos orgânicos."
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* Testimonial 3 */}
+            <Card className="hover-lift hover-glow">
+              <CardHeader>
+                <div className="flex items-center gap-4 mb-4">
+                  <img 
+                    src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=150" 
+                    alt="Carlos Alves"
+                    className="w-16 h-16 rounded-full object-cover"
+                  />
+                  <div>
+                    <CardTitle className="text-lg">Carlos Alves</CardTitle>
+                    <CardDescription>Consultor Agrícola</CardDescription>
+                  </div>
+                </div>
+                <div className="flex gap-1 mb-3">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground italic">
+                  "O centro de conhecimento é uma fonte incrível de informações atualizadas. 
+                  Uso diariamente para me manter informado sobre as melhores práticas sustentáveis."
+                </p>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>

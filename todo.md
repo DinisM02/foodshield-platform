@@ -43,3 +43,6 @@
 - [ ] Build final
 - [ ] Deploy permanente
 - [ ] Testes de responsividade
+
+## 📝 Melhorias Solicitadas
+- [x] Adicionar seção de Depoimentos de Clientes na Home

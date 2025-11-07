@@ -1,16 +1,79 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowRight, BookOpen, ShoppingCart, Wrench, Users, Leaf, TrendingUp, Globe, ChevronDown, Star } from "lucide-react";
+import { ArrowRight, BookOpen, ShoppingCart, Wrench, Users, Leaf, TrendingUp, Globe, ChevronDown, Star, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
 
+const testimonials = [
+  {
+    id: 1,
+    name: "João Machado",
+    role: "Agricultor em Nampula",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150",
+    text: "A plataforma transformou minha produção. Com as ferramentas de cálculo de carbono, consegui reduzir custos em 30% e aumentar a sustentabilidade da minha fazenda.",
+    rating: 5
+  },
+  {
+    id: 2,
+    name: "Maria Santos",
+    role: "Cooperativa em Maputo",
+    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150",
+    text: "O marketplace conectou nossa cooperativa diretamente aos consumidores. Nossas vendas triplicaram e conseguimos preços mais justos para nossos produtos orgânicos.",
+    rating: 5
+  },
+  {
+    id: 3,
+    name: "Carlos Alves",
+    role: "Consultor Agrícola",
+    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=150",
+    text: "O centro de conhecimento é uma fonte incrível de informações atualizadas. Uso diariamente para me manter informado sobre as melhores práticas sustentáveis.",
+    rating: 5
+  },
+  {
+    id: 4,
+    name: "Ana Silva",
+    role: "Produtora de Hortaliças",
+    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=150",
+    text: "As ferramentas de cálculo de custos me ajudaram a entender melhor minha margem de lucro. Agora consigo precificar meus produtos de forma mais inteligente.",
+    rating: 5
+  },
+  {
+    id: 5,
+    name: "Pedro Neves",
+    role: "Técnico Agrícola",
+    image: "https://images.unsplash.com/photo-1500595046891-79fde38eba5a?q=80&w=150",
+    text: "A consultoria especializada me ajudou a implementar práticas regenerativas. Os resultados foram visíveis em apenas 3 meses de aplicação.",
+    rating: 5
+  },
+  {
+    id: 6,
+    name: "Rosa Mendes",
+    role: "Empreendedora Rural",
+    image: "https://images.unsplash.com/photo-1507876466326-da4f10d7a81d?q=80&w=150",
+    text: "Graças ao SustainHub, consegui expandir meu negócio de forma sustentável. A plataforma oferece todas as ferramentas que um pequeno produtor precisa.",
+    rating: 5
+  }
+];
+
 export default function Home() {
   const { isAuthenticated } = useAuth();
+  const [currentTestimonial, setCurrentTestimonial] = useState(0);
+
+  const nextTestimonial = () => {
+    setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+  };
+
+  const prevTestimonial = () => {
+    setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+  };
 
   const scrollToContent = () => {
     document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' });
   };
+
+  const testimonial = testimonials[currentTestimonial];
 
   return (
     <div className="min-h-screen">
@@ -203,7 +266,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Testimonials Section */}
+      {/* Testimonials Carousel Section */}
       <section className="py-20 bg-white">
         <div className="container">
           <div className="text-center mb-16 animate-fade-in">
@@ -215,90 +278,82 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Testimonial 1 */}
-            <Card className="hover-lift hover-glow">
-              <CardHeader>
-                <div className="flex items-center gap-4 mb-4">
-                  <img 
-                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150" 
-                    alt="João Machado"
-                    className="w-16 h-16 rounded-full object-cover"
-                  />
-                  <div>
-                    <CardTitle className="text-lg">João Machado</CardTitle>
-                    <CardDescription>Agricultor em Nampula</CardDescription>
+          {/* Carousel */}
+          <div className="max-w-4xl mx-auto">
+            <Card className="hover-glow border-2 border-primary/20">
+              <CardContent className="p-8">
+                <div className="flex flex-col md:flex-row gap-8 items-center">
+                  {/* Avatar and Info */}
+                  <div className="flex flex-col items-center md:items-start gap-4 flex-shrink-0">
+                    <img 
+                      src={testimonial.image} 
+                      alt={testimonial.name}
+                      className="w-24 h-24 rounded-full object-cover border-4 border-primary"
+                    />
+                    <div className="text-center md:text-left">
+                      <h3 className="text-xl font-bold">{testimonial.name}</h3>
+                      <p className="text-muted-foreground">{testimonial.role}</p>
+                      <div className="flex gap-1 mt-2 justify-center md:justify-start">
+                        {[...Array(testimonial.rating)].map((_, i) => (
+                          <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Testimonial Text */}
+                  <div className="flex-1">
+                    <p className="text-lg text-muted-foreground italic leading-relaxed">
+                      "{testimonial.text}"
+                    </p>
                   </div>
                 </div>
-                <div className="flex gap-1 mb-3">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-                  ))}
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground italic">
-                  "A plataforma transformou minha produção. Com as ferramentas de cálculo de carbono, 
-                  consegui reduzir custos em 30% e aumentar a sustentabilidade da minha fazenda."
-                </p>
               </CardContent>
             </Card>
 
-            {/* Testimonial 2 */}
-            <Card className="hover-lift hover-glow">
-              <CardHeader>
-                <div className="flex items-center gap-4 mb-4">
-                  <img 
-                    src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150" 
-                    alt="Maria Santos"
-                    className="w-16 h-16 rounded-full object-cover"
-                  />
-                  <div>
-                    <CardTitle className="text-lg">Maria Santos</CardTitle>
-                    <CardDescription>Cooperativa em Maputo</CardDescription>
-                  </div>
-                </div>
-                <div className="flex gap-1 mb-3">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-                  ))}
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground italic">
-                  "O marketplace conectou nossa cooperativa diretamente aos consumidores. 
-                  Nossas vendas triplicaram e conseguimos preços mais justos para nossos produtos orgânicos."
-                </p>
-              </CardContent>
-            </Card>
+            {/* Navigation Controls */}
+            <div className="flex items-center justify-between mt-8">
+              <Button 
+                variant="outline" 
+                size="lg"
+                onClick={prevTestimonial}
+                className="rounded-full w-12 h-12 p-0 hover:bg-primary hover:text-white transition-colors"
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </Button>
 
-            {/* Testimonial 3 */}
-            <Card className="hover-lift hover-glow">
-              <CardHeader>
-                <div className="flex items-center gap-4 mb-4">
-                  <img 
-                    src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=150" 
-                    alt="Carlos Alves"
-                    className="w-16 h-16 rounded-full object-cover"
+              {/* Indicators */}
+              <div className="flex gap-2">
+                {testimonials.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentTestimonial(index)}
+                    className={`h-3 rounded-full transition-all ${
+                      index === currentTestimonial 
+                        ? 'bg-primary w-8' 
+                        : 'bg-gray-300 w-3 hover:bg-gray-400'
+                    }`}
+                    aria-label={`Go to testimonial ${index + 1}`}
                   />
-                  <div>
-                    <CardTitle className="text-lg">Carlos Alves</CardTitle>
-                    <CardDescription>Consultor Agrícola</CardDescription>
-                  </div>
-                </div>
-                <div className="flex gap-1 mb-3">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-                  ))}
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground italic">
-                  "O centro de conhecimento é uma fonte incrível de informações atualizadas. 
-                  Uso diariamente para me manter informado sobre as melhores práticas sustentáveis."
-                </p>
-              </CardContent>
-            </Card>
+                ))}
+              </div>
+
+              <Button 
+                variant="outline" 
+                size="lg"
+                onClick={nextTestimonial}
+                className="rounded-full w-12 h-12 p-0 hover:bg-primary hover:text-white transition-colors"
+              >
+                <ChevronRight className="w-6 h-6" />
+              </Button>
+            </div>
+
+            {/* Counter */}
+            <div className="text-center mt-6 text-muted-foreground">
+              <p className="text-sm">
+                {currentTestimonial + 1} de {testimonials.length} histórias de sucesso
+              </p>
+            </div>
           </div>
         </div>
       </section>

@@ -47,3 +47,4 @@
 ## 📝 Melhorias Solicitadas
 - [x] Adicionar seção de Depoimentos de Clientes na Home
 - [x] Transformar depoimentos em carrossel dinâmico com navegação
+- [x] Criar página dedicada com todos os depoimentos

@@ -348,11 +348,17 @@ export default function Home() {
               </Button>
             </div>
 
-            {/* Counter */}
-            <div className="text-center mt-6 text-muted-foreground">
-              <p className="text-sm">
+            {/* Counter and Button */}
+            <div className="text-center mt-8 space-y-4">
+              <p className="text-sm text-muted-foreground">
                 {currentTestimonial + 1} de {testimonials.length} histórias de sucesso
               </p>
+              <Link href="/testimonials">
+                <Button variant="outline" className="hover:bg-primary hover:text-white hover:border-primary transition-colors">
+                  Ver Todas as Histórias
+                  <ArrowRight className="ml-2 w-4 h-4" />
+                </Button>
+              </Link>
             </div>
           </div>
         </div>

@@ -9,6 +9,7 @@ import Knowledge from "./pages/Knowledge";
 import Marketplace from "./pages/Marketplace";
 import Services from "./pages/Services";
 import Tools from "./pages/Tools";
+import Testimonials from "./pages/Testimonials";
 
 function Router() {
   return (
@@ -18,6 +19,7 @@ function Router() {
       <Route path={"/marketplace"} component={Marketplace} />
       <Route path={"/services"} component={Services} />
       <Route path={"/tools"} component={Tools} />
+      <Route path={"/testimonials"} component={Testimonials} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>

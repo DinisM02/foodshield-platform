@@ -1,6 +1,8 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Star, Users, Heart, TrendingUp } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Star, Users, Heart, TrendingUp, ArrowRight } from "lucide-react";
+import { Link } from "wouter";
 
 const testimonials = [
   {
@@ -122,7 +124,7 @@ export default function Testimonials() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-blue-50">
+    <div className="min-h-screen bg-white">
       {/* Header */}
       <div className="bg-primary text-white py-16">
         <div className="container">
@@ -141,11 +143,11 @@ export default function Testimonials() {
             {stats.map((stat, index) => {
               const Icon = stat.icon;
               return (
-                <Card key={index} className="text-center hover-glow">
+                <Card key={index} className="text-center hover-glow border-2 border-primary/20">
                   <CardContent className="pt-6">
                     <Icon className="w-10 h-10 mx-auto mb-3 text-primary" />
                     <div className="text-3xl font-bold text-primary mb-2">{stat.value}</div>
-                    <div className="text-muted-foreground">{stat.label}</div>
+                    <div className="text-sm text-muted-foreground font-medium">{stat.label}</div>
                   </CardContent>
                 </Card>
               );
@@ -159,20 +161,20 @@ export default function Testimonials() {
         <div className="container">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {testimonials.map((testimonial) => (
-              <Card key={testimonial.id} className="hover-lift hover-glow overflow-hidden group border-2 hover:border-primary transition-all">
-                <CardHeader className="pb-3">
+              <Card key={testimonial.id} className="hover-lift hover-glow overflow-hidden group border-2 border-gray-200 hover:border-primary transition-all bg-white">
+                <CardHeader className="pb-3 bg-white">
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center gap-3 flex-1">
                       <img 
                         src={testimonial.image} 
                         alt={testimonial.name}
-                        className="w-14 h-14 rounded-full object-cover border-2 border-primary"
+                        className="w-14 h-14 rounded-full object-cover border-2 border-primary flex-shrink-0"
                       />
                       <div className="min-w-0">
-                        <CardTitle className="text-lg group-hover:text-primary transition-colors truncate">
+                        <CardTitle className="text-lg text-gray-900 group-hover:text-primary transition-colors truncate">
                           {testimonial.name}
                         </CardTitle>
-                        <CardDescription className="text-sm truncate">
+                        <CardDescription className="text-sm text-gray-600 truncate">
                           {testimonial.role}
                         </CardDescription>
                       </div>
@@ -185,12 +187,12 @@ export default function Testimonials() {
                   </div>
                 </CardHeader>
 
-                <CardContent className="space-y-4">
-                  <p className="text-muted-foreground italic text-sm leading-relaxed">
+                <CardContent className="space-y-4 bg-white">
+                  <p className="text-gray-700 italic text-sm leading-relaxed">
                     "{testimonial.text}"
                   </p>
-                  <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
-                    <TrendingUp className="w-3 h-3 mr-1" />
+                  <Badge className="bg-green-100 text-green-800 hover:bg-green-100 inline-flex items-center gap-1">
+                    <TrendingUp className="w-3 h-3" />
                     {testimonial.impact}
                   </Badge>
                 </CardContent>
@@ -209,11 +211,12 @@ export default function Testimonials() {
           <p className="text-xl opacity-90 mb-8 max-w-2xl mx-auto">
             Junte-se a centenas de produtores e empreendedores que já transformaram seus negócios
           </p>
-          <a href="/knowledge">
-            <button className="bg-white text-primary hover:bg-white/90 font-semibold py-3 px-8 rounded-lg transition-colors">
+          <Link href="/knowledge">
+            <Button size="lg" className="bg-white text-primary hover:bg-white/90 text-lg px-8 py-6 h-auto group">
               Começar Agora
-            </button>
-          </a>
+              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </Link>
         </div>
       </section>
 

@@ -354,7 +354,7 @@ export default function Home() {
                 {currentTestimonial + 1} de {testimonials.length} histórias de sucesso
               </p>
               <Link href="/testimonials">
-                <Button variant="outline" className="hover:bg-primary hover:text-white hover:border-primary transition-colors">
+                <Button variant="outline" className="text-primary border-primary hover:bg-primary hover:text-white hover:border-primary transition-colors font-semibold">
                   Ver Todas as Histórias
                   <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>

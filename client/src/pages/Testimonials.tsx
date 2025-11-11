@@ -212,7 +212,7 @@ export default function Testimonials() {
             Junte-se a centenas de produtores e empreendedores que já transformaram seus negócios
           </p>
           <Link href="/knowledge">
-            <Button size="lg" className="bg-white text-primary hover:bg-white/90 text-lg px-8 py-6 h-auto group">
+            <Button size="lg" className="bg-white text-primary hover:bg-white/90 text-lg px-8 py-6 h-auto group font-semibold">
               Começar Agora
               <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Button>

@@ -51,3 +51,4 @@
 
 ## 🐛 Bugs Reportados
 - [x] Corrigir visibilidade de botões e textos na página de depoimentos
+- [x] Corrigir textos de botões que ainda estão invisíveis

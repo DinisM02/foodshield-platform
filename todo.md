@@ -52,3 +52,11 @@
 ## 🐛 Bugs Reportados
 - [x] Corrigir visibilidade de botões e textos na página de depoimentos
 - [x] Corrigir textos de botões que ainda estão invisíveis
+
+## 🆕 Novas Funcionalidades
+- [x] Implementar formulário de Newsletter (na página Blog)
+- [x] Criar seção de Blog com artigos
+- [ ] Desenvolver Dashboard de Usuário
+- [x] Adicionar página FAQ
+- [ ] Implementar sistema de busca global
+- [ ] Criar página de Sobre Nós

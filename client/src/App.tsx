@@ -10,6 +10,8 @@ import Marketplace from "./pages/Marketplace";
 import Services from "./pages/Services";
 import Tools from "./pages/Tools";
 import Testimonials from "./pages/Testimonials";
+import Blog from "./pages/Blog";
+import FAQ from "./pages/FAQ";
 
 function Router() {
   return (
@@ -20,6 +22,8 @@ function Router() {
       <Route path={"/services"} component={Services} />
       <Route path={"/tools"} component={Tools} />
       <Route path={"/testimonials"} component={Testimonials} />
+      <Route path={"/blog"} component={Blog} />
+      <Route path={"/faq"} component={FAQ} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>

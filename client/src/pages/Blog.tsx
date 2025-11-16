@@ -1,3 +1,5 @@
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -88,7 +90,8 @@ export default function Blog() {
   });
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white flex flex-col">
+      <Header />
       {/* Header */}
       <div className="bg-primary text-white py-16">
         <div className="container">
@@ -230,12 +233,7 @@ export default function Blog() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-8 text-center text-white" style={{ backgroundColor: '#0084B6' }}>
-        <div className="container">
-          <p>&copy; 2025 SustainHub. Todos os direitos reservados.</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

@@ -1,3 +1,5 @@
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, HelpCircle, MessageCircle } from "lucide-react";
@@ -130,7 +132,8 @@ export default function FAQ() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white flex flex-col">
+      <Header />
       {/* Header */}
       <div className="bg-primary text-white py-16">
         <div className="container">
@@ -197,12 +200,7 @@ export default function FAQ() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-8 text-center text-white" style={{ backgroundColor: '#0084B6' }}>
-        <div className="container">
-          <p>&copy; 2025 SustainHub. Todos os direitos reservados.</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

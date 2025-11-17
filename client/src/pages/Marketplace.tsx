@@ -1,4 +1,6 @@
 import { useState } from "react";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -109,7 +111,9 @@ export default function Marketplace() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-white">
+      <div className="min-h-screen bg-white flex flex-col">
+        <Header />
+        <div className="flex-1 flex items-center justify-center bg-gradient-to-br from-blue-50 to-white">
         <Card className="max-w-md w-full mx-4">
           <CardHeader>
             <CardTitle className="text-2xl">Acesso Restrito</CardTitle>
@@ -121,12 +125,15 @@ export default function Marketplace() {
             </a>
           </CardFooter>
         </Card>
+        </div>
+        <Footer />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-blue-50">
+    <div className="min-h-screen bg-gradient-to-b from-white to-blue-50 flex flex-col">
+      <Header />
       {/* Header */}
       <div className="bg-primary text-white py-16">
         <div className="container">
@@ -228,12 +235,7 @@ export default function Marketplace() {
         </div>
       </div>
 
-      {/* Footer */}
-      <footer className="py-8 text-center text-white mt-20" style={{ backgroundColor: '#0084B6' }}>
-        <div className="container">
-          <p>&copy; 2025 SustainHub. Todos os direitos reservados.</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

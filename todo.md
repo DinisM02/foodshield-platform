@@ -62,3 +62,6 @@
 - [ ] Criar página de Sobre Nós
 - [x] Criar Header/Navbar com menu de navegação
 - [x] Criar Área de Consumidor com Dashboard
+
+## 🐛 Bugs Reportados - Fase 2
+- [x] Adicionar Header e Footer em TODAS as páginas (Knowledge, Marketplace, Services, Tools)

@@ -12,6 +12,7 @@ import Tools from "./pages/Tools";
 import Testimonials from "./pages/Testimonials";
 import Blog from "./pages/Blog";
 import FAQ from "./pages/FAQ";
+import Dashboard from "./pages/Dashboard";
 
 function Router() {
   return (
@@ -24,6 +25,7 @@ function Router() {
       <Route path={"/testimonials"} component={Testimonials} />
       <Route path={"/blog"} component={Blog} />
       <Route path={"/faq"} component={FAQ} />
+      <Route path={"/@dashboard"} component={Dashboard} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>

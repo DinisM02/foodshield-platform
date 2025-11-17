@@ -14,7 +14,8 @@ export default function Header() {
     { label: "Ferramentas", href: "/tools" },
     { label: "Blog", href: "/blog" },
     { label: "FAQ", href: "/faq" },
-    { label: "Depoimentos", href: "/testimonials" }
+    { label: "Depoimentos", href: "/testimonials" },
+    { label: "Minha Área", href: "/@dashboard" }
   ];
 
   return (

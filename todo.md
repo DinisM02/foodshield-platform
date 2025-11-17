@@ -61,3 +61,4 @@
 - [ ] Implementar sistema de busca global
 - [ ] Criar página de Sobre Nós
 - [x] Criar Header/Navbar com menu de navegação
+- [x] Criar Área de Consumidor com Dashboard

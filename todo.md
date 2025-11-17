@@ -66,3 +66,4 @@
 ## 🐛 Bugs Reportados - Fase 2
 - [x] Adicionar Header e Footer em TODAS as páginas (Knowledge, Marketplace, Services, Tools)
 - [x] Implementar busca global no Header
+- [x] Melhorar Footer com links, contato e redes sociais

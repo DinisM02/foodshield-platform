@@ -41,9 +41,6 @@ export default function Header() {
     { label: "Marketplace", href: "/marketplace" },
     { label: "Serviços", href: "/services" },
     { label: "Ferramentas", href: "/tools" },
-    { label: "Blog", href: "/blog" },
-    { label: "FAQ", href: "/faq" },
-
     { label: "Minha Área", href: "/@dashboard" }
   ];
 

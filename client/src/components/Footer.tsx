@@ -148,14 +148,7 @@ export default function Footer() {
                   </a>
                 </Link>
               </li>
-              <li>
-                <Link href="/testimonials">
-                  <a className="text-gray-400 hover:text-primary transition-colors text-sm flex items-center gap-2 group">
-                    <span className="w-1 h-1 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                    Depoimentos
-                  </a>
-                </Link>
-              </li>
+
               <li>
                 <a href="#" className="text-gray-400 hover:text-primary transition-colors text-sm flex items-center gap-2 group">
                   <span className="w-1 h-1 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />

@@ -9,7 +9,7 @@ import Knowledge from "./pages/Knowledge";
 import Marketplace from "./pages/Marketplace";
 import Services from "./pages/Services";
 import Tools from "./pages/Tools";
-import Testimonials from "./pages/Testimonials";
+
 import Blog from "./pages/Blog";
 import FAQ from "./pages/FAQ";
 import Dashboard from "./pages/Dashboard";
@@ -22,7 +22,7 @@ function Router() {
       <Route path={"/marketplace"} component={Marketplace} />
       <Route path={"/services"} component={Services} />
       <Route path={"/tools"} component={Tools} />
-      <Route path={"/testimonials"} component={Testimonials} />
+
       <Route path={"/blog"} component={Blog} />
       <Route path={"/faq"} component={FAQ} />
       <Route path={"/@dashboard"} component={Dashboard} />

@@ -104,15 +104,11 @@ export default function Header() {
               {showSearchResults && searchResults.length > 0 && (
                 <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg max-h-96 overflow-y-auto z-50">
                   {searchResults.map((result) => (
-                    <Link key={result.id} href={result.href}>
-                      <a
-                        onClick={() => {
-                          setSearchQuery("");
-                          setShowSearchResults(false);
-                        }}
-                        className="block px-4 py-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0 transition-colors"
-                      >
-                        <div className="flex items-center justify-between">
+                    <Link key={result.id} href={result.href} onClick={() => {
+                      setSearchQuery("");
+                      setShowSearchResults(false);
+                    }} className="block px-4 py-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0 transition-colors">
+                      <div className="flex items-center justify-between">
                           <div>
                             <h4 className="font-medium text-gray-900">{result.title}</h4>
                             <p className="text-sm text-gray-500">{result.category}</p>
@@ -124,8 +120,7 @@ export default function Header() {
                             {result.type === "blog" && "Blog"}
                             {result.type === "tools" && "Ferramentas"}
                           </span>
-                        </div>
-                      </a>
+                      </div>
                     </Link>
                   ))}
                 </div>
@@ -142,10 +137,8 @@ export default function Header() {
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-1">
             {navItems.map((item) => (
-              <Link key={item.href} href={item.href}>
-                <a className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-primary hover:bg-blue-50 rounded-md transition-colors">
-                  {item.label}
-                </a>
+              <Link key={item.href} href={item.href} className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-primary hover:bg-blue-50 rounded-md transition-colors">
+                {item.label}
               </Link>
             ))}
           </nav>
@@ -190,20 +183,15 @@ export default function Header() {
             {searchResults.length > 0 && (
               <div className="bg-gray-50 rounded-lg p-3 mb-4 max-h-48 overflow-y-auto">
                 {searchResults.map((result) => (
-                  <Link key={result.id} href={result.href}>
-                    <a
-                      onClick={() => {
-                        setSearchQuery("");
-                        setIsMenuOpen(false);
-                      }}
-                      className="block px-3 py-2 hover:bg-white rounded-md transition-colors text-sm"
-                    >
-                      <h4 className="font-medium text-gray-900">{result.title}</h4>
-                      <p className="text-xs text-gray-500">{result.category}</p>
-                    </a>
+                  <Link key={result.id} href={result.href} onClick={() => {
+                    setSearchQuery("");
+                    setIsMenuOpen(false);
+                  }} className="block px-3 py-2 hover:bg-white rounded-md transition-colors text-sm">
+                    <h4 className="font-medium text-gray-900">{result.title}</h4>
+                    <p className="text-xs text-gray-500">{result.category}</p>
                   </Link>
                 ))}
-              </div>
+                </div>
             )}
           </div>
         )}
@@ -213,13 +201,8 @@ export default function Header() {
           <nav className="lg:hidden pb-4 border-t border-gray-200">
             <div className="flex flex-col gap-2 pt-4">
               {navItems.map((item) => (
-                <Link key={item.href} href={item.href}>
-                  <a
-                    onClick={() => setIsMenuOpen(false)}
-                    className="block px-4 py-2 text-sm font-medium text-gray-700 hover:text-primary hover:bg-blue-50 rounded-md transition-colors"
-                  >
-                    {item.label}
-                  </a>
+                <Link key={item.href} href={item.href} onClick={() => setIsMenuOpen(false)} className="block px-4 py-2 text-sm font-medium text-gray-700 hover:text-primary hover:bg-blue-50 rounded-md transition-colors">
+                  {item.label}
                 </Link>
               ))}
               <Link href="/knowledge">

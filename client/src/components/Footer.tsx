@@ -91,35 +91,27 @@ export default function Footer() {
             </h3>
             <ul className="space-y-3">
               <li>
-                <Link href="/knowledge">
-                  <a className="text-gray-400 hover:text-primary transition-colors text-sm flex items-center gap-2 group">
-                    <span className="w-1 h-1 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                    Centro de Conhecimento
-                  </a>
+                <Link href="/knowledge" className="text-gray-400 hover:text-primary transition-colors text-sm flex items-center gap-2 group">
+                  <span className="w-1 h-1 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                  Centro de Conhecimento
                 </Link>
               </li>
               <li>
-                <Link href="/marketplace">
-                  <a className="text-gray-400 hover:text-primary transition-colors text-sm flex items-center gap-2 group">
-                    <span className="w-1 h-1 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                    Marketplace
-                  </a>
+                <Link href="/marketplace" className="text-gray-400 hover:text-primary transition-colors text-sm flex items-center gap-2 group">
+                  <span className="w-1 h-1 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                  Marketplace
                 </Link>
               </li>
               <li>
-                <Link href="/services">
-                  <a className="text-gray-400 hover:text-primary transition-colors text-sm flex items-center gap-2 group">
-                    <span className="w-1 h-1 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                    Serviços
-                  </a>
+                <Link href="/services" className="text-gray-400 hover:text-primary transition-colors text-sm flex items-center gap-2 group">
+                  <span className="w-1 h-1 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                  Serviços
                 </Link>
               </li>
               <li>
-                <Link href="/tools">
-                  <a className="text-gray-400 hover:text-primary transition-colors text-sm flex items-center gap-2 group">
-                    <span className="w-1 h-1 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                    Ferramentas
-                  </a>
+                <Link href="/tools" className="text-gray-400 hover:text-primary transition-colors text-sm flex items-center gap-2 group">
+                  <span className="w-1 h-1 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                  Ferramentas
                 </Link>
               </li>
             </ul>
@@ -133,19 +125,15 @@ export default function Footer() {
             </h3>
             <ul className="space-y-3">
               <li>
-                <Link href="/blog">
-                  <a className="text-gray-400 hover:text-primary transition-colors text-sm flex items-center gap-2 group">
-                    <span className="w-1 h-1 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                    Blog
-                  </a>
+                <Link href="/blog" className="text-gray-400 hover:text-primary transition-colors text-sm flex items-center gap-2 group">
+                  <span className="w-1 h-1 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                  Blog
                 </Link>
               </li>
               <li>
-                <Link href="/faq">
-                  <a className="text-gray-400 hover:text-primary transition-colors text-sm flex items-center gap-2 group">
-                    <span className="w-1 h-1 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                    FAQ
-                  </a>
+                <Link href="/faq" className="text-gray-400 hover:text-primary transition-colors text-sm flex items-center gap-2 group">
+                  <span className="w-1 h-1 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                  FAQ
                 </Link>
               </li>
 

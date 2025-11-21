@@ -76,28 +76,28 @@ export default function Header() {
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">
       <div className="container">
-        <div className="flex items-center justify-between h-20 gap-4">
+        <div className="flex items-center justify-between h-16 gap-2">
           {/* Logo */}
           <Link href="/">
             <div className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
               <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
                 <Leaf className="w-6 h-6 text-white" />
               </div>
-              <span className="text-2xl font-bold text-primary hidden sm:inline">SustainHub</span>
+              <span className="text-xl font-bold text-primary hidden sm:inline whitespace-nowrap">SustainHub</span>
             </div>
           </Link>
 
           {/* Search Bar - Desktop */}
-          <div className="hidden md:block flex-1 max-w-md relative">
+          <div className="hidden md:block flex-1 max-w-xs relative">
             <div className="relative">
-              <Search className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+              <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
               <Input
                 type="text"
-                placeholder="Buscar em todo o site..."
+                placeholder="Buscar..."
                 value={searchQuery}
                 onChange={(e) => handleSearch(e.target.value)}
                 onFocus={() => searchQuery && setShowSearchResults(true)}
-                className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                className="pl-9 pr-3 py-1.5 w-full text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
               />
               
               {/* Search Results Dropdown */}
@@ -135,16 +135,16 @@ export default function Header() {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-1">
+          <nav className="hidden lg:flex items-center gap-0 flex-1 justify-center">
             {navItems.map((item) => (
-              <Link key={item.href} href={item.href} className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-primary hover:bg-blue-50 rounded-md transition-colors">
+              <Link key={item.href} href={item.href} className="px-2.5 py-2 text-xs font-medium text-gray-700 hover:text-primary hover:bg-blue-50 rounded-md transition-colors whitespace-nowrap">
                 {item.label}
               </Link>
             ))}
           </nav>
 
           {/* CTA Button */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-2 flex-shrink-0">
             <Link href="/knowledge">
               <Button className="bg-primary hover:bg-primary/90 text-white">
                 Começar

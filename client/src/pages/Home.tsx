@@ -97,26 +97,26 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-20 bg-gradient-to-b from-white to-blue-50">
+      <section id="features" className="py-20 bg-gradient-to-b from-slate-50 to-slate-100">
         <div className="container">
           <div className="text-center mb-16">
-            <h2 className="text-5xl font-bold text-gray-900 mb-4">Tudo Que Você Precisa</h2>
-            <p className="text-xl text-gray-600">Uma plataforma integrada com ferramentas, conhecimento e recursos para impulsionar a sustentabilidade</p>
+            <h2 className="text-5xl font-bold text-slate-900 mb-4">Tudo Que Você Precisa</h2>
+            <p className="text-xl text-slate-700">Uma plataforma integrada com ferramentas, conhecimento e recursos para impulsionar a sustentabilidade</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {features.map((feature, index) => {
               const Icon = feature.icon;
               return (
-                <Card key={index} className="hover-lift hover-glow border-2 border-gray-200 hover:border-primary transition-all">
+                <Card key={index} className="hover-lift hover-glow border-2 border-slate-200 hover:border-primary hover:shadow-lg transition-all bg-white">
                   <CardHeader>
-                    <div className="w-14 h-14 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                      <Icon className="w-7 h-7 text-primary" />
+                    <div className="w-14 h-14 bg-emerald-100 rounded-lg flex items-center justify-center mb-4">
+                      <Icon className="w-7 h-7 text-emerald-700" />
                     </div>
-                    <CardTitle className="text-xl">{feature.title}</CardTitle>
+                    <CardTitle className="text-xl text-slate-900">{feature.title}</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-gray-600">{feature.description}</p>
+                    <p className="text-slate-600">{feature.description}</p>
                   </CardContent>
                 </Card>
               );
@@ -126,7 +126,7 @@ export default function Home() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 bg-primary text-white">
+      <section className="py-16 bg-gradient-to-r from-emerald-700 to-emerald-600 text-white">
         <div className="container">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
             <div>
@@ -152,7 +152,7 @@ export default function Home() {
 
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-primary to-blue-700 text-white">
+      <section className="py-20 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white">
         <div className="container text-center">
           <h2 className="text-5xl font-bold mb-6">Pronto Para Começar?</h2>
           <p className="text-xl opacity-90 mb-8 max-w-2xl mx-auto">

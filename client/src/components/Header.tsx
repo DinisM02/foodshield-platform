@@ -137,14 +137,14 @@ export default function Header() {
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-0 flex-1 justify-center">
             {navItems.map((item) => (
-              <Link key={item.href} href={item.href} className="px-2.5 py-2 text-xs font-medium text-gray-700 hover:text-primary hover:bg-blue-50 rounded-md transition-colors whitespace-nowrap">
+              <Link key={item.href} href={item.href} className="px-2.5 py-2 text-xs font-medium text-slate-700 hover:text-emerald-700 hover:bg-emerald-50 rounded-md transition-colors whitespace-nowrap">
                 {item.label}
               </Link>
             ))}
           </nav>
 
           {/* CTA Button */}
-          <div className="hidden md:flex items-center gap-2 flex-shrink-0">
+          <div className="hidden md:flex items-center gap-4">
             <Link href="/knowledge">
               <Button className="bg-primary hover:bg-primary/90 text-white">
                 Começar

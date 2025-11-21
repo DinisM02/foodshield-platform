@@ -91,26 +91,26 @@ export default function Footer() {
             </h3>
             <ul className="space-y-3">
               <li>
-                <Link href="/knowledge" className="text-gray-400 hover:text-primary transition-colors text-sm flex items-center gap-2 group">
-                  <span className="w-1 h-1 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                <Link href="/knowledge" className="text-gray-300 hover:text-emerald-400 transition-colors text-sm flex items-center gap-2 group">
+                  <span className="w-1 h-1 bg-emerald-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
                   Centro de Conhecimento
                 </Link>
               </li>
               <li>
-                <Link href="/marketplace" className="text-gray-400 hover:text-primary transition-colors text-sm flex items-center gap-2 group">
-                  <span className="w-1 h-1 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                <Link href="/marketplace" className="text-gray-300 hover:text-emerald-400 transition-colors text-sm flex items-center gap-2 group">
+                  <span className="w-1 h-1 bg-emerald-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
                   Marketplace
                 </Link>
               </li>
               <li>
-                <Link href="/services" className="text-gray-400 hover:text-primary transition-colors text-sm flex items-center gap-2 group">
-                  <span className="w-1 h-1 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                <Link href="/services" className="text-gray-300 hover:text-emerald-400 transition-colors text-sm flex items-center gap-2 group">
+                  <span className="w-1 h-1 bg-emerald-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
                   Serviços
                 </Link>
               </li>
               <li>
-                <Link href="/tools" className="text-gray-400 hover:text-primary transition-colors text-sm flex items-center gap-2 group">
-                  <span className="w-1 h-1 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                <Link href="/tools" className="text-gray-300 hover:text-emerald-400 transition-colors text-sm flex items-center gap-2 group">
+                  <span className="w-1 h-1 bg-emerald-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
                   Ferramentas
                 </Link>
               </li>
@@ -125,14 +125,14 @@ export default function Footer() {
             </h3>
             <ul className="space-y-3">
               <li>
-                <Link href="/blog" className="text-gray-400 hover:text-primary transition-colors text-sm flex items-center gap-2 group">
-                  <span className="w-1 h-1 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                <Link href="/blog" className="text-gray-300 hover:text-emerald-400 transition-colors text-sm flex items-center gap-2 group">
+                  <span className="w-1 h-1 bg-emerald-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
                   Blog
                 </Link>
               </li>
               <li>
-                <Link href="/faq" className="text-gray-400 hover:text-primary transition-colors text-sm flex items-center gap-2 group">
-                  <span className="w-1 h-1 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                <Link href="/faq" className="text-gray-300 hover:text-emerald-400 transition-colors text-sm flex items-center gap-2 group">
+                  <span className="w-1 h-1 bg-emerald-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
                   FAQ
                 </Link>
               </li>
@@ -189,26 +189,26 @@ export default function Footer() {
             </h3>
             <ul className="space-y-3">
               <li>
-                <a href="#" className="text-gray-400 hover:text-primary transition-colors text-sm flex items-center gap-2 group">
-                  <span className="w-1 h-1 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                <a href="#" className="text-gray-300 hover:text-emerald-400 transition-colors text-sm flex items-center gap-2 group">
+                  <span className="w-1 h-1 bg-emerald-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
                   Sobre Nós
                 </a>
               </li>
               <li>
-                <a href="#" className="text-gray-400 hover:text-primary transition-colors text-sm flex items-center gap-2 group">
-                  <span className="w-1 h-1 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                <a href="#" className="text-gray-300 hover:text-emerald-400 transition-colors text-sm flex items-center gap-2 group">
+                  <span className="w-1 h-1 bg-emerald-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
                   Carreira
                 </a>
               </li>
               <li>
-                <a href="#" className="text-gray-400 hover:text-primary transition-colors text-sm flex items-center gap-2 group">
-                  <span className="w-1 h-1 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                <a href="#" className="text-gray-300 hover:text-emerald-400 transition-colors text-sm flex items-center gap-2 group">
+                  <span className="w-1 h-1 bg-emerald-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
                   Parceiros
                 </a>
               </li>
               <li>
-                <a href="#" className="text-gray-400 hover:text-primary transition-colors text-sm flex items-center gap-2 group">
-                  <span className="w-1 h-1 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                <a href="#" className="text-gray-300 hover:text-emerald-400 transition-colors text-sm flex items-center gap-2 group">
+                  <span className="w-1 h-1 bg-emerald-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
                   Imprensa
                 </a>
               </li>

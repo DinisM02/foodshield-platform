@@ -146,7 +146,7 @@ export default function Header() {
           {/* CTA Button */}
           <div className="hidden md:flex items-center gap-4">
             <Link href="/knowledge">
-              <Button className="bg-primary hover:bg-primary/90 text-white">
+              <Button className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold">
                 Começar
               </Button>
             </Link>
@@ -208,7 +208,7 @@ export default function Header() {
               <Link href="/knowledge">
                 <Button
                   onClick={() => setIsMenuOpen(false)}
-                  className="w-full mt-2 bg-primary hover:bg-primary/90 text-white"
+                  className="w-full mt-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold"
                 >
                   Começar
                 </Button>

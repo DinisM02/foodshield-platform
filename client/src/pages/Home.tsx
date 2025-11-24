@@ -74,14 +74,14 @@ export default function Home() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <Link href="/knowledge">
-              <Button size="lg" className="bg-white text-primary hover:bg-white/90 text-lg px-8 py-6 h-auto">
+              <Button size="lg" className="bg-emerald-600 text-white hover:bg-emerald-700 text-lg px-8 py-6 h-auto font-semibold">
                 Explorar Plataforma
               </Button>
             </Link>
             <Button 
               size="lg" 
               variant="outline" 
-              className="border-white text-white hover:bg-white/20 text-lg px-8 py-6 h-auto"
+              className="border-white text-white hover:bg-white/20 text-lg px-8 py-6 h-auto font-semibold"
               onClick={scrollToContent}
             >
               Saiba Mais
@@ -159,7 +159,7 @@ export default function Home() {
             Junte-se à nossa comunidade e faça parte da transformação sustentável
           </p>
           <Link href="/knowledge">
-            <Button size="lg" className="bg-white text-primary hover:bg-white/90 text-lg px-8 py-6 h-auto">
+            <Button size="lg" className="bg-white text-emerald-700 hover:bg-gray-100 text-lg px-8 py-6 h-auto font-semibold">
               Começar Agora
             </Button>
           </Link>

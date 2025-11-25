@@ -15,22 +15,26 @@ const features = [
   {
     icon: BookOpen,
     title: "Centro de Conhecimento",
-    description: "Biblioteca digital com artigos, vídeos, guias e pesquisas sobre agricultura sustentável"
+    description: "Biblioteca digital com artigos, vídeos, guias e pesquisas sobre agricultura sustentável",
+    href: "/knowledge"
   },
   {
     icon: ShoppingCart,
     title: "Marketplace",
-    description: "Produtos locais com indicadores de sustentabilidade e impacto ambiental"
+    description: "Produtos locais com indicadores de sustentabilidade e impacto ambiental",
+    href: "/marketplace"
   },
   {
     icon: Users,
     title: "Consultoria",
-    description: "Especialistas disponíveis para orientar projetos sustentáveis"
+    description: "Especialistas disponíveis para orientar projetos sustentáveis",
+    href: "/services"
   },
   {
     icon: Wrench,
     title: "Ferramentas Digitais",
-    description: "Calculadoras e dashboards para análise de sustentabilidade e custos"
+    description: "Calculadoras e dashboards para análise de sustentabilidade e custos",
+    href: "/tools"
   }
 ];
 
@@ -108,17 +112,19 @@ export default function Home() {
             {features.map((feature, index) => {
               const Icon = feature.icon;
               return (
-                <Card key={index} className="hover-lift hover-glow border-2 border-slate-200 hover:border-primary hover:shadow-lg transition-all bg-white">
-                  <CardHeader>
-                    <div className="w-14 h-14 bg-emerald-100 rounded-lg flex items-center justify-center mb-4">
-                      <Icon className="w-7 h-7 text-emerald-700" />
-                    </div>
-                    <CardTitle className="text-xl text-slate-900">{feature.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-slate-600">{feature.description}</p>
-                  </CardContent>
-                </Card>
+                <Link key={index} href={feature.href}>
+                  <Card className="hover-lift hover-glow border-2 border-slate-200 hover:border-emerald-600 hover:shadow-lg transition-all bg-white cursor-pointer h-full">
+                    <CardHeader>
+                      <div className="w-14 h-14 bg-emerald-100 rounded-lg flex items-center justify-center mb-4">
+                        <Icon className="w-7 h-7 text-emerald-700" />
+                      </div>
+                      <CardTitle className="text-xl text-slate-900">{feature.title}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-slate-600">{feature.description}</p>
+                    </CardContent>
+                  </Card>
+                </Link>
               );
             })}
           </div>

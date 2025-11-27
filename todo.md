@@ -56,9 +56,9 @@
 ## 🆕 Novas Funcionalidades
 - [x] Implementar formulário de Newsletter (na página Blog)
 - [x] Criar seção de Blog com artigos
-- [ ] Desenvolver Dashboard de Usuário
+- [x] Desenvolver Dashboard de Usuário
 - [x] Adicionar página FAQ
-- [ ] Implementar sistema de busca global
+- [x] Implementar sistema de busca global
 - [ ] Criar página de Sobre Nós
 - [x] Criar Header/Navbar com menu de navegação
 - [x] Criar Área de Consumidor com Dashboard
@@ -67,3 +67,17 @@
 - [x] Adicionar Header e Footer em TODAS as páginas (Knowledge, Marketplace, Services, Tools)
 - [x] Implementar busca global no Header
 - [x] Melhorar Footer com links, contato e redes sociais
+
+## 🌍 Bilinguismo & Autenticação (NOVA - 21/11)
+- [x] Implementar sistema bilíngue (PT/EN)
+- [x] Criar LanguageContext com traduções completas
+- [x] Adicionar seletor de idioma no Header
+- [x] Adicionar botões de Login/Signup no Header
+- [x] Implementar logout functionality
+- [x] Corrigir import do Header no Dashboard
+- [x] Remover seção de depoimentos
+- [x] Remover Blog e FAQ da navbar
+- [x] Corrigir nested anchor tags
+- [x] Melhorar contraste de cores
+- [x] Corrigir contraste dos botões
+- [x] Implementar testes de autenticação (7/7 passando)

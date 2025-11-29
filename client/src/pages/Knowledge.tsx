@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from "@/components/ui/badge";
 import { BookOpen, Video, FileText, Search, Clock, User } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Content {
   id: number;
@@ -95,12 +96,12 @@ const typeIcons = {
   research: Search
 };
 
-const typeLabels = {
+const getTypeLabels = (t: (key: string) => string) => ({
   article: "Artigo",
   video: "Vídeo",
   guide: "Guia",
   research: "Pesquisa"
-};
+});
 
 const accessLevelColors = {
   free: "bg-green-500",
@@ -108,15 +109,18 @@ const accessLevelColors = {
   premium: "bg-purple-500"
 };
 
-const accessLevelLabels = {
+const getAccessLevelLabels = (t: (key: string) => string) => ({
   free: "Gratuito",
   login: "Membros",
   premium: "Premium"
-};
+});
 
 export default function Knowledge() {
+  const { t } = useLanguage();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedType, setSelectedType] = useState<string>("Todos");
+  const typeLabels = getTypeLabels(t);
+  const accessLevelLabels = getAccessLevelLabels(t);
 
   const types = ["Todos", "Artigo", "Vídeo", "Guia", "Pesquisa"];
 
@@ -135,7 +139,7 @@ export default function Knowledge() {
         <div className="container">
           <div className="flex items-center gap-3 mb-4">
             <BookOpen className="w-10 h-10" />
-            <h1 className="text-5xl font-bold">Centro de Conhecimento</h1>
+            <h1 className="text-5xl font-bold">{t('nav.knowledge')}</h1>
           </div>
           <p className="text-xl opacity-90">Biblioteca digital com recursos sobre agricultura sustentável</p>
         </div>
@@ -148,7 +152,7 @@ export default function Knowledge() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
             <Input
               type="text"
-              placeholder="Buscar artigos, vídeos, guias..."
+              placeholder={t('header.search')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10 h-12 text-lg"

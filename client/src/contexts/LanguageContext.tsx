@@ -77,6 +77,10 @@ const translations = {
     'footer.cookies': 'Cookies',
     'footer.accessibility': 'Acessibilidade',
 
+    // Auth
+    'auth.login_required': 'Faça login para acessar este recurso',
+    'auth.restricted': 'Acesso Restrito',
+
     // Pages
     'page.access_denied': 'Acesso Restrito',
     'page.access_denied_msg': 'Você precisa estar autenticado para acessar esta página.',
@@ -148,6 +152,10 @@ const translations = {
     'footer.terms': 'Terms of Service',
     'footer.cookies': 'Cookies',
     'footer.accessibility': 'Accessibility',
+
+    // Auth
+    'auth.login_required': 'Login to access this resource',
+    'auth.restricted': 'Access Restricted',
 
     // Pages
     'page.access_denied': 'Access Restricted',

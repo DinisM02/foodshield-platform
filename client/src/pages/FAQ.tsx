@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronDown, HelpCircle, MessageCircle } from "lucide-react";
 import { useState } from "react";
 import { Link } from "wouter";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const faqData = [
   {
@@ -125,6 +126,7 @@ const faqData = [
 ];
 
 export default function FAQ() {
+  const { t } = useLanguage();
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
   const toggleExpand = (id: number) => {

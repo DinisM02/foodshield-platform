@@ -8,38 +8,41 @@ import { BookOpen, ShoppingCart, Users, Wrench, Leaf, TrendingUp, Globe, Chevron
 import { Link } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 
 
-const features = [
+const getFeatures = (t: (key: string) => string) => [
   {
     icon: BookOpen,
-    title: "Centro de Conhecimento",
-    description: "Biblioteca digital com artigos, vídeos, guias e pesquisas sobre agricultura sustentável",
+    title: t('features.knowledge'),
+    description: t('features.knowledge_desc'),
     href: "/knowledge"
   },
   {
     icon: ShoppingCart,
-    title: "Marketplace",
-    description: "Produtos locais com indicadores de sustentabilidade e impacto ambiental",
+    title: t('features.marketplace'),
+    description: t('features.marketplace_desc'),
     href: "/marketplace"
   },
   {
     icon: Users,
-    title: "Consultoria",
-    description: "Especialistas disponíveis para orientar projetos sustentáveis",
+    title: t('features.consulting'),
+    description: t('features.consulting_desc'),
     href: "/services"
   },
   {
     icon: Wrench,
-    title: "Ferramentas Digitais",
-    description: "Calculadoras e dashboards para análise de sustentabilidade e custos",
+    title: t('features.tools'),
+    description: t('features.tools_desc'),
     href: "/tools"
   }
 ];
 
 export default function Home() {
   const { user, loading, isAuthenticated } = useAuth();
+  const { t } = useLanguage();
+  const features = getFeatures(t);
 
   const scrollToContent = () => {
     document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' });
@@ -68,18 +71,18 @@ export default function Home() {
         <div className="relative z-10 container text-center text-white">
           <div className="flex items-center justify-center gap-2 mb-4">
             <Leaf className="w-8 h-8" />
-            <span className="text-lg font-semibold">Segurança Alimentar e Desenvolvimento Sustentável</span>
+            <span className="text-lg font-semibold">{t('hero.tagline')}</span>
           </div>
           <h1 className="text-6xl md:text-7xl font-bold mb-6 leading-tight">
-            SustainHub
+            {t('hero.title')}
           </h1>
           <p className="text-2xl md:text-3xl opacity-90 mb-8 max-w-3xl mx-auto">
-            A plataforma completa para transformar sistemas alimentares e promover práticas sustentáveis em Moçambique e além
+            {t('hero.description')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <Link href="/knowledge">
               <Button size="lg" className="bg-emerald-600 text-white hover:bg-emerald-700 text-lg px-8 py-6 h-auto font-semibold">
-                Explorar Plataforma
+                {t('hero.explore')}
               </Button>
             </Link>
             <Button 
@@ -88,7 +91,7 @@ export default function Home() {
               className="border-white text-white hover:bg-white/20 text-lg px-8 py-6 h-auto font-semibold"
               onClick={scrollToContent}
             >
-              Saiba Mais
+              {t('hero.learn_more')}
               <ChevronDown className="ml-2 w-5 h-5" />
             </Button>
           </div>
@@ -104,8 +107,8 @@ export default function Home() {
       <section id="features" className="py-20 bg-gradient-to-b from-slate-50 to-slate-100">
         <div className="container">
           <div className="text-center mb-16">
-            <h2 className="text-5xl font-bold text-slate-900 mb-4">Tudo Que Você Precisa</h2>
-            <p className="text-xl text-slate-700">Uma plataforma integrada com ferramentas, conhecimento e recursos para impulsionar a sustentabilidade</p>
+            <h2 className="text-5xl font-bold text-slate-900 mb-4">{t('features.title')}</h2>
+            <p className="text-xl text-slate-700">{t('features.subtitle')}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -137,19 +140,19 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
             <div>
               <div className="text-5xl font-bold mb-2">500+</div>
-              <p className="text-lg opacity-90">Recursos Disponíveis</p>
+              <p className="text-lg opacity-90">{t('stats.resources')}</p>
             </div>
             <div>
               <div className="text-5xl font-bold mb-2">1000+</div>
-              <p className="text-lg opacity-90">Usuários Ativos</p>
+              <p className="text-lg opacity-90">{t('stats.users')}</p>
             </div>
             <div>
               <div className="text-5xl font-bold mb-2">50+</div>
-              <p className="text-lg opacity-90">Especialistas</p>
+              <p className="text-lg opacity-90">{t('stats.specialists')}</p>
             </div>
             <div>
               <div className="text-5xl font-bold mb-2">100%</div>
-              <p className="text-lg opacity-90">Satisfação</p>
+              <p className="text-lg opacity-90">{t('stats.satisfaction')}</p>
             </div>
           </div>
         </div>
@@ -160,13 +163,13 @@ export default function Home() {
       {/* CTA Section */}
       <section className="py-20 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white">
         <div className="container text-center">
-          <h2 className="text-5xl font-bold mb-6">Pronto Para Começar?</h2>
+          <h2 className="text-5xl font-bold mb-6">{t('cta.title')}</h2>
           <p className="text-xl opacity-90 mb-8 max-w-2xl mx-auto">
-            Junte-se à nossa comunidade e faça parte da transformação sustentável
+            {t('cta.subtitle')}
           </p>
           <Link href="/knowledge">
             <Button size="lg" className="bg-white text-emerald-700 hover:bg-gray-100 text-lg px-8 py-6 h-auto font-semibold">
-              Começar Agora
+              {t('cta.button')}
             </Button>
           </Link>
         </div>

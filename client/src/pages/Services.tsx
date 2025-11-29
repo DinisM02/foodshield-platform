@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Users, MessageSquare, Calendar, CheckCircle, ArrowRight } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const services = [
   {
@@ -43,6 +44,7 @@ const services = [
 ];
 
 export default function Services() {
+  const { t } = useLanguage();
   const { isAuthenticated } = useAuth();
 
   if (!isAuthenticated) {
@@ -53,7 +55,7 @@ export default function Services() {
         <Card className="max-w-md w-full mx-4">
           <CardHeader>
             <CardTitle className="text-2xl">Acesso Restrito</CardTitle>
-            <CardDescription>Faça login para acessar nossos serviços</CardDescription>
+            <CardDescription>{t('auth.login_required')}</CardDescription>
           </CardHeader>
           <CardFooter>
             <a href={getLoginUrl()} className="w-full">
@@ -75,9 +77,9 @@ export default function Services() {
         <div className="container">
           <div className="flex items-center gap-3 mb-4">
             <Users className="w-10 h-10" />
-            <h1 className="text-5xl font-bold">Serviços de Consultoria</h1>
+            <h1 className="text-5xl font-bold">{t('nav.services')}</h1>
           </div>
-          <p className="text-xl opacity-90">Suporte especializado para seu projeto sustentável</p>
+          <p className="text-xl opacity-90">Especialistas disponíveis para orientar seus projetos</p>
         </div>
       </div>
 

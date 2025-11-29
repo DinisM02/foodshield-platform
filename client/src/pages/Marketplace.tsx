@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { ShoppingCart, Leaf, Package, Star } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Product {
   id: number;
@@ -83,7 +84,8 @@ const mockProducts: Product[] = [
 ];
 
 export default function Marketplace() {
-  const { isAuthenticated } = useAuth();
+  const { t } = useLanguage();
+  const { user, loading, isAuthenticated } = useAuth();
   const [cart, setCart] = useState<{ product: Product; quantity: number }[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("Todos");
 
@@ -139,9 +141,9 @@ export default function Marketplace() {
         <div className="container">
           <div className="flex items-center gap-3 mb-4">
             <ShoppingCart className="w-10 h-10" />
-            <h1 className="text-5xl font-bold">Marketplace Sustentável</h1>
+            <h1 className="text-5xl font-bold">{t('nav.marketplace')}</h1>
           </div>
-          <p className="text-xl opacity-90">Produtos locais certificados com impacto positivo</p>
+          <p className="text-xl opacity-90">Produtos locais com indicadores de sustentabilidade</p>
         </div>
       </div>
 

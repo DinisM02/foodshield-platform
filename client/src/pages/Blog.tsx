@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar, User, ArrowRight, Search } from "lucide-react";
 import { Link } from "wouter";
 import { useState } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const blogPosts = [
   {
@@ -79,6 +80,7 @@ const blogPosts = [
 const categories = ["Todos", "Sustentabilidade", "Recursos Hídricos", "Certificação", "Tecnologia", "Produção", "Mercado"];
 
 export default function Blog() {
+  const { t } = useLanguage();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Todos");
 
@@ -95,8 +97,8 @@ export default function Blog() {
       {/* Header */}
       <div className="bg-primary text-white py-16">
         <div className="container">
-          <h1 className="text-5xl font-bold mb-4">Blog SustainHub</h1>
-          <p className="text-xl opacity-90">Artigos e insights sobre agricultura sustentável e práticas responsáveis</p>
+          <h1 className="text-5xl font-bold mb-4">Blog</h1>
+          <p className="text-xl opacity-90">Artículos y noticias sobre agricultura sustentable</p>
         </div>
       </div>
 

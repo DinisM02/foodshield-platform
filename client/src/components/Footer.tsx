@@ -2,8 +2,10 @@ import { Link } from "wouter";
 import { Leaf, Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Footer() {
+  const { t } = useLanguage();
   const currentYear = new Date().getFullYear();
 
   return (
@@ -12,16 +14,16 @@ export default function Footer() {
       <div className="bg-primary/10 border-b border-primary/20">
         <div className="container py-12">
           <div className="max-w-2xl mx-auto text-center">
-            <h3 className="text-2xl font-bold mb-2">Fique Atualizado</h3>
-            <p className="text-gray-400 mb-6">Receba dicas, notícias e ofertas exclusivas sobre agricultura sustentável</p>
+            <h3 className="text-2xl font-bold mb-2">{t('newsletter.title')}</h3>
+            <p className="text-gray-400 mb-6">{t('newsletter.subtitle')}</p>
             <div className="flex gap-2">
               <Input
                 type="email"
-                placeholder="Seu email..."
+                placeholder={t('newsletter.email')}
                 className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
               />
               <Button className="bg-primary hover:bg-primary/90 text-white">
-                Inscrever
+                {t('newsletter.subscribe')}
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </div>
@@ -41,7 +43,7 @@ export default function Footer() {
               <span className="text-2xl font-bold">SustainHub</span>
             </div>
             <p className="text-gray-400 text-sm mb-6 leading-relaxed">
-              Transformando a agricultura através da sustentabilidade, inovação e conhecimento compartilhado.
+              {t('footer.company')}
             </p>
             <div className="flex gap-3">
               <a 
@@ -87,13 +89,13 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-6 flex items-center gap-2">
               <div className="w-1 h-6 bg-primary rounded-full" />
-              Plataforma
+              {t('footer.platform')}
             </h3>
             <ul className="space-y-3">
               <li>
                 <Link href="/knowledge" className="text-gray-300 hover:text-emerald-400 transition-colors text-sm flex items-center gap-2 group">
                   <span className="w-1 h-1 bg-emerald-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                  Centro de Conhecimento
+                  {t('nav.knowledge')}
                 </Link>
               </li>
               <li>
@@ -105,13 +107,13 @@ export default function Footer() {
               <li>
                 <Link href="/services" className="text-gray-300 hover:text-emerald-400 transition-colors text-sm flex items-center gap-2 group">
                   <span className="w-1 h-1 bg-emerald-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                  Serviços
+                  {t('nav.services')}
                 </Link>
               </li>
               <li>
                 <Link href="/tools" className="text-gray-300 hover:text-emerald-400 transition-colors text-sm flex items-center gap-2 group">
                   <span className="w-1 h-1 bg-emerald-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                  Ferramentas
+                  {t('nav.tools')}
                 </Link>
               </li>
             </ul>
@@ -121,7 +123,7 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-6 flex items-center gap-2">
               <div className="w-1 h-6 bg-primary rounded-full" />
-              Recursos
+              {t('footer.resources')}
             </h3>
             <ul className="space-y-3">
               <li>
@@ -140,7 +142,7 @@ export default function Footer() {
               <li>
                 <a href="#" className="text-gray-400 hover:text-primary transition-colors text-sm flex items-center gap-2 group">
                   <span className="w-1 h-1 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                  Documentação
+                  {t('footer.privacy')}
                 </a>
               </li>
             </ul>
@@ -150,7 +152,7 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-6 flex items-center gap-2">
               <div className="w-1 h-6 bg-primary rounded-full" />
-              Contato
+              {t('footer.contact')}
             </h3>
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
@@ -185,19 +187,19 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-6 flex items-center gap-2">
               <div className="w-1 h-6 bg-primary rounded-full" />
-              Empresa
+              {t('footer.company')}
             </h3>
             <ul className="space-y-3">
               <li>
                 <a href="#" className="text-gray-300 hover:text-emerald-400 transition-colors text-sm flex items-center gap-2 group">
                   <span className="w-1 h-1 bg-emerald-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                  Sobre Nós
+                  {t('footer.about')}
                 </a>
               </li>
               <li>
                 <a href="#" className="text-gray-300 hover:text-emerald-400 transition-colors text-sm flex items-center gap-2 group">
                   <span className="w-1 h-1 bg-emerald-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                  Carreira
+                  {t('footer.careers')}
                 </a>
               </li>
               <li>

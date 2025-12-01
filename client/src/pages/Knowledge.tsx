@@ -139,9 +139,9 @@ export default function Knowledge() {
         <div className="container">
           <div className="flex items-center gap-3 mb-4">
             <BookOpen className="w-10 h-10" />
-            <h1 className="text-5xl font-bold">{t('nav.knowledge')}</h1>
+            <h1 className="text-5xl font-bold">{t('knowledge.title')}</h1>
           </div>
-          <p className="text-xl opacity-90">Biblioteca digital com recursos sobre agricultura sustentável</p>
+          <p className="text-xl opacity-90">{t('knowledge.subtitle')}</p>
         </div>
       </div>
 
@@ -222,7 +222,7 @@ export default function Knowledge() {
 
                 <CardFooter>
                   <Button variant="outline" className="w-full group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-colors">
-                    Ler Mais
+                    {t('blog.read_more')}
                   </Button>
                 </CardFooter>
               </Card>
@@ -233,8 +233,8 @@ export default function Knowledge() {
         {filteredContents.length === 0 && (
           <div className="text-center py-20">
             <Search className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-            <h3 className="text-2xl font-semibold mb-2">Nenhum resultado encontrado</h3>
-            <p className="text-muted-foreground">Tente buscar com outros termos</p>
+            <h3 className="text-2xl font-semibold mb-2">{t('knowledge.no_results')}</h3>
+            <p className="text-muted-foreground">{t('common.search')}</p>
           </div>
         )}
       </div>

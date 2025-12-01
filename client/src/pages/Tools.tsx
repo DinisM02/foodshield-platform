@@ -69,9 +69,9 @@ export default function Tools() {
         <div className="container">
           <div className="flex items-center gap-3 mb-4">
             <Calculator className="w-10 h-10" />
-            <h1 className="text-5xl font-bold">{t('nav.tools')}</h1>
+            <h1 className="text-5xl font-bold">{t('tools.title')}</h1>
           </div>
-          <p className="text-xl opacity-90">Calculadoras e dashboards para análise de sustentabilidade</p>
+          <p className="text-xl opacity-90">{t('tools.subtitle')}</p>
         </div>
       </div>
 

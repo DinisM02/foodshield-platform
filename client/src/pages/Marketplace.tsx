@@ -141,9 +141,9 @@ export default function Marketplace() {
         <div className="container">
           <div className="flex items-center gap-3 mb-4">
             <ShoppingCart className="w-10 h-10" />
-            <h1 className="text-5xl font-bold">{t('nav.marketplace')}</h1>
+            <h1 className="text-5xl font-bold">{t('marketplace.title')}</h1>
           </div>
-          <p className="text-xl opacity-90">Produtos locais com indicadores de sustentabilidade</p>
+          <p className="text-xl opacity-90">{t('marketplace.subtitle')}</p>
         </div>
       </div>
 

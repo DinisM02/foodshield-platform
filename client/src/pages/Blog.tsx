@@ -97,8 +97,8 @@ export default function Blog() {
       {/* Header */}
       <div className="bg-primary text-white py-16">
         <div className="container">
-          <h1 className="text-5xl font-bold mb-4">Blog</h1>
-          <p className="text-xl opacity-90">Artículos y noticias sobre agricultura sustentable</p>
+          <h1 className="text-5xl font-bold mb-4">{t('blog.title')}</h1>
+          <p className="text-xl opacity-90">{t('blog.subtitle')}</p>
         </div>
       </div>
 
@@ -111,7 +111,7 @@ export default function Blog() {
               <Search className="absolute left-4 top-3 w-5 h-5 text-gray-400" />
               <input
                 type="text"
-                placeholder="Buscar artigos..."
+                placeholder={t('blog.search_placeholder')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-12 pr-4 py-3 border-2 border-primary rounded-lg focus:outline-none focus:border-primary"
@@ -131,7 +131,7 @@ export default function Blog() {
                     : "bg-white text-primary border-2 border-primary hover:bg-primary hover:text-white"
                 }`}
               >
-                {category}
+                {category === 'Todos' ? t('blog.all_categories') : category}
               </button>
             ))}
           </div>
@@ -183,13 +183,13 @@ export default function Blog() {
 
                     {/* Read Time */}
                     <div className="text-sm font-semibold text-primary">
-                      Tempo de leitura: {post.readTime}
+                      {t('blog.read_time')}: {post.readTime}
                     </div>
 
                     {/* Read More Button */}
                     <Link href={`/blog/${post.id}`}>
                       <Button className="w-full bg-primary hover:bg-primary/90 text-white group/btn">
-                        Ler Artigo
+                        {t('blog.read_more')}
                         <ArrowRight className="ml-2 w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
                       </Button>
                     </Link>
@@ -199,7 +199,7 @@ export default function Blog() {
             </div>
           ) : (
             <div className="text-center py-12">
-              <p className="text-xl text-gray-600 mb-4">Nenhum artigo encontrado</p>
+              <p className="text-xl text-gray-600 mb-4">{t('blog.no_results')}</p>
               <Button
                 onClick={() => {
                   setSearchTerm("");
@@ -208,7 +208,7 @@ export default function Blog() {
                 variant="outline"
                 className="border-primary text-primary hover:bg-primary hover:text-white"
               >
-                Limpar Filtros
+                {t('common.cancel')}
               </Button>
             </div>
           )}
@@ -218,18 +218,18 @@ export default function Blog() {
       {/* Newsletter Section */}
       <section className="py-16 bg-primary text-white">
         <div className="container text-center">
-          <h2 className="text-4xl font-bold mb-4">Receba Artigos Semanais</h2>
+          <h2 className="text-4xl font-bold mb-4">{t('newsletter.title')}</h2>
           <p className="text-xl opacity-90 mb-8 max-w-2xl mx-auto">
-            Inscreva-se na nossa newsletter e fique atualizado com as melhores práticas de sustentabilidade
+            {t('newsletter.subtitle')}
           </p>
           <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
             <input
               type="email"
-              placeholder="Seu email"
+              placeholder={t('newsletter.email')}
               className="flex-1 px-4 py-3 rounded-lg text-gray-900 focus:outline-none"
             />
             <Button className="bg-white text-primary hover:bg-white/90 font-semibold">
-              Inscrever
+              {t('newsletter.subscribe')}
             </Button>
           </div>
         </div>

@@ -77,9 +77,9 @@ export default function Services() {
         <div className="container">
           <div className="flex items-center gap-3 mb-4">
             <Users className="w-10 h-10" />
-            <h1 className="text-5xl font-bold">{t('nav.services')}</h1>
+            <h1 className="text-5xl font-bold">{t('services.title')}</h1>
           </div>
-          <p className="text-xl opacity-90">Especialistas disponíveis para orientar seus projetos</p>
+          <p className="text-xl opacity-90">{t('services.subtitle')}</p>
         </div>
       </div>
 

@@ -80,12 +80,106 @@ const translations = {
     // Auth
     'auth.login_required': 'Faça login para acessar este recurso',
     'auth.restricted': 'Acesso Restrito',
+    'auth.login': 'Fazer Login',
 
     // Pages
     'page.access_denied': 'Acesso Restrito',
     'page.access_denied_msg': 'Você precisa estar autenticado para acessar esta página.',
     'page.not_found': 'Página Não Encontrada',
     'page.not_found_msg': 'A página que você procura não existe.',
+
+    // Blog
+    'blog.title': 'Blog',
+    'blog.subtitle': 'Artigos e notícias sobre agricultura sustentável',
+    'blog.search_placeholder': 'Buscar artigos...',
+    'blog.all_categories': 'Todos',
+    'blog.no_results': 'Nenhum artigo encontrado',
+    'blog.read_more': 'Ler Mais',
+    'blog.by_author': 'Por',
+    'blog.read_time': 'min de leitura',
+
+    // Knowledge Center
+    'knowledge.title': 'Centro de Conhecimento',
+    'knowledge.subtitle': 'Biblioteca digital com recursos sobre agricultura sustentável',
+    'knowledge.search_placeholder': 'Buscar recursos...',
+    'knowledge.all': 'Todos',
+    'knowledge.no_results': 'Nenhum resultado encontrado',
+
+    // Marketplace
+    'marketplace.title': 'Marketplace',
+    'marketplace.subtitle': 'Produtos locais com indicadores de sustentabilidade',
+    'marketplace.filter': 'Filtrar por categoria',
+    'marketplace.add_to_cart': 'Adicionar ao Carrinho',
+    'marketplace.price': 'Preço',
+    'marketplace.stock': 'Em Estoque',
+    'marketplace.sustainability': 'Sustentabilidade',
+    'marketplace.checkout': 'Finalizar Compra',
+    'marketplace.cart_empty': 'Seu carrinho está vazio',
+
+    // Services
+    'services.title': 'Consultoria',
+    'services.subtitle': 'Especialistas disponíveis para orientar seus projetos',
+    'services.request': 'Solicitar Consultoria',
+    'services.price': 'Preço',
+    'services.features': 'Características',
+    'services.schedule': 'Agendar Reunião',
+
+    // Tools
+    'tools.title': 'Ferramentas Digitais',
+    'tools.subtitle': 'Calculadoras e dashboards para análise de sustentabilidade',
+    'tools.carbon_calculator': 'Calculadora de Carbono',
+    'tools.cost_calculator': 'Calculadora de Custos',
+    'tools.calculate': 'Calcular',
+    'tools.result': 'Resultado',
+    'tools.area_hectares': 'Área (hectares)',
+    'tools.fuel_liters': 'Combustível (litros/mês)',
+    'tools.fertilizer_kg': 'Fertilizante (kg/mês)',
+    'tools.carbon_equivalent': 'Equivalente a:',
+    'tools.cost_per_hectare': 'Custo por hectare:',
+    'tools.suggested_margin': 'Margem sugerida:',
+
+    // Dashboard
+    'dashboard.welcome': 'Bem-vindo',
+    'dashboard.activity_summary': 'Aqui está um resumo da sua atividade na plataforma',
+    'dashboard.overview': 'Visão Geral',
+    'dashboard.purchases': 'Compras',
+    'dashboard.consultations': 'Consultorías',
+    'dashboard.articles_read': 'Artigos Lidos',
+    'dashboard.tools_used': 'Ferramentas Usadas',
+    'dashboard.total_spent': 'Total Gasto',
+    'dashboard.sustainability_score': 'Pontuação de Sustentabilidade',
+    'dashboard.recent_purchases': 'Compras Recentes',
+    'dashboard.status_delivered': 'Entregue',
+    'dashboard.status_pending': 'Pendente',
+    'dashboard.status_scheduled': 'Agendada',
+    'dashboard.logout': 'Sair',
+
+    // FAQ
+    'faq.title': 'Perguntas Frequentes',
+    'faq.subtitle': 'Encontre respostas para as dúvidas mais comuns sobre o SustainHub',
+    'faq.no_answer': 'Não encontrou sua resposta?',
+    'faq.contact_us': 'Entre em contato conosco',
+
+    // Common
+    'common.search': 'Buscar',
+    'common.filter': 'Filtrar',
+    'common.sort': 'Ordenar',
+    'common.view_all': 'Ver Todas',
+    'common.learn_more': 'Saiba Mais',
+    'common.get_started': 'Começar',
+    'common.subscribe': 'Inscrever',
+    'common.cancel': 'Cancelar',
+    'common.save': 'Salvar',
+    'common.delete': 'Deletar',
+    'common.edit': 'Editar',
+    'common.back': 'Voltar',
+    'common.next': 'Próximo',
+    'common.previous': 'Anterior',
+    'common.loading': 'Carregando...',
+    'common.error': 'Erro',
+    'common.success': 'Sucesso',
+    'common.warning': 'Aviso',
+    'common.info': 'Informação',
   },
   en: {
     // Header & Navigation
@@ -156,12 +250,106 @@ const translations = {
     // Auth
     'auth.login_required': 'Login to access this resource',
     'auth.restricted': 'Access Restricted',
+    'auth.login': 'Login',
 
     // Pages
     'page.access_denied': 'Access Restricted',
     'page.access_denied_msg': 'You need to be authenticated to access this page.',
     'page.not_found': 'Page Not Found',
     'page.not_found_msg': 'The page you are looking for does not exist.',
+
+    // Blog
+    'blog.title': 'Blog',
+    'blog.subtitle': 'Articles and news about sustainable agriculture',
+    'blog.search_placeholder': 'Search articles...',
+    'blog.all_categories': 'All',
+    'blog.no_results': 'No articles found',
+    'blog.read_more': 'Read More',
+    'blog.by_author': 'By',
+    'blog.read_time': 'min read',
+
+    // Knowledge Center
+    'knowledge.title': 'Knowledge Center',
+    'knowledge.subtitle': 'Digital library with resources on sustainable agriculture',
+    'knowledge.search_placeholder': 'Search resources...',
+    'knowledge.all': 'All',
+    'knowledge.no_results': 'No results found',
+
+    // Marketplace
+    'marketplace.title': 'Marketplace',
+    'marketplace.subtitle': 'Local products with sustainability indicators',
+    'marketplace.filter': 'Filter by category',
+    'marketplace.add_to_cart': 'Add to Cart',
+    'marketplace.price': 'Price',
+    'marketplace.stock': 'In Stock',
+    'marketplace.sustainability': 'Sustainability',
+    'marketplace.checkout': 'Checkout',
+    'marketplace.cart_empty': 'Your cart is empty',
+
+    // Services
+    'services.title': 'Consulting',
+    'services.subtitle': 'Experts available to guide your projects',
+    'services.request': 'Request Consulting',
+    'services.price': 'Price',
+    'services.features': 'Features',
+    'services.schedule': 'Schedule Meeting',
+
+    // Tools
+    'tools.title': 'Digital Tools',
+    'tools.subtitle': 'Calculators and dashboards for sustainability analysis',
+    'tools.carbon_calculator': 'Carbon Calculator',
+    'tools.cost_calculator': 'Cost Calculator',
+    'tools.calculate': 'Calculate',
+    'tools.result': 'Result',
+    'tools.area_hectares': 'Area (hectares)',
+    'tools.fuel_liters': 'Fuel (liters/month)',
+    'tools.fertilizer_kg': 'Fertilizer (kg/month)',
+    'tools.carbon_equivalent': 'Equivalent to:',
+    'tools.cost_per_hectare': 'Cost per hectare:',
+    'tools.suggested_margin': 'Suggested margin:',
+
+    // Dashboard
+    'dashboard.welcome': 'Welcome',
+    'dashboard.activity_summary': 'Here is a summary of your activity on the platform',
+    'dashboard.overview': 'Overview',
+    'dashboard.purchases': 'Purchases',
+    'dashboard.consultations': 'Consultations',
+    'dashboard.articles_read': 'Articles Read',
+    'dashboard.tools_used': 'Tools Used',
+    'dashboard.total_spent': 'Total Spent',
+    'dashboard.sustainability_score': 'Sustainability Score',
+    'dashboard.recent_purchases': 'Recent Purchases',
+    'dashboard.status_delivered': 'Delivered',
+    'dashboard.status_pending': 'Pending',
+    'dashboard.status_scheduled': 'Scheduled',
+    'dashboard.logout': 'Logout',
+
+    // FAQ
+    'faq.title': 'Frequently Asked Questions',
+    'faq.subtitle': 'Find answers to common questions about SustainHub',
+    'faq.no_answer': 'Did not find your answer?',
+    'faq.contact_us': 'Contact us',
+
+    // Common
+    'common.search': 'Search',
+    'common.filter': 'Filter',
+    'common.sort': 'Sort',
+    'common.view_all': 'View All',
+    'common.learn_more': 'Learn More',
+    'common.get_started': 'Get Started',
+    'common.subscribe': 'Subscribe',
+    'common.cancel': 'Cancel',
+    'common.save': 'Save',
+    'common.delete': 'Delete',
+    'common.edit': 'Edit',
+    'common.back': 'Back',
+    'common.next': 'Next',
+    'common.previous': 'Previous',
+    'common.loading': 'Loading...',
+    'common.error': 'Error',
+    'common.success': 'Success',
+    'common.warning': 'Warning',
+    'common.info': 'Information',
   },
 };
 

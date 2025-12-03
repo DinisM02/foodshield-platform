@@ -81,3 +81,16 @@
 - [x] Melhorar contraste de cores
 - [x] Corrigir contraste dos botões
 - [x] Implementar testes de autenticação (7/7 passando)
+
+## Admin Dashboard (NOVA - 21/11)
+- [x] Criar estrutura base do Admin Dashboard com sidebar navegavel
+- [x] Implementar protecao de rotas (apenas admin pode acessar)
+- [x] Criar pagina de gerenciamento de usuarios (CRUD)
+- [x] Criar pagina de gerenciamento de blog posts (CRUD)
+- [x] Criar pagina de gerenciamento de produtos marketplace (CRUD)
+- [x] Criar pagina de gerenciamento de servicos/consultoria (CRUD)
+- [x] Criar pagina de gerenciamento de pedidos
+- [x] Criar pagina de relatorios e analytics
+- [ ] Implementar filtros e busca em todas as paginas
+- [ ] Adicionar paginacao nas listas
+- [x] Implementar testes para admin routes (6/6 passando)

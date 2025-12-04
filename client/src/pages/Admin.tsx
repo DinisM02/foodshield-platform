@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useAuth } from '@/_core/hooks/useAuth';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useLocation } from 'wouter';
+import { trpc } from '@/lib/trpc';
 import { Button } from '@/components/ui/button';
 import {
   Users,
@@ -14,6 +15,10 @@ import {
   Menu,
   X,
   Home,
+  Loader2,
+  Trash2,
+  Edit,
+  Plus,
 } from 'lucide-react';
 
 interface NavItem {
@@ -205,6 +210,16 @@ export default function Admin() {
 
 // Tab Components
 function OverviewTab({ t, language }: { t: (key: string) => string; language: string }) {
+  const usersQuery = trpc.admin.users.list.useQuery();
+  const blogQuery = trpc.admin.blog.list.useQuery();
+  const productsQuery = trpc.admin.products.list.useQuery();
+  const servicesQuery = trpc.admin.services.list.useQuery();
+
+  const totalUsers = usersQuery.data?.length ?? 0;
+  const totalBlogPosts = blogQuery.data?.length ?? 0;
+  const totalProducts = productsQuery.data?.length ?? 0;
+  const totalServices = servicesQuery.data?.length ?? 0;
+
   return (
     <div>
       <h3 className="text-xl font-bold text-gray-900 mb-6">
@@ -215,39 +230,39 @@ function OverviewTab({ t, language }: { t: (key: string) => string; language: st
           <div className="text-gray-500 text-sm font-medium mb-2">
             {language === 'pt' ? 'Total de Usuários' : 'Total Users'}
           </div>
-          <div className="text-3xl font-bold text-gray-900">1,234</div>
+          <div className="text-3xl font-bold text-gray-900">{totalUsers}</div>
           <div className="text-green-600 text-sm mt-2">
-            {language === 'pt' ? '+12% este mês' : '+12% this month'}
+            {language === 'pt' ? 'Registrados' : 'Registered'}
           </div>
         </div>
 
         <div className="bg-white rounded-lg shadow p-6">
           <div className="text-gray-500 text-sm font-medium mb-2">
-            {language === 'pt' ? 'Pedidos' : 'Orders'}
+            {language === 'pt' ? 'Artigos de Blog' : 'Blog Articles'}
           </div>
-          <div className="text-3xl font-bold text-gray-900">567</div>
+          <div className="text-3xl font-bold text-gray-900">{totalBlogPosts}</div>
           <div className="text-green-600 text-sm mt-2">
-            {language === 'pt' ? '+8% este mês' : '+8% this month'}
+            {language === 'pt' ? 'Publicados' : 'Published'}
           </div>
         </div>
 
         <div className="bg-white rounded-lg shadow p-6">
           <div className="text-gray-500 text-sm font-medium mb-2">
-            {language === 'pt' ? 'Receita' : 'Revenue'}
+            {language === 'pt' ? 'Produtos' : 'Products'}
           </div>
-          <div className="text-3xl font-bold text-gray-900">$45,231</div>
+          <div className="text-3xl font-bold text-gray-900">{totalProducts}</div>
           <div className="text-green-600 text-sm mt-2">
-            {language === 'pt' ? '+23% este mês' : '+23% this month'}
+            {language === 'pt' ? 'No Marketplace' : 'In Marketplace'}
           </div>
         </div>
 
         <div className="bg-white rounded-lg shadow p-6">
           <div className="text-gray-500 text-sm font-medium mb-2">
-            {language === 'pt' ? 'Consultorías' : 'Consultations'}
+            {language === 'pt' ? 'Serviços' : 'Services'}
           </div>
-          <div className="text-3xl font-bold text-gray-900">89</div>
+          <div className="text-3xl font-bold text-gray-900">{totalServices}</div>
           <div className="text-green-600 text-sm mt-2">
-            {language === 'pt' ? '+5% este mês' : '+5% this month'}
+            {language === 'pt' ? 'Disponíveis' : 'Available'}
           </div>
         </div>
       </div>
@@ -256,212 +271,337 @@ function OverviewTab({ t, language }: { t: (key: string) => string; language: st
 }
 
 function UsersTab({ t, language }: { t: (key: string) => string; language: string }) {
+  const usersQuery = trpc.admin.users.list.useQuery();
+  const deleteUserMutation = trpc.admin.users.delete.useMutation();
+
+  const handleDeleteUser = (id: number) => {
+    if (confirm(language === 'pt' ? 'Tem certeza?' : 'Are you sure?')) {
+      deleteUserMutation.mutate({ id }, {
+        onSuccess: () => {
+          usersQuery.refetch();
+        },
+      });
+    }
+  };
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-xl font-bold text-gray-900">
           {language === 'pt' ? 'Gerenciar Usuários' : 'Manage Users'}
         </h3>
-        <Button className="bg-primary hover:bg-primary/90">
-          {language === 'pt' ? 'Novo Usuário' : 'New User'}
-        </Button>
       </div>
       <div className="bg-white rounded-lg shadow overflow-hidden">
-        <table className="w-full">
-          <thead className="bg-gray-50 border-b border-gray-200">
-            <tr>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                {language === 'pt' ? 'Nome' : 'Name'}
-              </th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                {language === 'pt' ? 'Email' : 'Email'}
-              </th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                {language === 'pt' ? 'Função' : 'Role'}
-              </th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                {language === 'pt' ? 'Ações' : 'Actions'}
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            <tr className="hover:bg-gray-50">
-              <td className="px-6 py-4 text-sm text-gray-900">João Silva</td>
-              <td className="px-6 py-4 text-sm text-gray-600">joao@example.com</td>
-              <td className="px-6 py-4 text-sm">
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                  {language === 'pt' ? 'Usuário' : 'User'}
-                </span>
-              </td>
-              <td className="px-6 py-4 text-sm space-x-2">
-                <Button variant="outline" size="sm">
-                  {language === 'pt' ? 'Editar' : 'Edit'}
-                </Button>
-                <Button variant="outline" size="sm" className="text-red-600">
-                  {language === 'pt' ? 'Deletar' : 'Delete'}
-                </Button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        {usersQuery.isLoading ? (
+          <div className="p-6 text-center">
+            <Loader2 className="w-6 h-6 animate-spin mx-auto text-gray-400" />
+          </div>
+        ) : (
+          <table className="w-full">
+            <thead className="bg-gray-50 border-b border-gray-200">
+              <tr>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
+                  {language === 'pt' ? 'Nome' : 'Name'}
+                </th>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
+                  {language === 'pt' ? 'Email' : 'Email'}
+                </th>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
+                  {language === 'pt' ? 'Função' : 'Role'}
+                </th>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
+                  {language === 'pt' ? 'Ações' : 'Actions'}
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              {usersQuery.data?.map((user) => (
+                <tr key={user.id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 text-sm text-gray-900">{user.name}</td>
+                  <td className="px-6 py-4 text-sm text-gray-600">{user.email}</td>
+                  <td className="px-6 py-4 text-sm">
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                      user.role === 'admin' 
+                        ? 'bg-red-100 text-red-800' 
+                        : 'bg-blue-100 text-blue-800'
+                    }`}>
+                      {user.role === 'admin' ? 'Admin' : language === 'pt' ? 'Usuário' : 'User'}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-sm space-x-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      disabled={deleteUserMutation.isPending}
+                      onClick={() => handleDeleteUser(user.id)}
+                      className="text-red-600"
+                    >
+                      {deleteUserMutation.isPending ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Trash2 className="w-4 h-4" />
+                      )}
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );
 }
 
 function BlogTab({ t, language }: { t: (key: string) => string; language: string }) {
+  const blogQuery = trpc.admin.blog.list.useQuery();
+  const deleteBlogMutation = trpc.admin.blog.delete.useMutation();
+
+  const handleDeleteBlog = (id: number) => {
+    if (confirm(language === 'pt' ? 'Tem certeza?' : 'Are you sure?')) {
+      deleteBlogMutation.mutate({ id }, {
+        onSuccess: () => {
+          blogQuery.refetch();
+        },
+      });
+    }
+  };
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-xl font-bold text-gray-900">
           {language === 'pt' ? 'Gerenciar Blog' : 'Manage Blog'}
         </h3>
-        <Button className="bg-primary hover:bg-primary/90">
+        <Button className="bg-primary hover:bg-primary/90 gap-2">
+          <Plus className="w-4 h-4" />
           {language === 'pt' ? 'Novo Artigo' : 'New Article'}
         </Button>
       </div>
       <div className="bg-white rounded-lg shadow overflow-hidden">
-        <table className="w-full">
-          <thead className="bg-gray-50 border-b border-gray-200">
-            <tr>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                {language === 'pt' ? 'Título' : 'Title'}
-              </th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                {language === 'pt' ? 'Autor' : 'Author'}
-              </th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                {language === 'pt' ? 'Data' : 'Date'}
-              </th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                {language === 'pt' ? 'Ações' : 'Actions'}
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            <tr className="hover:bg-gray-50">
-              <td className="px-6 py-4 text-sm text-gray-900">
-                {language === 'pt'
-                  ? 'Agricultura Regenerativa'
-                  : 'Regenerative Agriculture'}
-              </td>
-              <td className="px-6 py-4 text-sm text-gray-600">Dr. João Silva</td>
-              <td className="px-6 py-4 text-sm text-gray-600">15/11/2025</td>
-              <td className="px-6 py-4 text-sm space-x-2">
-                <Button variant="outline" size="sm">
-                  {language === 'pt' ? 'Editar' : 'Edit'}
-                </Button>
-                <Button variant="outline" size="sm" className="text-red-600">
-                  {language === 'pt' ? 'Deletar' : 'Delete'}
-                </Button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        {blogQuery.isLoading ? (
+          <div className="p-6 text-center">
+            <Loader2 className="w-6 h-6 animate-spin mx-auto text-gray-400" />
+          </div>
+        ) : (
+          <table className="w-full">
+            <thead className="bg-gray-50 border-b border-gray-200">
+              <tr>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
+                  {language === 'pt' ? 'Título' : 'Title'}
+                </th>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
+                  {language === 'pt' ? 'Autor' : 'Author'}
+                </th>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
+                  {language === 'pt' ? 'Status' : 'Status'}
+                </th>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
+                  {language === 'pt' ? 'Ações' : 'Actions'}
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              {blogQuery.data?.map((post) => (
+                <tr key={post.id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 text-sm text-gray-900">{post.titlePt}</td>
+                  <td className="px-6 py-4 text-sm text-gray-600">{post.author}</td>
+                  <td className="px-6 py-4 text-sm">
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                      post.published 
+                        ? 'bg-green-100 text-green-800' 
+                        : 'bg-yellow-100 text-yellow-800'
+                    }`}>
+                      {post.published ? 'Publicado' : 'Rascunho'}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-sm space-x-2">
+                    <Button variant="outline" size="sm">
+                      <Edit className="w-4 h-4" />
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      disabled={deleteBlogMutation.isPending}
+                      onClick={() => handleDeleteBlog(post.id)}
+                      className="text-red-600"
+                    >
+                      {deleteBlogMutation.isPending ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Trash2 className="w-4 h-4" />
+                      )}
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );
 }
 
 function MarketplaceTab({ t, language }: { t: (key: string) => string; language: string }) {
+  const productsQuery = trpc.admin.products.list.useQuery();
+  const deleteProductMutation = trpc.admin.products.delete.useMutation();
+
+  const handleDeleteProduct = (id: number) => {
+    if (confirm(language === 'pt' ? 'Tem certeza?' : 'Are you sure?')) {
+      deleteProductMutation.mutate({ id }, {
+        onSuccess: () => {
+          productsQuery.refetch();
+        },
+      });
+    }
+  };
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-xl font-bold text-gray-900">
           {language === 'pt' ? 'Gerenciar Produtos' : 'Manage Products'}
         </h3>
-        <Button className="bg-primary hover:bg-primary/90">
+        <Button className="bg-primary hover:bg-primary/90 gap-2">
+          <Plus className="w-4 h-4" />
           {language === 'pt' ? 'Novo Produto' : 'New Product'}
         </Button>
       </div>
       <div className="bg-white rounded-lg shadow overflow-hidden">
-        <table className="w-full">
-          <thead className="bg-gray-50 border-b border-gray-200">
-            <tr>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                {language === 'pt' ? 'Produto' : 'Product'}
-              </th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                {language === 'pt' ? 'Preço' : 'Price'}
-              </th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                {language === 'pt' ? 'Estoque' : 'Stock'}
-              </th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                {language === 'pt' ? 'Ações' : 'Actions'}
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            <tr className="hover:bg-gray-50">
-              <td className="px-6 py-4 text-sm text-gray-900">
-                {language === 'pt' ? 'Tomate Orgânico' : 'Organic Tomato'}
-              </td>
-              <td className="px-6 py-4 text-sm text-gray-600">$5.99</td>
-              <td className="px-6 py-4 text-sm text-gray-600">45</td>
-              <td className="px-6 py-4 text-sm space-x-2">
-                <Button variant="outline" size="sm">
-                  {language === 'pt' ? 'Editar' : 'Edit'}
-                </Button>
-                <Button variant="outline" size="sm" className="text-red-600">
-                  {language === 'pt' ? 'Deletar' : 'Delete'}
-                </Button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        {productsQuery.isLoading ? (
+          <div className="p-6 text-center">
+            <Loader2 className="w-6 h-6 animate-spin mx-auto text-gray-400" />
+          </div>
+        ) : (
+          <table className="w-full">
+            <thead className="bg-gray-50 border-b border-gray-200">
+              <tr>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
+                  {language === 'pt' ? 'Produto' : 'Product'}
+                </th>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
+                  {language === 'pt' ? 'Preço' : 'Price'}
+                </th>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
+                  {language === 'pt' ? 'Estoque' : 'Stock'}
+                </th>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
+                  {language === 'pt' ? 'Ações' : 'Actions'}
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              {productsQuery.data?.map((product) => (
+                <tr key={product.id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 text-sm text-gray-900">{product.name}</td>
+                  <td className="px-6 py-4 text-sm text-gray-600">{product.price} MZN</td>
+                  <td className="px-6 py-4 text-sm text-gray-600">{product.stock}</td>
+                  <td className="px-6 py-4 text-sm space-x-2">
+                    <Button variant="outline" size="sm">
+                      <Edit className="w-4 h-4" />
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      disabled={deleteProductMutation.isPending}
+                      onClick={() => handleDeleteProduct(product.id)}
+                      className="text-red-600"
+                    >
+                      {deleteProductMutation.isPending ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Trash2 className="w-4 h-4" />
+                      )}
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );
 }
 
 function ServicesTab({ t, language }: { t: (key: string) => string; language: string }) {
+  const servicesQuery = trpc.admin.services.list.useQuery();
+  const deleteServiceMutation = trpc.admin.services.delete.useMutation();
+
+  const handleDeleteService = (id: number) => {
+    if (confirm(language === 'pt' ? 'Tem certeza?' : 'Are you sure?')) {
+      deleteServiceMutation.mutate({ id }, {
+        onSuccess: () => {
+          servicesQuery.refetch();
+        },
+      });
+    }
+  };
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-xl font-bold text-gray-900">
           {language === 'pt' ? 'Gerenciar Serviços' : 'Manage Services'}
         </h3>
-        <Button className="bg-primary hover:bg-primary/90">
+        <Button className="bg-primary hover:bg-primary/90 gap-2">
+          <Plus className="w-4 h-4" />
           {language === 'pt' ? 'Novo Serviço' : 'New Service'}
         </Button>
       </div>
       <div className="bg-white rounded-lg shadow overflow-hidden">
-        <table className="w-full">
-          <thead className="bg-gray-50 border-b border-gray-200">
-            <tr>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                {language === 'pt' ? 'Serviço' : 'Service'}
-              </th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                {language === 'pt' ? 'Especialista' : 'Specialist'}
-              </th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                {language === 'pt' ? 'Preço' : 'Price'}
-              </th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                {language === 'pt' ? 'Ações' : 'Actions'}
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            <tr className="hover:bg-gray-50">
-              <td className="px-6 py-4 text-sm text-gray-900">
-                {language === 'pt' ? 'Consultoria Agrícola' : 'Agricultural Consulting'}
-              </td>
-              <td className="px-6 py-4 text-sm text-gray-600">Dr. João Silva</td>
-              <td className="px-6 py-4 text-sm text-gray-600">$100/hora</td>
-              <td className="px-6 py-4 text-sm space-x-2">
-                <Button variant="outline" size="sm">
-                  {language === 'pt' ? 'Editar' : 'Edit'}
-                </Button>
-                <Button variant="outline" size="sm" className="text-red-600">
-                  {language === 'pt' ? 'Deletar' : 'Delete'}
-                </Button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        {servicesQuery.isLoading ? (
+          <div className="p-6 text-center">
+            <Loader2 className="w-6 h-6 animate-spin mx-auto text-gray-400" />
+          </div>
+        ) : (
+          <table className="w-full">
+            <thead className="bg-gray-50 border-b border-gray-200">
+              <tr>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
+                  {language === 'pt' ? 'Serviço' : 'Service'}
+                </th>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
+                  {language === 'pt' ? 'Especialista' : 'Specialist'}
+                </th>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
+                  {language === 'pt' ? 'Preço' : 'Price'}
+                </th>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
+                  {language === 'pt' ? 'Ações' : 'Actions'}
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              {servicesQuery.data?.map((service) => (
+                <tr key={service.id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 text-sm text-gray-900">{service.titlePt}</td>
+                  <td className="px-6 py-4 text-sm text-gray-600">{service.specialist}</td>
+                  <td className="px-6 py-4 text-sm text-gray-600">{service.price} MZN</td>
+                  <td className="px-6 py-4 text-sm space-x-2">
+                    <Button variant="outline" size="sm">
+                      <Edit className="w-4 h-4" />
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      disabled={deleteServiceMutation.isPending}
+                      onClick={() => handleDeleteService(service.id)}
+                      className="text-red-600"
+                    >
+                      {deleteServiceMutation.isPending ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Trash2 className="w-4 h-4" />
+                      )}
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );

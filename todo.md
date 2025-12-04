@@ -94,3 +94,17 @@
 - [ ] Implementar filtros e busca em todas as paginas
 - [ ] Adicionar paginacao nas listas
 - [x] Implementar testes para admin routes (6/6 passando)
+
+
+## Admin Dashboard - Conexao ao Banco de Dados (NOVA - 21/11)
+- [x] Expandir schema com tabelas blogPosts e services
+- [x] Criar query helpers para CRUD (usuarios, blogs, produtos, servicos)
+- [x] Criar tRPC procedures para admin (admin.users, admin.blog, admin.products, admin.services)
+- [x] Conectar Admin Dashboard ao backend com trpc hooks
+- [x] Implementar delete operations com confirmacao
+- [x] Implementar loading states e error handling
+- [x] Suporte bilingual completo (PT/EN) no Admin Dashboard
+- [x] Testes de CRUD operations (16/16 passando)
+- [ ] Implementar create/update operations no Admin Dashboard
+- [ ] Adicionar paginacao nas tabelas
+- [ ] Implementar filtros avancados

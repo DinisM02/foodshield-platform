@@ -57,9 +57,45 @@ export const consultations = mysqlTable("consultations", {
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
+export const blogPosts = mysqlTable("blogPosts", {
+  id: int("id").autoincrement().primaryKey(),
+  titlePt: text("titlePt").notNull(),
+  titleEn: text("titleEn").notNull(),
+  excerptPt: text("excerptPt").notNull(),
+  excerptEn: text("excerptEn").notNull(),
+  contentPt: text("contentPt").notNull(),
+  contentEn: text("contentEn").notNull(),
+  author: varchar("author", { length: 100 }).notNull(),
+  category: varchar("category", { length: 100 }).notNull(),
+  imageUrl: text("imageUrl").notNull(),
+  readTime: int("readTime").notNull(), // in minutes
+  published: boolean("published").default(false).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export const services = mysqlTable("services", {
+  id: int("id").autoincrement().primaryKey(),
+  titlePt: text("titlePt").notNull(),
+  titleEn: text("titleEn").notNull(),
+  descriptionPt: text("descriptionPt").notNull(),
+  descriptionEn: text("descriptionEn").notNull(),
+  specialist: varchar("specialist", { length: 100 }).notNull(),
+  price: int("price").notNull(), // in MZN
+  priceType: mysqlEnum("priceType", ["hourly", "daily", "project"]).notNull(),
+  features: text("features"), // JSON array as string
+  available: boolean("available").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 export type Content = typeof contents.$inferSelect;
 export type Product = typeof products.$inferSelect;
 export type Order = typeof orders.$inferSelect;
 export type Consultation = typeof consultations.$inferSelect;
+export type BlogPost = typeof blogPosts.$inferSelect;
+export type InsertBlogPost = typeof blogPosts.$inferInsert;
+export type Service = typeof services.$inferSelect;
+export type InsertService = typeof services.$inferInsert;

@@ -15,6 +15,13 @@
       "when": 1762337866780,
       "tag": "0001_foamy_silvermane",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1764750353991,
+      "tag": "0002_minor_namora",
+      "breakpoints": true
     }
   ]
 }

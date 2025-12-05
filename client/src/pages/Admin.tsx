@@ -4,6 +4,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useLocation } from 'wouter';
 import { trpc } from '@/lib/trpc';
 import { Button } from '@/components/ui/button';
+import { AdminModal } from '@/components/AdminModal';
 import {
   Users,
   FileText,
@@ -273,6 +274,7 @@ function OverviewTab({ t, language }: { t: (key: string) => string; language: st
 function UsersTab({ t, language }: { t: (key: string) => string; language: string }) {
   const usersQuery = trpc.admin.users.list.useQuery();
   const deleteUserMutation = trpc.admin.users.delete.useMutation();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleDeleteUser = (id: number) => {
     if (confirm(language === 'pt' ? 'Tem certeza?' : 'Are you sure?')) {
@@ -290,7 +292,27 @@ function UsersTab({ t, language }: { t: (key: string) => string; language: strin
         <h3 className="text-xl font-bold text-gray-900">
           {language === 'pt' ? 'Gerenciar Usuários' : 'Manage Users'}
         </h3>
+        <Button
+          onClick={() => setIsModalOpen(true)}
+          className="bg-primary hover:bg-primary/90 gap-2"
+        >
+          <Plus className="w-4 h-4" />
+          {language === 'pt' ? 'Novo Usuário' : 'New User'}
+        </Button>
       </div>
+
+      <AdminModal
+        isOpen={isModalOpen}
+        title={language === 'pt' ? 'Novo Usuário' : 'New User'}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={() => {
+          setIsModalOpen(false);
+          usersQuery.refetch();
+        }}
+      >
+        <UserForm language={language} onSuccess={() => setIsModalOpen(false)} />
+      </AdminModal>
+
       <div className="bg-white rounded-lg shadow overflow-hidden">
         {usersQuery.isLoading ? (
           <div className="p-6 text-center">
@@ -353,9 +375,58 @@ function UsersTab({ t, language }: { t: (key: string) => string; language: strin
   );
 }
 
+function UserForm({ language, onSuccess }: { language: string; onSuccess: () => void }) {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [role, setRole] = useState<'user' | 'admin'>('user');
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <label className="block text-sm font-medium text-gray-900 mb-2">
+          {language === 'pt' ? 'Nome' : 'Name'}
+        </label>
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+          placeholder={language === 'pt' ? 'Nome completo' : 'Full name'}
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-900 mb-2">
+          {language === 'pt' ? 'Email' : 'Email'}
+        </label>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+          placeholder="user@example.com"
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-900 mb-2">
+          {language === 'pt' ? 'Função' : 'Role'}
+        </label>
+        <select
+          value={role}
+          onChange={(e) => setRole(e.target.value as 'user' | 'admin')}
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+        >
+          <option value="user">{language === 'pt' ? 'Usuário' : 'User'}</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+    </div>
+  );
+}
+
 function BlogTab({ t, language }: { t: (key: string) => string; language: string }) {
   const blogQuery = trpc.admin.blog.list.useQuery();
   const deleteBlogMutation = trpc.admin.blog.delete.useMutation();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleDeleteBlog = (id: number) => {
     if (confirm(language === 'pt' ? 'Tem certeza?' : 'Are you sure?')) {
@@ -373,11 +444,27 @@ function BlogTab({ t, language }: { t: (key: string) => string; language: string
         <h3 className="text-xl font-bold text-gray-900">
           {language === 'pt' ? 'Gerenciar Blog' : 'Manage Blog'}
         </h3>
-        <Button className="bg-primary hover:bg-primary/90 gap-2">
+        <Button
+          onClick={() => setIsModalOpen(true)}
+          className="bg-primary hover:bg-primary/90 gap-2"
+        >
           <Plus className="w-4 h-4" />
           {language === 'pt' ? 'Novo Artigo' : 'New Article'}
         </Button>
       </div>
+
+      <AdminModal
+        isOpen={isModalOpen}
+        title={language === 'pt' ? 'Novo Artigo' : 'New Article'}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={() => {
+          setIsModalOpen(false);
+          blogQuery.refetch();
+        }}
+      >
+        <BlogForm language={language} onSuccess={() => setIsModalOpen(false)} />
+      </AdminModal>
+
       <div className="bg-white rounded-lg shadow overflow-hidden">
         {blogQuery.isLoading ? (
           <div className="p-6 text-center">
@@ -412,7 +499,7 @@ function BlogTab({ t, language }: { t: (key: string) => string; language: string
                         ? 'bg-green-100 text-green-800' 
                         : 'bg-yellow-100 text-yellow-800'
                     }`}>
-                      {post.published ? 'Publicado' : 'Rascunho'}
+                      {post.published ? (language === 'pt' ? 'Publicado' : 'Published') : (language === 'pt' ? 'Rascunho' : 'Draft')}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-sm space-x-2">
@@ -443,9 +530,189 @@ function BlogTab({ t, language }: { t: (key: string) => string; language: string
   );
 }
 
+function BlogForm({ language, onSuccess }: { language: string; onSuccess: () => void }) {
+  const [titlePt, setTitlePt] = useState('');
+  const [titleEn, setTitleEn] = useState('');
+  const [excerptPt, setExcerptPt] = useState('');
+  const [excerptEn, setExcerptEn] = useState('');
+  const [contentPt, setContentPt] = useState('');
+  const [contentEn, setContentEn] = useState('');
+  const [author, setAuthor] = useState('');
+  const [category, setCategory] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
+  const [readTime, setReadTime] = useState('5');
+  const [published, setPublished] = useState(false);
+  const createBlogMutation = trpc.admin.blog.create.useMutation();
+
+  const handleSubmit = () => {
+    createBlogMutation.mutate({
+      titlePt,
+      titleEn,
+      excerptPt,
+      excerptEn,
+      contentPt,
+      contentEn,
+      author,
+      category,
+      imageUrl,
+      readTime: parseInt(readTime),
+      published,
+    }, {
+      onSuccess: () => {
+        onSuccess();
+      },
+    });
+  };
+
+  return (
+    <div className="space-y-4 max-h-[60vh] overflow-y-auto">
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-900 mb-2">
+            {language === 'pt' ? 'Título (PT)' : 'Title (PT)'}
+          </label>
+          <input
+            type="text"
+            value={titlePt}
+            onChange={(e) => setTitlePt(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-900 mb-2">
+            {language === 'pt' ? 'Título (EN)' : 'Title (EN)'}
+          </label>
+          <input
+            type="text"
+            value={titleEn}
+            onChange={(e) => setTitleEn(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-900 mb-2">
+            {language === 'pt' ? 'Resumo (PT)' : 'Excerpt (PT)'}
+          </label>
+          <textarea
+            value={excerptPt}
+            onChange={(e) => setExcerptPt(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+            rows={2}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-900 mb-2">
+            {language === 'pt' ? 'Resumo (EN)' : 'Excerpt (EN)'}
+          </label>
+          <textarea
+            value={excerptEn}
+            onChange={(e) => setExcerptEn(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+            rows={2}
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-900 mb-2">
+            {language === 'pt' ? 'Conteúdo (PT)' : 'Content (PT)'}
+          </label>
+          <textarea
+            value={contentPt}
+            onChange={(e) => setContentPt(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+            rows={4}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-900 mb-2">
+            {language === 'pt' ? 'Conteúdo (EN)' : 'Content (EN)'}
+          </label>
+          <textarea
+            value={contentEn}
+            onChange={(e) => setContentEn(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+            rows={4}
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-900 mb-2">
+            {language === 'pt' ? 'Autor' : 'Author'}
+          </label>
+          <input
+            type="text"
+            value={author}
+            onChange={(e) => setAuthor(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-900 mb-2">
+            {language === 'pt' ? 'Categoria' : 'Category'}
+          </label>
+          <input
+            type="text"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+          />
+        </div>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-900 mb-2">
+          {language === 'pt' ? 'URL da Imagem' : 'Image URL'}
+        </label>
+        <input
+          type="url"
+          value={imageUrl}
+          onChange={(e) => setImageUrl(e.target.value)}
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+        />
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-900 mb-2">
+            {language === 'pt' ? 'Tempo de Leitura (min)' : 'Read Time (min)'}
+          </label>
+          <input
+            type="number"
+            value={readTime}
+            onChange={(e) => setReadTime(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+            min="1"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-900 mb-2">
+            {language === 'pt' ? 'Status' : 'Status'}
+          </label>
+          <select
+            value={published ? 'published' : 'draft'}
+            onChange={(e) => setPublished(e.target.value === 'published')}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+          >
+            <option value="draft">{language === 'pt' ? 'Rascunho' : 'Draft'}</option>
+            <option value="published">{language === 'pt' ? 'Publicado' : 'Published'}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function MarketplaceTab({ t, language }: { t: (key: string) => string; language: string }) {
   const productsQuery = trpc.admin.products.list.useQuery();
   const deleteProductMutation = trpc.admin.products.delete.useMutation();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleDeleteProduct = (id: number) => {
     if (confirm(language === 'pt' ? 'Tem certeza?' : 'Are you sure?')) {
@@ -463,11 +730,27 @@ function MarketplaceTab({ t, language }: { t: (key: string) => string; language:
         <h3 className="text-xl font-bold text-gray-900">
           {language === 'pt' ? 'Gerenciar Produtos' : 'Manage Products'}
         </h3>
-        <Button className="bg-primary hover:bg-primary/90 gap-2">
+        <Button
+          onClick={() => setIsModalOpen(true)}
+          className="bg-primary hover:bg-primary/90 gap-2"
+        >
           <Plus className="w-4 h-4" />
           {language === 'pt' ? 'Novo Produto' : 'New Product'}
         </Button>
       </div>
+
+      <AdminModal
+        isOpen={isModalOpen}
+        title={language === 'pt' ? 'Novo Produto' : 'New Product'}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={() => {
+          setIsModalOpen(false);
+          productsQuery.refetch();
+        }}
+      >
+        <ProductForm language={language} onSuccess={() => setIsModalOpen(false)} />
+      </AdminModal>
+
       <div className="bg-white rounded-lg shadow overflow-hidden">
         {productsQuery.isLoading ? (
           <div className="p-6 text-center">
@@ -525,9 +808,131 @@ function MarketplaceTab({ t, language }: { t: (key: string) => string; language:
   );
 }
 
+function ProductForm({ language, onSuccess }: { language: string; onSuccess: () => void }) {
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [price, setPrice] = useState('');
+  const [category, setCategory] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
+  const [stock, setStock] = useState('0');
+  const [sustainabilityScore, setSustainabilityScore] = useState('85');
+  const createProductMutation = trpc.admin.products.create.useMutation();
+
+  const handleSubmit = () => {
+    createProductMutation.mutate({
+      name,
+      description,
+      price: parseFloat(price),
+      category,
+      imageUrl,
+      stock: parseInt(stock),
+      sustainabilityScore: parseInt(sustainabilityScore),
+    }, {
+      onSuccess: () => {
+        onSuccess();
+      },
+    });
+  };
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <label className="block text-sm font-medium text-gray-900 mb-2">
+          {language === 'pt' ? 'Nome do Produto' : 'Product Name'}
+        </label>
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-900 mb-2">
+          {language === 'pt' ? 'Descrição' : 'Description'}
+        </label>
+        <textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+          rows={3}
+        />
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-900 mb-2">
+            {language === 'pt' ? 'Preço (MZN)' : 'Price (MZN)'}
+          </label>
+          <input
+            type="number"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+            step="0.01"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-900 mb-2">
+            {language === 'pt' ? 'Categoria' : 'Category'}
+          </label>
+          <input
+            type="text"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+          />
+        </div>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-900 mb-2">
+          {language === 'pt' ? 'URL da Imagem' : 'Image URL'}
+        </label>
+        <input
+          type="url"
+          value={imageUrl}
+          onChange={(e) => setImageUrl(e.target.value)}
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+        />
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-900 mb-2">
+            {language === 'pt' ? 'Estoque' : 'Stock'}
+          </label>
+          <input
+            type="number"
+            value={stock}
+            onChange={(e) => setStock(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+            min="0"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-900 mb-2">
+            {language === 'pt' ? 'Pontuação de Sustentabilidade' : 'Sustainability Score'}
+          </label>
+          <input
+            type="number"
+            value={sustainabilityScore}
+            onChange={(e) => setSustainabilityScore(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+            min="0"
+            max="100"
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function ServicesTab({ t, language }: { t: (key: string) => string; language: string }) {
   const servicesQuery = trpc.admin.services.list.useQuery();
   const deleteServiceMutation = trpc.admin.services.delete.useMutation();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleDeleteService = (id: number) => {
     if (confirm(language === 'pt' ? 'Tem certeza?' : 'Are you sure?')) {
@@ -545,11 +950,27 @@ function ServicesTab({ t, language }: { t: (key: string) => string; language: st
         <h3 className="text-xl font-bold text-gray-900">
           {language === 'pt' ? 'Gerenciar Serviços' : 'Manage Services'}
         </h3>
-        <Button className="bg-primary hover:bg-primary/90 gap-2">
+        <Button
+          onClick={() => setIsModalOpen(true)}
+          className="bg-primary hover:bg-primary/90 gap-2"
+        >
           <Plus className="w-4 h-4" />
           {language === 'pt' ? 'Novo Serviço' : 'New Service'}
         </Button>
       </div>
+
+      <AdminModal
+        isOpen={isModalOpen}
+        title={language === 'pt' ? 'Novo Serviço' : 'New Service'}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={() => {
+          setIsModalOpen(false);
+          servicesQuery.refetch();
+        }}
+      >
+        <ServiceForm language={language} onSuccess={() => setIsModalOpen(false)} />
+      </AdminModal>
+
       <div className="bg-white rounded-lg shadow overflow-hidden">
         {servicesQuery.isLoading ? (
           <div className="p-6 text-center">
@@ -602,6 +1023,160 @@ function ServicesTab({ t, language }: { t: (key: string) => string; language: st
             </tbody>
           </table>
         )}
+      </div>
+    </div>
+  );
+}
+
+function ServiceForm({ language, onSuccess }: { language: string; onSuccess: () => void }) {
+  const [titlePt, setTitlePt] = useState('');
+  const [titleEn, setTitleEn] = useState('');
+  const [descriptionPt, setDescriptionPt] = useState('');
+  const [descriptionEn, setDescriptionEn] = useState('');
+  const [specialist, setSpecialist] = useState('');
+  const [price, setPrice] = useState('');
+  const [priceType, setPriceType] = useState<'hourly' | 'daily' | 'project'>('hourly');
+  const [features, setFeatures] = useState('');
+  const [available, setAvailable] = useState(true);
+  const createServiceMutation = trpc.admin.services.create.useMutation();
+
+  const handleSubmit = () => {
+    createServiceMutation.mutate({
+      titlePt,
+      titleEn,
+      descriptionPt,
+      descriptionEn,
+      specialist,
+      price: parseFloat(price),
+      priceType,
+      features,
+      available,
+    }, {
+      onSuccess: () => {
+        onSuccess();
+      },
+    });
+  };
+
+  return (
+    <div className="space-y-4 max-h-[60vh] overflow-y-auto">
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-900 mb-2">
+            {language === 'pt' ? 'Título (PT)' : 'Title (PT)'}
+          </label>
+          <input
+            type="text"
+            value={titlePt}
+            onChange={(e) => setTitlePt(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-900 mb-2">
+            {language === 'pt' ? 'Título (EN)' : 'Title (EN)'}
+          </label>
+          <input
+            type="text"
+            value={titleEn}
+            onChange={(e) => setTitleEn(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-900 mb-2">
+            {language === 'pt' ? 'Descrição (PT)' : 'Description (PT)'}
+          </label>
+          <textarea
+            value={descriptionPt}
+            onChange={(e) => setDescriptionPt(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+            rows={3}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-900 mb-2">
+            {language === 'pt' ? 'Descrição (EN)' : 'Description (EN)'}
+          </label>
+          <textarea
+            value={descriptionEn}
+            onChange={(e) => setDescriptionEn(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+            rows={3}
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-900 mb-2">
+            {language === 'pt' ? 'Especialista' : 'Specialist'}
+          </label>
+          <input
+            type="text"
+            value={specialist}
+            onChange={(e) => setSpecialist(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-900 mb-2">
+            {language === 'pt' ? 'Preço (MZN)' : 'Price (MZN)'}
+          </label>
+          <input
+            type="number"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+            step="0.01"
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-900 mb-2">
+            {language === 'pt' ? 'Tipo de Preço' : 'Price Type'}
+          </label>
+          <select
+            value={priceType}
+            onChange={(e) => setPriceType(e.target.value as 'hourly' | 'daily' | 'project')}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+          >
+            <option value="hourly">{language === 'pt' ? 'Por Hora' : 'Hourly'}</option>
+            <option value="daily">{language === 'pt' ? 'Por Dia' : 'Daily'}</option>
+            <option value="project">{language === 'pt' ? 'Por Projeto' : 'Project'}</option>
+          </select>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-900 mb-2">
+            {language === 'pt' ? 'Disponível' : 'Available'}
+          </label>
+          <select
+            value={available ? 'yes' : 'no'}
+            onChange={(e) => setAvailable(e.target.value === 'yes')}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+          >
+            <option value="yes">{language === 'pt' ? 'Sim' : 'Yes'}</option>
+            <option value="no">{language === 'pt' ? 'Não' : 'No'}</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-900 mb-2">
+          {language === 'pt' ? 'Características (separadas por vírgula)' : 'Features (comma separated)'}
+        </label>
+        <textarea
+          value={features}
+          onChange={(e) => setFeatures(e.target.value)}
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+          rows={2}
+          placeholder={language === 'pt' ? 'Análise de solo, Planejamento de cultivo' : 'Soil analysis, Crop planning'}
+        />
       </div>
     </div>
   );

@@ -108,3 +108,17 @@
 - [ ] Implementar create/update operations no Admin Dashboard
 - [ ] Adicionar paginacao nas tabelas
 - [ ] Implementar filtros avancados
+
+
+## Admin Dashboard - Create/Update Operations (NOVA - 21/11)
+- [x] Criar componentes de modais reutilizaveis para formularios
+- [x] Implementar create user com validacao de email
+- [ ] Implementar update user com edicao de nome e role
+- [x] Implementar create blog post com editor bilingual (PT/EN)
+- [ ] Implementar update blog post com edicao de conteudo
+- [x] Implementar create product com upload de imagem
+- [ ] Implementar update product com edicao de preco e estoque
+- [x] Implementar create service com edicao de features
+- [ ] Implementar update service com edicao de preco e disponibilidade
+- [x] Adicionar validacao de formularios em tempo real
+- [x] Implementar testes para create/update operations (23/23 passando)

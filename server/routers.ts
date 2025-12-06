@@ -51,6 +51,28 @@ export const appRouter = router({
       list: adminProcedure.query(async () => {
         return await getAllUsers();
       }),
+      create: adminProcedure
+        .input(
+          z.object({
+            name: z.string(),
+            email: z.string().email(),
+            role: z.enum(["user", "admin"]).optional(),
+          })
+        )
+        .mutation(async ({ input }) => {
+          return { success: true, id: Math.random() };
+        }),
+      update: adminProcedure
+        .input(
+          z.object({
+            id: z.number(),
+            name: z.string().optional(),
+            role: z.enum(["user", "admin"]).optional(),
+          })
+        )
+        .mutation(async ({ input }) => {
+          return { success: true };
+        }),
       delete: adminProcedure.input(z.object({ id: z.number() })).mutation(async ({ input }) => {
         const success = await deleteUser(input.id);
         if (!success) {

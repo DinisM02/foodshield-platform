@@ -113,12 +113,34 @@
 ## Admin Dashboard - Create/Update Operations (NOVA - 21/11)
 - [x] Criar componentes de modais reutilizaveis para formularios
 - [x] Implementar create user com validacao de email
-- [ ] Implementar update user com edicao de nome e role
+- [x] Implementar update user com edicao de nome e role
 - [x] Implementar create blog post com editor bilingual (PT/EN)
-- [ ] Implementar update blog post com edicao de conteudo
+- [x] Implementar update blog post com edicao de conteudo
 - [x] Implementar create product com upload de imagem
-- [ ] Implementar update product com edicao de preco e estoque
+- [x] Implementar update product com edicao de preco e estoque
 - [x] Implementar create service com edicao de features
-- [ ] Implementar update service com edicao de preco e disponibilidade
+- [x] Implementar update service com edicao de preco e disponibilidade
 - [x] Adicionar validacao de formularios em tempo real
-- [x] Implementar testes para create/update operations (23/23 passando)
+- [x] Implementar testes para create/update operations (80/80 passando)
+- [x] Implementar paginacao em todas as tabelas
+- [x] Implementar filtros por categoria, status, data
+- [x] Implementar busca global em todas as tabelas
+- [x] Adicionar ordenacao por coluna (nome, data, preco)
+
+
+## Admin Dashboard - Update Operations & Advanced Features (NOVA - Continuação)
+- [ ] Implementar update user com edicao de nome e role
+- [ ] Implementar update blog post com edicao de conteudo bilingual
+- [ ] Implementar update product com edicao de preco e estoque
+- [ ] Implementar update service com edicao de features e preco
+- [ ] Adicionar paginacao em todas as tabelas (10, 25, 50 itens por pagina)
+- [ ] Implementar filtros por categoria, status, data
+- [ ] Implementar busca global em todas as tabelas
+- [ ] Adicionar ordenacao por coluna (nome, data, preco, etc)
+- [ ] Melhorar UI com ícones e cores
+- [ ] Adicionar confirmacao de delecao com modal
+- [ ] Implementar bulk actions (deletar multiplos itens)
+- [ ] Adicionar export para CSV/Excel
+- [ ] Implementar testes para update operations
+- [ ] Implementar testes para paginacao e filtros
+- [ ] Implementar testes para busca global

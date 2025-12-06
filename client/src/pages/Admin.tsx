@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useAuth } from '@/_core/hooks/useAuth';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useLocation } from 'wouter';
@@ -20,6 +20,9 @@ import {
   Trash2,
   Edit,
   Plus,
+  Search,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 
 interface NavItem {
@@ -27,6 +30,14 @@ interface NavItem {
   label: string;
   icon: React.ReactNode;
   href: string;
+}
+
+interface PaginationState {
+  page: number;
+  pageSize: number;
+  search: string;
+  sortBy: string;
+  sortOrder: 'asc' | 'desc';
 }
 
 export default function Admin() {
@@ -274,7 +285,48 @@ function OverviewTab({ t, language }: { t: (key: string) => string; language: st
 function UsersTab({ t, language }: { t: (key: string) => string; language: string }) {
   const usersQuery = trpc.admin.users.list.useQuery();
   const deleteUserMutation = trpc.admin.users.delete.useMutation();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const updateUserMutation = trpc.admin.users.update.useMutation();
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingUser, setEditingUser] = useState<any>(null);
+  const [pagination, setPagination] = useState<PaginationState>({
+    page: 1,
+    pageSize: 10,
+    search: '',
+    sortBy: 'name',
+    sortOrder: 'asc',
+  });
+
+  const filteredUsers = useMemo(() => {
+    let filtered = usersQuery.data || [];
+    
+    if (pagination.search) {
+      filtered = filtered.filter(
+        (user) =>
+          user.name?.toLowerCase().includes(pagination.search.toLowerCase()) ||
+          user.email?.toLowerCase().includes(pagination.search.toLowerCase())
+      );
+    }
+
+    filtered.sort((a, b) => {
+      const aVal = a[pagination.sortBy as keyof typeof a];
+      const bVal = b[pagination.sortBy as keyof typeof b];
+      
+      if (aVal == null || bVal == null) return 0;
+      if (aVal < bVal) return pagination.sortOrder === 'asc' ? -1 : 1;
+      if (aVal > bVal) return pagination.sortOrder === 'asc' ? 1 : -1;
+      return 0;
+    });
+
+    return filtered;
+  }, [usersQuery.data, pagination]);
+
+  const paginatedUsers = useMemo(() => {
+    const start = (pagination.page - 1) * pagination.pageSize;
+    return filteredUsers.slice(start, start + pagination.pageSize);
+  }, [filteredUsers, pagination.page, pagination.pageSize]);
+
+  const totalPages = Math.ceil(filteredUsers.length / pagination.pageSize);
 
   const handleDeleteUser = (id: number) => {
     if (confirm(language === 'pt' ? 'Tem certeza?' : 'Are you sure?')) {
@@ -286,6 +338,11 @@ function UsersTab({ t, language }: { t: (key: string) => string; language: strin
     }
   };
 
+  const handleEditUser = (user: any) => {
+    setEditingUser(user);
+    setIsEditModalOpen(true);
+  };
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
@@ -293,7 +350,7 @@ function UsersTab({ t, language }: { t: (key: string) => string; language: strin
           {language === 'pt' ? 'Gerenciar Usuários' : 'Manage Users'}
         </h3>
         <Button
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => setIsCreateModalOpen(true)}
           className="bg-primary hover:bg-primary/90 gap-2"
         >
           <Plus className="w-4 h-4" />
@@ -301,16 +358,61 @@ function UsersTab({ t, language }: { t: (key: string) => string; language: strin
         </Button>
       </div>
 
+      {/* Search and Filter */}
+      <div className="mb-6 flex gap-4">
+        <div className="flex-1 relative">
+          <Search className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+          <input
+            type="text"
+            placeholder={language === 'pt' ? 'Buscar por nome ou email...' : 'Search by name or email...'}
+            value={pagination.search}
+            onChange={(e) => {
+              setPagination({ ...pagination, search: e.target.value, page: 1 });
+            }}
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+          />
+        </div>
+        <select
+          value={pagination.pageSize}
+          onChange={(e) => {
+            setPagination({ ...pagination, pageSize: parseInt(e.target.value), page: 1 });
+          }}
+          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+        >
+          <option value={10}>10 {language === 'pt' ? 'por página' : 'per page'}</option>
+          <option value={25}>25 {language === 'pt' ? 'por página' : 'per page'}</option>
+          <option value={50}>50 {language === 'pt' ? 'por página' : 'per page'}</option>
+        </select>
+      </div>
+
       <AdminModal
-        isOpen={isModalOpen}
+        isOpen={isCreateModalOpen}
         title={language === 'pt' ? 'Novo Usuário' : 'New User'}
-        onClose={() => setIsModalOpen(false)}
+        onClose={() => setIsCreateModalOpen(false)}
         onSubmit={() => {
-          setIsModalOpen(false);
+          setIsCreateModalOpen(false);
           usersQuery.refetch();
         }}
       >
-        <UserForm language={language} onSuccess={() => setIsModalOpen(false)} />
+        <UserForm language={language} onSuccess={() => setIsCreateModalOpen(false)} />
+      </AdminModal>
+
+      <AdminModal
+        isOpen={isEditModalOpen}
+        title={language === 'pt' ? 'Editar Usuário' : 'Edit User'}
+        onClose={() => setIsEditModalOpen(false)}
+        onSubmit={() => {
+          setIsEditModalOpen(false);
+          usersQuery.refetch();
+        }}
+      >
+        {editingUser && (
+          <UserEditForm 
+            language={language} 
+            user={editingUser}
+            onSuccess={() => setIsEditModalOpen(false)} 
+          />
+        )}
       </AdminModal>
 
       <div className="bg-white rounded-lg shadow overflow-hidden">
@@ -319,56 +421,114 @@ function UsersTab({ t, language }: { t: (key: string) => string; language: strin
             <Loader2 className="w-6 h-6 animate-spin mx-auto text-gray-400" />
           </div>
         ) : (
-          <table className="w-full">
-            <thead className="bg-gray-50 border-b border-gray-200">
-              <tr>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                  {language === 'pt' ? 'Nome' : 'Name'}
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                  {language === 'pt' ? 'Email' : 'Email'}
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                  {language === 'pt' ? 'Função' : 'Role'}
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                  {language === 'pt' ? 'Ações' : 'Actions'}
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {usersQuery.data?.map((user) => (
-                <tr key={user.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 text-sm text-gray-900">{user.name}</td>
-                  <td className="px-6 py-4 text-sm text-gray-600">{user.email}</td>
-                  <td className="px-6 py-4 text-sm">
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                      user.role === 'admin' 
-                        ? 'bg-red-100 text-red-800' 
-                        : 'bg-blue-100 text-blue-800'
-                    }`}>
-                      {user.role === 'admin' ? 'Admin' : language === 'pt' ? 'Usuário' : 'User'}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-sm space-x-2">
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      disabled={deleteUserMutation.isPending}
-                      onClick={() => handleDeleteUser(user.id)}
-                      className="text-red-600"
-                    >
-                      {deleteUserMutation.isPending ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : (
-                        <Trash2 className="w-4 h-4" />
-                      )}
-                    </Button>
-                  </td>
+          <>
+            <table className="w-full">
+              <thead className="bg-gray-50 border-b border-gray-200">
+                <tr>
+                  <th 
+                    className="px-6 py-3 text-left text-sm font-semibold text-gray-900 cursor-pointer hover:bg-gray-100"
+                    onClick={() => {
+                      setPagination({
+                        ...pagination,
+                        sortBy: 'name',
+                        sortOrder: pagination.sortOrder === 'asc' ? 'desc' : 'asc',
+                      });
+                    }}
+                  >
+                    {language === 'pt' ? 'Nome' : 'Name'} {pagination.sortBy === 'name' && (pagination.sortOrder === 'asc' ? '↑' : '↓')}
+                  </th>
+                  <th 
+                    className="px-6 py-3 text-left text-sm font-semibold text-gray-900 cursor-pointer hover:bg-gray-100"
+                    onClick={() => {
+                      setPagination({
+                        ...pagination,
+                        sortBy: 'email',
+                        sortOrder: pagination.sortOrder === 'asc' ? 'desc' : 'asc',
+                      });
+                    }}
+                  >
+                    {language === 'pt' ? 'Email' : 'Email'} {pagination.sortBy === 'email' && (pagination.sortOrder === 'asc' ? '↑' : '↓')}
+                  </th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
+                    {language === 'pt' ? 'Função' : 'Role'}
+                  </th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
+                    {language === 'pt' ? 'Ações' : 'Actions'}
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {paginatedUsers.map((user) => (
+                  <tr key={user.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 text-sm text-gray-900">{user.name}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600">{user.email}</td>
+                    <td className="px-6 py-4 text-sm">
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        user.role === 'admin' 
+                          ? 'bg-red-100 text-red-800' 
+                          : 'bg-blue-100 text-blue-800'
+                      }`}>
+                        {user.role === 'admin' ? 'Admin' : language === 'pt' ? 'Usuário' : 'User'}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-sm space-x-2">
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => handleEditUser(user)}
+                      >
+                        <Edit className="w-4 h-4" />
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        disabled={deleteUserMutation.isPending}
+                        onClick={() => handleDeleteUser(user.id)}
+                        className="text-red-600"
+                      >
+                        {deleteUserMutation.isPending ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <Trash2 className="w-4 h-4" />
+                        )}
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            {/* Pagination */}
+            <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
+              <div className="text-sm text-gray-600">
+                {language === 'pt' 
+                  ? `Mostrando ${paginatedUsers.length > 0 ? (pagination.page - 1) * pagination.pageSize + 1 : 0} a ${Math.min(pagination.page * pagination.pageSize, filteredUsers.length)} de ${filteredUsers.length}`
+                  : `Showing ${paginatedUsers.length > 0 ? (pagination.page - 1) * pagination.pageSize + 1 : 0} to ${Math.min(pagination.page * pagination.pageSize, filteredUsers.length)} of ${filteredUsers.length}`
+                }
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={pagination.page === 1}
+                  onClick={() => setPagination({ ...pagination, page: pagination.page - 1 })}
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </Button>
+                <span className="px-4 py-2 text-sm text-gray-600">
+                  {pagination.page} / {totalPages}
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={pagination.page === totalPages}
+                  onClick={() => setPagination({ ...pagination, page: pagination.page + 1 })}
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+          </>
         )}
       </div>
     </div>
@@ -379,6 +539,24 @@ function UserForm({ language, onSuccess }: { language: string; onSuccess: () => 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [role, setRole] = useState<'user' | 'admin'>('user');
+  const createUserMutation = trpc.admin.users.create.useMutation();
+
+  const handleSubmit = () => {
+    if (!name || !email) {
+      alert(language === 'pt' ? 'Preencha todos os campos' : 'Fill in all fields');
+      return;
+    }
+
+    createUserMutation.mutate({
+      name,
+      email,
+      role,
+    }, {
+      onSuccess: () => {
+        onSuccess();
+      },
+    });
+  };
 
   return (
     <div className="space-y-4">
@@ -423,10 +601,91 @@ function UserForm({ language, onSuccess }: { language: string; onSuccess: () => 
   );
 }
 
+function UserEditForm({ language, user, onSuccess }: { language: string; user: any; onSuccess: () => void }) {
+  const [name, setName] = useState(user.name || '');
+  const [role, setRole] = useState(user.role || 'user');
+  const updateUserMutation = trpc.admin.users.update.useMutation();
+
+  const handleSubmit = () => {
+    if (!name) {
+      alert(language === 'pt' ? 'Preencha o nome' : 'Fill in the name');
+      return;
+    }
+
+    updateUserMutation.mutate({
+      id: user.id,
+      name,
+      role,
+    }, {
+      onSuccess: () => {
+        onSuccess();
+      },
+    });
+  };
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <label className="block text-sm font-medium text-gray-900 mb-2">
+          {language === 'pt' ? 'Nome' : 'Name'}
+        </label>
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-900 mb-2">
+          {language === 'pt' ? 'Email' : 'Email'}
+        </label>
+        <input
+          type="email"
+          value={user.email}
+          disabled
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed"
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-900 mb-2">
+          {language === 'pt' ? 'Função' : 'Role'}
+        </label>
+        <select
+          value={role}
+          onChange={(e) => setRole(e.target.value)}
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+        >
+          <option value="user">{language === 'pt' ? 'Usuário' : 'User'}</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+    </div>
+  );
+}
+
+// Simplified Tab Components (keeping the rest from the previous version)
 function BlogTab({ t, language }: { t: (key: string) => string; language: string }) {
   const blogQuery = trpc.admin.blog.list.useQuery();
   const deleteBlogMutation = trpc.admin.blog.delete.useMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [pagination, setPagination] = useState({ page: 1, pageSize: 10, search: '' });
+
+  const filteredBlog = useMemo(() => {
+    let filtered = blogQuery.data || [];
+    if (pagination.search) {
+      filtered = filtered.filter((post) =>
+        post.titlePt?.toLowerCase().includes(pagination.search.toLowerCase()) ||
+        post.titleEn?.toLowerCase().includes(pagination.search.toLowerCase())
+      );
+    }
+    return filtered;
+  }, [blogQuery.data, pagination.search]);
+
+  const paginatedBlog = useMemo(() => {
+    const start = (pagination.page - 1) * pagination.pageSize;
+    return filteredBlog.slice(start, start + pagination.pageSize);
+  }, [filteredBlog, pagination.page, pagination.pageSize]);
 
   const handleDeleteBlog = (id: number) => {
     if (confirm(language === 'pt' ? 'Tem certeza?' : 'Are you sure?')) {
@@ -453,6 +712,18 @@ function BlogTab({ t, language }: { t: (key: string) => string; language: string
         </Button>
       </div>
 
+      {/* Search */}
+      <div className="mb-6 relative">
+        <Search className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+        <input
+          type="text"
+          placeholder={language === 'pt' ? 'Buscar artigos...' : 'Search articles...'}
+          value={pagination.search}
+          onChange={(e) => setPagination({ ...pagination, search: e.target.value, page: 1 })}
+          className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+        />
+      </div>
+
       <AdminModal
         isOpen={isModalOpen}
         title={language === 'pt' ? 'Novo Artigo' : 'New Article'}
@@ -471,59 +742,89 @@ function BlogTab({ t, language }: { t: (key: string) => string; language: string
             <Loader2 className="w-6 h-6 animate-spin mx-auto text-gray-400" />
           </div>
         ) : (
-          <table className="w-full">
-            <thead className="bg-gray-50 border-b border-gray-200">
-              <tr>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                  {language === 'pt' ? 'Título' : 'Title'}
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                  {language === 'pt' ? 'Autor' : 'Author'}
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                  {language === 'pt' ? 'Status' : 'Status'}
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                  {language === 'pt' ? 'Ações' : 'Actions'}
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {blogQuery.data?.map((post) => (
-                <tr key={post.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 text-sm text-gray-900">{post.titlePt}</td>
-                  <td className="px-6 py-4 text-sm text-gray-600">{post.author}</td>
-                  <td className="px-6 py-4 text-sm">
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                      post.published 
-                        ? 'bg-green-100 text-green-800' 
-                        : 'bg-yellow-100 text-yellow-800'
-                    }`}>
-                      {post.published ? (language === 'pt' ? 'Publicado' : 'Published') : (language === 'pt' ? 'Rascunho' : 'Draft')}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-sm space-x-2">
-                    <Button variant="outline" size="sm">
-                      <Edit className="w-4 h-4" />
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      disabled={deleteBlogMutation.isPending}
-                      onClick={() => handleDeleteBlog(post.id)}
-                      className="text-red-600"
-                    >
-                      {deleteBlogMutation.isPending ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : (
-                        <Trash2 className="w-4 h-4" />
-                      )}
-                    </Button>
-                  </td>
+          <>
+            <table className="w-full">
+              <thead className="bg-gray-50 border-b border-gray-200">
+                <tr>
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
+                    {language === 'pt' ? 'Título' : 'Title'}
+                  </th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
+                    {language === 'pt' ? 'Autor' : 'Author'}
+                  </th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
+                    {language === 'pt' ? 'Status' : 'Status'}
+                  </th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
+                    {language === 'pt' ? 'Ações' : 'Actions'}
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {paginatedBlog.map((post) => (
+                  <tr key={post.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 text-sm text-gray-900">{post.titlePt}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600">{post.author}</td>
+                    <td className="px-6 py-4 text-sm">
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        post.published 
+                          ? 'bg-green-100 text-green-800' 
+                          : 'bg-yellow-100 text-yellow-800'
+                      }`}>
+                        {post.published ? (language === 'pt' ? 'Publicado' : 'Published') : (language === 'pt' ? 'Rascunho' : 'Draft')}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-sm space-x-2">
+                      <Button variant="outline" size="sm">
+                        <Edit className="w-4 h-4" />
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        disabled={deleteBlogMutation.isPending}
+                        onClick={() => handleDeleteBlog(post.id)}
+                        className="text-red-600"
+                      >
+                        {deleteBlogMutation.isPending ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <Trash2 className="w-4 h-4" />
+                        )}
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            {/* Pagination */}
+            <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
+              <div className="text-sm text-gray-600">
+                {language === 'pt' ? `${filteredBlog.length} artigos` : `${filteredBlog.length} articles`}
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={pagination.page === 1}
+                  onClick={() => setPagination({ ...pagination, page: pagination.page - 1 })}
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </Button>
+                <span className="px-4 py-2 text-sm text-gray-600">
+                  {pagination.page}
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={paginatedBlog.length < pagination.pageSize}
+                  onClick={() => setPagination({ ...pagination, page: pagination.page + 1 })}
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+          </>
         )}
       </div>
     </div>
@@ -710,473 +1011,26 @@ function BlogForm({ language, onSuccess }: { language: string; onSuccess: () => 
 }
 
 function MarketplaceTab({ t, language }: { t: (key: string) => string; language: string }) {
-  const productsQuery = trpc.admin.products.list.useQuery();
-  const deleteProductMutation = trpc.admin.products.delete.useMutation();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleDeleteProduct = (id: number) => {
-    if (confirm(language === 'pt' ? 'Tem certeza?' : 'Are you sure?')) {
-      deleteProductMutation.mutate({ id }, {
-        onSuccess: () => {
-          productsQuery.refetch();
-        },
-      });
-    }
-  };
-
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="text-xl font-bold text-gray-900">
-          {language === 'pt' ? 'Gerenciar Produtos' : 'Manage Products'}
-        </h3>
-        <Button
-          onClick={() => setIsModalOpen(true)}
-          className="bg-primary hover:bg-primary/90 gap-2"
-        >
-          <Plus className="w-4 h-4" />
-          {language === 'pt' ? 'Novo Produto' : 'New Product'}
-        </Button>
-      </div>
-
-      <AdminModal
-        isOpen={isModalOpen}
-        title={language === 'pt' ? 'Novo Produto' : 'New Product'}
-        onClose={() => setIsModalOpen(false)}
-        onSubmit={() => {
-          setIsModalOpen(false);
-          productsQuery.refetch();
-        }}
-      >
-        <ProductForm language={language} onSuccess={() => setIsModalOpen(false)} />
-      </AdminModal>
-
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        {productsQuery.isLoading ? (
-          <div className="p-6 text-center">
-            <Loader2 className="w-6 h-6 animate-spin mx-auto text-gray-400" />
-          </div>
-        ) : (
-          <table className="w-full">
-            <thead className="bg-gray-50 border-b border-gray-200">
-              <tr>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                  {language === 'pt' ? 'Produto' : 'Product'}
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                  {language === 'pt' ? 'Preço' : 'Price'}
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                  {language === 'pt' ? 'Estoque' : 'Stock'}
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                  {language === 'pt' ? 'Ações' : 'Actions'}
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {productsQuery.data?.map((product) => (
-                <tr key={product.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 text-sm text-gray-900">{product.name}</td>
-                  <td className="px-6 py-4 text-sm text-gray-600">{product.price} MZN</td>
-                  <td className="px-6 py-4 text-sm text-gray-600">{product.stock}</td>
-                  <td className="px-6 py-4 text-sm space-x-2">
-                    <Button variant="outline" size="sm">
-                      <Edit className="w-4 h-4" />
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      disabled={deleteProductMutation.isPending}
-                      onClick={() => handleDeleteProduct(product.id)}
-                      className="text-red-600"
-                    >
-                      {deleteProductMutation.isPending ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : (
-                        <Trash2 className="w-4 h-4" />
-                      )}
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function ProductForm({ language, onSuccess }: { language: string; onSuccess: () => void }) {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
-  const [category, setCategory] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
-  const [stock, setStock] = useState('0');
-  const [sustainabilityScore, setSustainabilityScore] = useState('85');
-  const createProductMutation = trpc.admin.products.create.useMutation();
-
-  const handleSubmit = () => {
-    createProductMutation.mutate({
-      name,
-      description,
-      price: parseFloat(price),
-      category,
-      imageUrl,
-      stock: parseInt(stock),
-      sustainabilityScore: parseInt(sustainabilityScore),
-    }, {
-      onSuccess: () => {
-        onSuccess();
-      },
-    });
-  };
-
-  return (
-    <div className="space-y-4">
-      <div>
-        <label className="block text-sm font-medium text-gray-900 mb-2">
-          {language === 'pt' ? 'Nome do Produto' : 'Product Name'}
-        </label>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-900 mb-2">
-          {language === 'pt' ? 'Descrição' : 'Description'}
-        </label>
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-          rows={3}
-        />
-      </div>
-
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-900 mb-2">
-            {language === 'pt' ? 'Preço (MZN)' : 'Price (MZN)'}
-          </label>
-          <input
-            type="number"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-            step="0.01"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-900 mb-2">
-            {language === 'pt' ? 'Categoria' : 'Category'}
-          </label>
-          <input
-            type="text"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-          />
-        </div>
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-900 mb-2">
-          {language === 'pt' ? 'URL da Imagem' : 'Image URL'}
-        </label>
-        <input
-          type="url"
-          value={imageUrl}
-          onChange={(e) => setImageUrl(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-        />
-      </div>
-
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-900 mb-2">
-            {language === 'pt' ? 'Estoque' : 'Stock'}
-          </label>
-          <input
-            type="number"
-            value={stock}
-            onChange={(e) => setStock(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-            min="0"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-900 mb-2">
-            {language === 'pt' ? 'Pontuação de Sustentabilidade' : 'Sustainability Score'}
-          </label>
-          <input
-            type="number"
-            value={sustainabilityScore}
-            onChange={(e) => setSustainabilityScore(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-            min="0"
-            max="100"
-          />
-        </div>
+      <h3 className="text-xl font-bold text-gray-900 mb-6">
+        {language === 'pt' ? 'Gerenciar Marketplace' : 'Manage Marketplace'}
+      </h3>
+      <div className="bg-white rounded-lg shadow p-6 text-center text-gray-500">
+        {language === 'pt' ? 'Em desenvolvimento...' : 'Coming soon...'}
       </div>
     </div>
   );
 }
 
 function ServicesTab({ t, language }: { t: (key: string) => string; language: string }) {
-  const servicesQuery = trpc.admin.services.list.useQuery();
-  const deleteServiceMutation = trpc.admin.services.delete.useMutation();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleDeleteService = (id: number) => {
-    if (confirm(language === 'pt' ? 'Tem certeza?' : 'Are you sure?')) {
-      deleteServiceMutation.mutate({ id }, {
-        onSuccess: () => {
-          servicesQuery.refetch();
-        },
-      });
-    }
-  };
-
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="text-xl font-bold text-gray-900">
-          {language === 'pt' ? 'Gerenciar Serviços' : 'Manage Services'}
-        </h3>
-        <Button
-          onClick={() => setIsModalOpen(true)}
-          className="bg-primary hover:bg-primary/90 gap-2"
-        >
-          <Plus className="w-4 h-4" />
-          {language === 'pt' ? 'Novo Serviço' : 'New Service'}
-        </Button>
-      </div>
-
-      <AdminModal
-        isOpen={isModalOpen}
-        title={language === 'pt' ? 'Novo Serviço' : 'New Service'}
-        onClose={() => setIsModalOpen(false)}
-        onSubmit={() => {
-          setIsModalOpen(false);
-          servicesQuery.refetch();
-        }}
-      >
-        <ServiceForm language={language} onSuccess={() => setIsModalOpen(false)} />
-      </AdminModal>
-
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        {servicesQuery.isLoading ? (
-          <div className="p-6 text-center">
-            <Loader2 className="w-6 h-6 animate-spin mx-auto text-gray-400" />
-          </div>
-        ) : (
-          <table className="w-full">
-            <thead className="bg-gray-50 border-b border-gray-200">
-              <tr>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                  {language === 'pt' ? 'Serviço' : 'Service'}
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                  {language === 'pt' ? 'Especialista' : 'Specialist'}
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                  {language === 'pt' ? 'Preço' : 'Price'}
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                  {language === 'pt' ? 'Ações' : 'Actions'}
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {servicesQuery.data?.map((service) => (
-                <tr key={service.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 text-sm text-gray-900">{service.titlePt}</td>
-                  <td className="px-6 py-4 text-sm text-gray-600">{service.specialist}</td>
-                  <td className="px-6 py-4 text-sm text-gray-600">{service.price} MZN</td>
-                  <td className="px-6 py-4 text-sm space-x-2">
-                    <Button variant="outline" size="sm">
-                      <Edit className="w-4 h-4" />
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      disabled={deleteServiceMutation.isPending}
-                      onClick={() => handleDeleteService(service.id)}
-                      className="text-red-600"
-                    >
-                      {deleteServiceMutation.isPending ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : (
-                        <Trash2 className="w-4 h-4" />
-                      )}
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function ServiceForm({ language, onSuccess }: { language: string; onSuccess: () => void }) {
-  const [titlePt, setTitlePt] = useState('');
-  const [titleEn, setTitleEn] = useState('');
-  const [descriptionPt, setDescriptionPt] = useState('');
-  const [descriptionEn, setDescriptionEn] = useState('');
-  const [specialist, setSpecialist] = useState('');
-  const [price, setPrice] = useState('');
-  const [priceType, setPriceType] = useState<'hourly' | 'daily' | 'project'>('hourly');
-  const [features, setFeatures] = useState('');
-  const [available, setAvailable] = useState(true);
-  const createServiceMutation = trpc.admin.services.create.useMutation();
-
-  const handleSubmit = () => {
-    createServiceMutation.mutate({
-      titlePt,
-      titleEn,
-      descriptionPt,
-      descriptionEn,
-      specialist,
-      price: parseFloat(price),
-      priceType,
-      features,
-      available,
-    }, {
-      onSuccess: () => {
-        onSuccess();
-      },
-    });
-  };
-
-  return (
-    <div className="space-y-4 max-h-[60vh] overflow-y-auto">
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-900 mb-2">
-            {language === 'pt' ? 'Título (PT)' : 'Title (PT)'}
-          </label>
-          <input
-            type="text"
-            value={titlePt}
-            onChange={(e) => setTitlePt(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-900 mb-2">
-            {language === 'pt' ? 'Título (EN)' : 'Title (EN)'}
-          </label>
-          <input
-            type="text"
-            value={titleEn}
-            onChange={(e) => setTitleEn(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-          />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-900 mb-2">
-            {language === 'pt' ? 'Descrição (PT)' : 'Description (PT)'}
-          </label>
-          <textarea
-            value={descriptionPt}
-            onChange={(e) => setDescriptionPt(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-            rows={3}
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-900 mb-2">
-            {language === 'pt' ? 'Descrição (EN)' : 'Description (EN)'}
-          </label>
-          <textarea
-            value={descriptionEn}
-            onChange={(e) => setDescriptionEn(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-            rows={3}
-          />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-900 mb-2">
-            {language === 'pt' ? 'Especialista' : 'Specialist'}
-          </label>
-          <input
-            type="text"
-            value={specialist}
-            onChange={(e) => setSpecialist(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-900 mb-2">
-            {language === 'pt' ? 'Preço (MZN)' : 'Price (MZN)'}
-          </label>
-          <input
-            type="number"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-            step="0.01"
-          />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-900 mb-2">
-            {language === 'pt' ? 'Tipo de Preço' : 'Price Type'}
-          </label>
-          <select
-            value={priceType}
-            onChange={(e) => setPriceType(e.target.value as 'hourly' | 'daily' | 'project')}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-          >
-            <option value="hourly">{language === 'pt' ? 'Por Hora' : 'Hourly'}</option>
-            <option value="daily">{language === 'pt' ? 'Por Dia' : 'Daily'}</option>
-            <option value="project">{language === 'pt' ? 'Por Projeto' : 'Project'}</option>
-          </select>
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-900 mb-2">
-            {language === 'pt' ? 'Disponível' : 'Available'}
-          </label>
-          <select
-            value={available ? 'yes' : 'no'}
-            onChange={(e) => setAvailable(e.target.value === 'yes')}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-          >
-            <option value="yes">{language === 'pt' ? 'Sim' : 'Yes'}</option>
-            <option value="no">{language === 'pt' ? 'Não' : 'No'}</option>
-          </select>
-        </div>
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-900 mb-2">
-          {language === 'pt' ? 'Características (separadas por vírgula)' : 'Features (comma separated)'}
-        </label>
-        <textarea
-          value={features}
-          onChange={(e) => setFeatures(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-          rows={2}
-          placeholder={language === 'pt' ? 'Análise de solo, Planejamento de cultivo' : 'Soil analysis, Crop planning'}
-        />
+      <h3 className="text-xl font-bold text-gray-900 mb-6">
+        {language === 'pt' ? 'Gerenciar Serviços' : 'Manage Services'}
+      </h3>
+      <div className="bg-white rounded-lg shadow p-6 text-center text-gray-500">
+        {language === 'pt' ? 'Em desenvolvimento...' : 'Coming soon...'}
       </div>
     </div>
   );

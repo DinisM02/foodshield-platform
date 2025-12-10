@@ -94,7 +94,6 @@ export default function Header() {
           <Link href="/">
             <div className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
               <img src={APP_LOGO} alt="FOOD SHIELD" className="w-10 h-10" />
-              <span className="text-xl font-bold text-primary hidden sm:inline whitespace-nowrap">FOOD SHIELD</span>
             </div>
           </Link>
 

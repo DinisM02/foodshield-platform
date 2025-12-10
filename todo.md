@@ -173,3 +173,11 @@
 - [x] Testar em PT e EN
 - [x] Executar testes (92/92 passando)
 - [x] Salvar checkpoint
+
+## Branding Update - Remove Text from Header/Footer (CONCLUÍDO)
+- [x] Remover texto "FOOD SHIELD" do Header
+- [x] Remover texto "FOOD SHIELD" do Footer
+- [x] Deixar apenas o logo em ambos
+- [x] Testar em PT e EN
+- [x] Executar testes (92/92 passando)
+- [x] Salvar checkpoint

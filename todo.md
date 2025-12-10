@@ -153,3 +153,23 @@
 - [x] Corrigir erros de sintaxe e TypeScript
 - [x] Validar com testes (80/80 passando)
 - [x] Plataforma 100% bilíngue (PT/EN) em todas as páginas
+
+## Marketplace - Bilinguismo Corrigido (CONCLUÍDO)
+- [x] Corrigir strings hardcoded em português no Marketplace
+- [x] Adicionar traduções para categorias em inglês
+- [x] Traduzir carrinho e botões
+- [x] Expandir LanguageContext com chaves de marketplace
+- [x] Testar em PT e EN
+- [x] Marketplace 100% bilíngue
+
+## Branding Update - FOOD SHIELD (CONCLUÍDO)
+- [x] Copiar logo para client/public/
+- [x] Atualizar nome da plataforma em const.ts
+- [x] Atualizar Header.tsx com novo logo
+- [x] Atualizar Footer.tsx com novo branding
+- [x] Atualizar Home.tsx com novo nome
+- [x] Atualizar LanguageContext com novas traduções
+- [x] Atualizar título da página HTML
+- [x] Testar em PT e EN
+- [x] Executar testes (92/92 passando)
+- [x] Salvar checkpoint

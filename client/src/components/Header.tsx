@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Link } from "wouter";
-import { Menu, X, Leaf, Search, Globe, LogOut } from "lucide-react";
+import { Menu, X, Search, Globe, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/_core/hooks/useAuth";
-import { getLoginUrl } from "@/const";
+import { getLoginUrl, APP_LOGO } from "@/const";
 import { trpc } from "@/lib/trpc";
 
 // Mock data for global search
@@ -93,10 +93,8 @@ export default function Header() {
           {/* Logo */}
           <Link href="/">
             <div className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
-              <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
-                <Leaf className="w-6 h-6 text-white" />
-              </div>
-              <span className="text-xl font-bold text-primary hidden sm:inline whitespace-nowrap">SustainHub</span>
+              <img src={APP_LOGO} alt="FOOD SHIELD" className="w-10 h-10" />
+              <span className="text-xl font-bold text-primary hidden sm:inline whitespace-nowrap">FOOD SHIELD</span>
             </div>
           </Link>
 

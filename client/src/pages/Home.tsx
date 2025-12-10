@@ -4,10 +4,10 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { BookOpen, ShoppingCart, Users, Wrench, Leaf, TrendingUp, Globe, ChevronDown } from "lucide-react";
+import { BookOpen, ShoppingCart, Users, Wrench, TrendingUp, Globe, ChevronDown } from "lucide-react";
 import { Link } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
-import { getLoginUrl } from "@/const";
+import { getLoginUrl, APP_LOGO } from "@/const";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 
@@ -70,11 +70,11 @@ export default function Home() {
         {/* Content */}
         <div className="relative z-10 container text-center text-white">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <Leaf className="w-8 h-8" />
+            <img src={APP_LOGO} alt="FOOD SHIELD" className="w-8 h-8" />
             <span className="text-lg font-semibold">{t('hero.tagline')}</span>
           </div>
           <h1 className="text-6xl md:text-7xl font-bold mb-6 leading-tight">
-            {t('hero.title')}
+            FOOD SHIELD
           </h1>
           <p className="text-2xl md:text-3xl opacity-90 mb-8 max-w-3xl mx-auto">
             {t('hero.description')}

@@ -1,8 +1,9 @@
 import { Link } from "wouter";
-import { Leaf, Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram, ArrowRight } from "lucide-react";
+import { Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { APP_LOGO } from "@/const";
 
 export default function Footer() {
   const { t } = useLanguage();
@@ -37,10 +38,8 @@ export default function Footer() {
           {/* Brand */}
           <div className="lg:col-span-1">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
-                <Leaf className="w-6 h-6 text-white" />
-              </div>
-              <span className="text-2xl font-bold">SustainHub</span>
+              <img src={APP_LOGO} alt="FOOD SHIELD" className="w-10 h-10" />
+              <span className="text-2xl font-bold">FOOD SHIELD</span>
             </div>
             <p className="text-gray-400 text-sm mb-6 leading-relaxed">
               {t('footer.company')}

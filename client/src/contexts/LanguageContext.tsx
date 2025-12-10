@@ -28,8 +28,8 @@ const translations = {
     'header.language': 'Idioma',
 
     // Hero Section
-    'hero.tagline': 'Segurança Alimentar e Desenvolvimento Sustentável',
-    'hero.title': 'SustainHub',
+    'hero.tagline': 'Melhorando a Segurança Alimentar e Segurança Alimentar',
+    'hero.title': 'FOOD SHIELD',
     'hero.description': 'A plataforma completa para transformar sistemas alimentares e promover práticas sustentáveis em Moçambique e além',
     'hero.explore': 'Explorar Plataforma',
     'hero.learn_more': 'Saiba Mais',
@@ -272,8 +272,8 @@ const translations = {
     'header.language': 'Language',
 
     // Hero Section
-    'hero.tagline': 'Food Security and Sustainable Development',
-    'hero.title': 'SustainHub',
+    'hero.tagline': 'Improving Food Safety & Food Security',
+    'hero.title': 'FOOD SHIELD',
     'hero.description': 'The complete platform to transform food systems and promote sustainable practices in Mozambique and beyond',
     'hero.explore': 'Explore Platform',
     'hero.learn_more': 'Learn More',

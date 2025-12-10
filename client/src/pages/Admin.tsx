@@ -72,13 +72,13 @@ export default function Admin() {
   const navItems: NavItem[] = [
     {
       id: 'overview',
-      label: language === 'pt' ? t('admin.overview') : 'Overview',
+      label: t('admin.overview'),
       icon: <Home className="w-5 h-5" />,
       href: '#overview',
     },
     {
       id: 'users',
-      label: language === 'pt' ? t('admin.users') : 'Users',
+      label: t('admin.users'),
       icon: <Users className="w-5 h-5" />,
       href: '#users',
     },
@@ -96,19 +96,19 @@ export default function Admin() {
     },
     {
       id: 'services',
-      label: language === 'pt' ? t('admin.services') : 'Services',
+      label: t('admin.services'),
       icon: <Briefcase className="w-5 h-5" />,
       href: '#services',
     },
     {
       id: 'analytics',
-      label: language === 'pt' ? t('admin.reports') : 'Reports',
+      label: t('admin.reports'),
       icon: <BarChart3 className="w-5 h-5" />,
       href: '#analytics',
     },
     {
       id: 'settings',
-      label: language === 'pt' ? t('admin.settings') : 'Settings',
+      label: t('admin.settings'),
       icon: <Settings className="w-5 h-5" />,
       href: '#settings',
     },
@@ -329,7 +329,7 @@ function UsersTab({ t, language }: { t: (key: string) => string; language: strin
   const totalPages = Math.ceil(filteredUsers.length / pagination.pageSize);
 
   const handleDeleteUser = (id: number) => {
-    if (confirm(language === 'pt' ? t('admin.confirm_delete') : 'Are you sure?')) {
+    if (confirm(t('admin.confirm_delete'))) {
       deleteUserMutation.mutate({ id }, {
         onSuccess: () => {
           usersQuery.refetch();
@@ -394,7 +394,7 @@ function UsersTab({ t, language }: { t: (key: string) => string; language: strin
           usersQuery.refetch();
         }}
       >
-        <UserForm language={language} onSuccess={() => setIsCreateModalOpen(false)} />
+        <UserForm language={language} t={t} onSuccess={() => setIsCreateModalOpen(false)} />
       </AdminModal>
 
       <AdminModal
@@ -409,6 +409,7 @@ function UsersTab({ t, language }: { t: (key: string) => string; language: strin
         {editingUser && (
           <UserEditForm 
             language={language} 
+            t={t}
             user={editingUser}
             onSuccess={() => setIsEditModalOpen(false)} 
           />
@@ -468,7 +469,7 @@ function UsersTab({ t, language }: { t: (key: string) => string; language: strin
                           ? 'bg-red-100 text-red-800' 
                           : 'bg-blue-100 text-blue-800'
                       }`}>
-                        {user.role === 'admin' ? t('admin.admin') : language === 'pt' ? t('admin.user') : 'User'}
+                        {user.role === 'admin' ? t('admin.admin') : t('admin.user')}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-sm space-x-2">
@@ -535,7 +536,7 @@ function UsersTab({ t, language }: { t: (key: string) => string; language: strin
   );
 }
 
-function UserForm({ language, onSuccess }: { language: string; onSuccess: () => void }) {
+function UserForm({ language, t, onSuccess }: { language: string; t: (key: string) => string; onSuccess: () => void }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [role, setRole] = useState<'user' | 'admin'>('user');
@@ -569,7 +570,7 @@ function UserForm({ language, onSuccess }: { language: string; onSuccess: () => 
           value={name}
           onChange={(e) => setName(e.target.value)}
           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-          placeholder={language === 'pt' ? 'Nome completo' : 'Full name'}
+          placeholder={t('admin.full_name')}
         />
       </div>
       <div>
@@ -601,7 +602,7 @@ function UserForm({ language, onSuccess }: { language: string; onSuccess: () => 
   );
 }
 
-function UserEditForm({ language, user, onSuccess }: { language: string; user: any; onSuccess: () => void }) {
+function UserEditForm({ language, t, user, onSuccess }: { language: string; t: (key: string) => string; user: any; onSuccess: () => void }) {
   const [name, setName] = useState(user.name || '');
   const [role, setRole] = useState(user.role || 'user');
   const updateUserMutation = trpc.admin.users.update.useMutation();
@@ -688,7 +689,7 @@ function BlogTab({ t, language }: { t: (key: string) => string; language: string
   }, [filteredBlog, pagination.page, pagination.pageSize]);
 
   const handleDeleteBlog = (id: number) => {
-    if (confirm(language === 'pt' ? t('admin.confirm_delete') : 'Are you sure?')) {
+    if (confirm(t('admin.confirm_delete'))) {
       deleteBlogMutation.mutate({ id }, {
         onSuccess: () => {
           blogQuery.refetch();
@@ -733,7 +734,7 @@ function BlogTab({ t, language }: { t: (key: string) => string; language: string
           blogQuery.refetch();
         }}
       >
-        <BlogForm language={language} onSuccess={() => setIsModalOpen(false)} />
+        <BlogForm language={language} t={t} onSuccess={() => setIsModalOpen(false)} />
       </AdminModal>
 
       <div className="bg-white rounded-lg shadow overflow-hidden">
@@ -771,7 +772,7 @@ function BlogTab({ t, language }: { t: (key: string) => string; language: string
                           ? 'bg-green-100 text-green-800' 
                           : 'bg-yellow-100 text-yellow-800'
                       }`}>
-                        {post.published ? (language === 'pt' ? t('admin.published_status') : 'Published') : (language === 'pt' ? t('admin.draft') : 'Draft')}
+                        {post.published ? (t('admin.published_status')) : (t('admin.draft'))}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-sm space-x-2">
@@ -831,7 +832,7 @@ function BlogTab({ t, language }: { t: (key: string) => string; language: string
   );
 }
 
-function BlogForm({ language, onSuccess }: { language: string; onSuccess: () => void }) {
+function BlogForm({ language, t, onSuccess }: { language: string; t: (key: string) => string; onSuccess: () => void }) {
   const [titlePt, setTitlePt] = useState('');
   const [titleEn, setTitleEn] = useState('');
   const [excerptPt, setExcerptPt] = useState('');
@@ -870,7 +871,7 @@ function BlogForm({ language, onSuccess }: { language: string; onSuccess: () => 
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-900 mb-2">
-            {language === 'pt' ? 'Título (PT)' : 'Title (PT)'}
+            {t('admin.title_pt')}
           </label>
           <input
             type="text"
@@ -881,7 +882,7 @@ function BlogForm({ language, onSuccess }: { language: string; onSuccess: () => 
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-900 mb-2">
-            {language === 'pt' ? 'Título (EN)' : 'Title (EN)'}
+            {t('admin.title_en')}
           </label>
           <input
             type="text"
@@ -895,7 +896,7 @@ function BlogForm({ language, onSuccess }: { language: string; onSuccess: () => 
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-900 mb-2">
-            {language === 'pt' ? 'Resumo (PT)' : 'Excerpt (PT)'}
+            {t('admin.excerpt_pt')}
           </label>
           <textarea
             value={excerptPt}
@@ -906,7 +907,7 @@ function BlogForm({ language, onSuccess }: { language: string; onSuccess: () => 
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-900 mb-2">
-            {language === 'pt' ? 'Resumo (EN)' : 'Excerpt (EN)'}
+            {t('admin.excerpt_en')}
           </label>
           <textarea
             value={excerptEn}
@@ -920,7 +921,7 @@ function BlogForm({ language, onSuccess }: { language: string; onSuccess: () => 
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-900 mb-2">
-            {language === 'pt' ? 'Conteúdo (PT)' : 'Content (PT)'}
+            {t('admin.content_pt')}
           </label>
           <textarea
             value={contentPt}
@@ -931,7 +932,7 @@ function BlogForm({ language, onSuccess }: { language: string; onSuccess: () => 
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-900 mb-2">
-            {language === 'pt' ? 'Conteúdo (EN)' : 'Content (EN)'}
+            {t('admin.content_en')}
           </label>
           <textarea
             value={contentEn}
@@ -969,7 +970,7 @@ function BlogForm({ language, onSuccess }: { language: string; onSuccess: () => 
 
       <div>
         <label className="block text-sm font-medium text-gray-900 mb-2">
-          {language === 'pt' ? 'URL da Imagem' : 'Image URL'}
+            {t('admin.image_url')}
         </label>
         <input
           type="url"
@@ -982,7 +983,7 @@ function BlogForm({ language, onSuccess }: { language: string; onSuccess: () => 
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-900 mb-2">
-            {language === 'pt' ? 'Tempo de Leitura (min)' : 'Read Time (min)'}
+            {t('admin.read_time')}
           </label>
           <input
             type="number"

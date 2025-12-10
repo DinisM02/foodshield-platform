@@ -115,6 +115,12 @@ const translations = {
     'marketplace.sustainability': 'Sustentabilidade',
     'marketplace.checkout': 'Finalizar Compra',
     'marketplace.cart_empty': 'Seu carrinho está vazio',
+    'marketplace.cart_items': 'itens no carrinho',
+    'marketplace.category_all': 'Todos',
+    'marketplace.category_seeds': 'Sementes',
+    'marketplace.category_inputs': 'Insumos',
+    'marketplace.category_equipment': 'Equipamentos',
+    'marketplace.category_fresh': 'Produtos Frescos',
 
     // Services
     'services.title': 'Consultoria',
@@ -353,6 +359,12 @@ const translations = {
     'marketplace.sustainability': 'Sustainability',
     'marketplace.checkout': 'Checkout',
     'marketplace.cart_empty': 'Your cart is empty',
+    'marketplace.cart_items': 'items in cart',
+    'marketplace.category_all': 'All',
+    'marketplace.category_seeds': 'Seeds',
+    'marketplace.category_inputs': 'Inputs',
+    'marketplace.category_equipment': 'Equipment',
+    'marketplace.category_fresh': 'Fresh Products',
 
     // Services
     'services.title': 'Consulting',

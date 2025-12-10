@@ -87,11 +87,12 @@ export default function Marketplace() {
   const { t } = useLanguage();
   const { user, loading, isAuthenticated } = useAuth();
   const [cart, setCart] = useState<{ product: Product; quantity: number }[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>("Todos");
+  const [selectedCategory, setSelectedCategory] = useState<string>(t('marketplace.category_all'));
 
-  const categories = ["Todos", "Sementes", "Insumos", "Equipamentos", "Produtos Frescos"];
+  const categories = [t('marketplace.category_all'), t('marketplace.category_seeds'), t('marketplace.category_inputs'), t('marketplace.category_equipment'), t('marketplace.category_fresh')];
 
-  const filteredProducts = selectedCategory === "Todos" 
+  const allCategoryLabel = t('marketplace.category_all');
+  const filteredProducts = selectedCategory === allCategoryLabel || selectedCategory === 'Todos'
     ? mockProducts 
     : mockProducts.filter(p => p.category === selectedCategory);
 
@@ -118,12 +119,12 @@ export default function Marketplace() {
         <div className="flex-1 flex items-center justify-center bg-gradient-to-br from-blue-50 to-white">
         <Card className="max-w-md w-full mx-4">
           <CardHeader>
-            <CardTitle className="text-2xl">Acesso Restrito</CardTitle>
-            <CardDescription>Faça login para acessar o marketplace</CardDescription>
+            <CardTitle className="text-2xl">{t('page.access_denied')}</CardTitle>
+            <CardDescription>{t('auth.login_required')}</CardDescription>
           </CardHeader>
           <CardFooter>
             <a href={getLoginUrl()} className="w-full">
-              <Button className="w-full">Fazer Login</Button>
+              <Button className="w-full">{t('auth.login')}</Button>
             </a>
           </CardFooter>
         </Card>
@@ -169,11 +170,11 @@ export default function Marketplace() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <ShoppingCart className="w-6 h-6 text-primary" />
-                  <span className="font-semibold">{totalItems} {totalItems === 1 ? 'item' : 'itens'} no carrinho</span>
+                  <span className="font-semibold">{totalItems} {t('marketplace.cart_items')}</span>
                 </div>
                 <div className="text-right">
                   <div className="text-2xl font-bold text-primary">{totalPrice.toLocaleString('pt-MZ')} MZN</div>
-                  <Button size="sm" className="mt-2">Finalizar Compra</Button>
+                  <Button size="sm" className="mt-2">{t('marketplace.checkout')}</Button>
                 </div>
               </div>
             </CardContent>
@@ -217,7 +218,7 @@ export default function Marketplace() {
                   </div>
                   <div className="flex items-center gap-1 text-muted-foreground">
                     <Package className="w-4 h-4" />
-                    <span className="text-sm">{product.stock} em estoque</span>
+                    <span className="text-sm">{product.stock} {t('marketplace.stock')}</span>
                   </div>
                 </div>
               </CardContent>
@@ -229,7 +230,7 @@ export default function Marketplace() {
                   disabled={product.stock === 0}
                 >
                   <ShoppingCart className="w-4 h-4 mr-2" />
-                  Adicionar ao Carrinho
+                  {t('marketplace.add_to_cart')}
                 </Button>
               </CardFooter>
             </Card>

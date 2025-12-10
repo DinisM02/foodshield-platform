@@ -72,43 +72,43 @@ export default function Admin() {
   const navItems: NavItem[] = [
     {
       id: 'overview',
-      label: language === 'pt' ? 'Visão Geral' : 'Overview',
+      label: language === 'pt' ? t('admin.overview') : 'Overview',
       icon: <Home className="w-5 h-5" />,
       href: '#overview',
     },
     {
       id: 'users',
-      label: language === 'pt' ? 'Usuários' : 'Users',
+      label: language === 'pt' ? t('admin.users') : 'Users',
       icon: <Users className="w-5 h-5" />,
       href: '#users',
     },
     {
       id: 'blog',
-      label: language === 'pt' ? 'Blog' : 'Blog',
+      label: language === 'pt' ? t('admin.blog') : t('admin.blog'),
       icon: <FileText className="w-5 h-5" />,
       href: '#blog',
     },
     {
       id: 'marketplace',
-      label: language === 'pt' ? 'Marketplace' : 'Marketplace',
+      label: language === 'pt' ? t('admin.marketplace') : t('admin.marketplace'),
       icon: <ShoppingCart className="w-5 h-5" />,
       href: '#marketplace',
     },
     {
       id: 'services',
-      label: language === 'pt' ? 'Serviços' : 'Services',
+      label: language === 'pt' ? t('admin.services') : 'Services',
       icon: <Briefcase className="w-5 h-5" />,
       href: '#services',
     },
     {
       id: 'analytics',
-      label: language === 'pt' ? 'Relatórios' : 'Reports',
+      label: language === 'pt' ? t('admin.reports') : 'Reports',
       icon: <BarChart3 className="w-5 h-5" />,
       href: '#analytics',
     },
     {
       id: 'settings',
-      label: language === 'pt' ? 'Configurações' : 'Settings',
+      label: language === 'pt' ? t('admin.settings') : 'Settings',
       icon: <Settings className="w-5 h-5" />,
       href: '#settings',
     },
@@ -235,7 +235,7 @@ function OverviewTab({ t, language }: { t: (key: string) => string; language: st
   return (
     <div>
       <h3 className="text-xl font-bold text-gray-900 mb-6">
-        {language === 'pt' ? 'Visão Geral' : 'Overview'}
+        {t('admin.overview')}
       </h3>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="bg-white rounded-lg shadow p-6">
@@ -270,7 +270,7 @@ function OverviewTab({ t, language }: { t: (key: string) => string; language: st
 
         <div className="bg-white rounded-lg shadow p-6">
           <div className="text-gray-500 text-sm font-medium mb-2">
-            {language === 'pt' ? 'Serviços' : 'Services'}
+            {t('admin.services')}
           </div>
           <div className="text-3xl font-bold text-gray-900">{totalServices}</div>
           <div className="text-green-600 text-sm mt-2">
@@ -329,7 +329,7 @@ function UsersTab({ t, language }: { t: (key: string) => string; language: strin
   const totalPages = Math.ceil(filteredUsers.length / pagination.pageSize);
 
   const handleDeleteUser = (id: number) => {
-    if (confirm(language === 'pt' ? 'Tem certeza?' : 'Are you sure?')) {
+    if (confirm(language === 'pt' ? t('admin.confirm_delete') : 'Are you sure?')) {
       deleteUserMutation.mutate({ id }, {
         onSuccess: () => {
           usersQuery.refetch();
@@ -354,7 +354,7 @@ function UsersTab({ t, language }: { t: (key: string) => string; language: strin
           className="bg-primary hover:bg-primary/90 gap-2"
         >
           <Plus className="w-4 h-4" />
-          {language === 'pt' ? 'Novo Usuário' : 'New User'}
+          {t('admin.new_user')}
         </Button>
       </div>
 
@@ -387,7 +387,7 @@ function UsersTab({ t, language }: { t: (key: string) => string; language: strin
 
       <AdminModal
         isOpen={isCreateModalOpen}
-        title={language === 'pt' ? 'Novo Usuário' : 'New User'}
+        title={t('admin.new_user')}
         onClose={() => setIsCreateModalOpen(false)}
         onSubmit={() => {
           setIsCreateModalOpen(false);
@@ -435,7 +435,7 @@ function UsersTab({ t, language }: { t: (key: string) => string; language: strin
                       });
                     }}
                   >
-                    {language === 'pt' ? 'Nome' : 'Name'} {pagination.sortBy === 'name' && (pagination.sortOrder === 'asc' ? '↑' : '↓')}
+                    {t('admin.name')} {pagination.sortBy === 'name' && (pagination.sortOrder === 'asc' ? '↑' : '↓')}
                   </th>
                   <th 
                     className="px-6 py-3 text-left text-sm font-semibold text-gray-900 cursor-pointer hover:bg-gray-100"
@@ -447,13 +447,13 @@ function UsersTab({ t, language }: { t: (key: string) => string; language: strin
                       });
                     }}
                   >
-                    {language === 'pt' ? 'Email' : 'Email'} {pagination.sortBy === 'email' && (pagination.sortOrder === 'asc' ? '↑' : '↓')}
+                    {t('admin.email')} {pagination.sortBy === 'email' && (pagination.sortOrder === 'asc' ? '↑' : '↓')}
                   </th>
                   <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                    {language === 'pt' ? 'Função' : 'Role'}
+                    {t('admin.role')}
                   </th>
                   <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                    {language === 'pt' ? 'Ações' : 'Actions'}
+                    {t('admin.actions')}
                   </th>
                 </tr>
               </thead>
@@ -468,7 +468,7 @@ function UsersTab({ t, language }: { t: (key: string) => string; language: strin
                           ? 'bg-red-100 text-red-800' 
                           : 'bg-blue-100 text-blue-800'
                       }`}>
-                        {user.role === 'admin' ? 'Admin' : language === 'pt' ? 'Usuário' : 'User'}
+                        {user.role === 'admin' ? t('admin.admin') : language === 'pt' ? t('admin.user') : 'User'}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-sm space-x-2">
@@ -562,7 +562,7 @@ function UserForm({ language, onSuccess }: { language: string; onSuccess: () => 
     <div className="space-y-4">
       <div>
         <label className="block text-sm font-medium text-gray-900 mb-2">
-          {language === 'pt' ? 'Nome' : 'Name'}
+          {t('admin.name')}
         </label>
         <input
           type="text"
@@ -574,7 +574,7 @@ function UserForm({ language, onSuccess }: { language: string; onSuccess: () => 
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-900 mb-2">
-          {language === 'pt' ? 'Email' : 'Email'}
+          {t('admin.email')}
         </label>
         <input
           type="email"
@@ -586,14 +586,14 @@ function UserForm({ language, onSuccess }: { language: string; onSuccess: () => 
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-900 mb-2">
-          {language === 'pt' ? 'Função' : 'Role'}
+          {t('admin.role')}
         </label>
         <select
           value={role}
           onChange={(e) => setRole(e.target.value as 'user' | 'admin')}
           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
         >
-          <option value="user">{language === 'pt' ? 'Usuário' : 'User'}</option>
+          <option value="user">{t('admin.user')}</option>
           <option value="admin">Admin</option>
         </select>
       </div>
@@ -627,7 +627,7 @@ function UserEditForm({ language, user, onSuccess }: { language: string; user: a
     <div className="space-y-4">
       <div>
         <label className="block text-sm font-medium text-gray-900 mb-2">
-          {language === 'pt' ? 'Nome' : 'Name'}
+          {t('admin.name')}
         </label>
         <input
           type="text"
@@ -638,7 +638,7 @@ function UserEditForm({ language, user, onSuccess }: { language: string; user: a
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-900 mb-2">
-          {language === 'pt' ? 'Email' : 'Email'}
+          {t('admin.email')}
         </label>
         <input
           type="email"
@@ -649,14 +649,14 @@ function UserEditForm({ language, user, onSuccess }: { language: string; user: a
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-900 mb-2">
-          {language === 'pt' ? 'Função' : 'Role'}
+          {t('admin.role')}
         </label>
         <select
           value={role}
           onChange={(e) => setRole(e.target.value)}
           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
         >
-          <option value="user">{language === 'pt' ? 'Usuário' : 'User'}</option>
+          <option value="user">{t('admin.user')}</option>
           <option value="admin">Admin</option>
         </select>
       </div>
@@ -688,7 +688,7 @@ function BlogTab({ t, language }: { t: (key: string) => string; language: string
   }, [filteredBlog, pagination.page, pagination.pageSize]);
 
   const handleDeleteBlog = (id: number) => {
-    if (confirm(language === 'pt' ? 'Tem certeza?' : 'Are you sure?')) {
+    if (confirm(language === 'pt' ? t('admin.confirm_delete') : 'Are you sure?')) {
       deleteBlogMutation.mutate({ id }, {
         onSuccess: () => {
           blogQuery.refetch();
@@ -708,7 +708,7 @@ function BlogTab({ t, language }: { t: (key: string) => string; language: string
           className="bg-primary hover:bg-primary/90 gap-2"
         >
           <Plus className="w-4 h-4" />
-          {language === 'pt' ? 'Novo Artigo' : 'New Article'}
+          {t('admin.new_article')}
         </Button>
       </div>
 
@@ -726,7 +726,7 @@ function BlogTab({ t, language }: { t: (key: string) => string; language: string
 
       <AdminModal
         isOpen={isModalOpen}
-        title={language === 'pt' ? 'Novo Artigo' : 'New Article'}
+        title={t('admin.new_article')}
         onClose={() => setIsModalOpen(false)}
         onSubmit={() => {
           setIsModalOpen(false);
@@ -747,16 +747,16 @@ function BlogTab({ t, language }: { t: (key: string) => string; language: string
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
                   <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                    {language === 'pt' ? 'Título' : 'Title'}
+                    {t('admin.title_col')}
                   </th>
                   <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                    {language === 'pt' ? 'Autor' : 'Author'}
+                    {t('admin.author')}
                   </th>
                   <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                    {language === 'pt' ? 'Status' : 'Status'}
+                    {t('admin.status')}
                   </th>
                   <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                    {language === 'pt' ? 'Ações' : 'Actions'}
+                    {t('admin.actions')}
                   </th>
                 </tr>
               </thead>
@@ -771,7 +771,7 @@ function BlogTab({ t, language }: { t: (key: string) => string; language: string
                           ? 'bg-green-100 text-green-800' 
                           : 'bg-yellow-100 text-yellow-800'
                       }`}>
-                        {post.published ? (language === 'pt' ? 'Publicado' : 'Published') : (language === 'pt' ? 'Rascunho' : 'Draft')}
+                        {post.published ? (language === 'pt' ? t('admin.published_status') : 'Published') : (language === 'pt' ? t('admin.draft') : 'Draft')}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-sm space-x-2">
@@ -945,7 +945,7 @@ function BlogForm({ language, onSuccess }: { language: string; onSuccess: () => 
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-900 mb-2">
-            {language === 'pt' ? 'Autor' : 'Author'}
+            {t('admin.author')}
           </label>
           <input
             type="text"
@@ -956,7 +956,7 @@ function BlogForm({ language, onSuccess }: { language: string; onSuccess: () => 
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-900 mb-2">
-            {language === 'pt' ? 'Categoria' : 'Category'}
+            {t('admin.category')}
           </label>
           <input
             type="text"
@@ -994,15 +994,15 @@ function BlogForm({ language, onSuccess }: { language: string; onSuccess: () => 
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-900 mb-2">
-            {language === 'pt' ? 'Status' : 'Status'}
+            {t('admin.status')}
           </label>
           <select
             value={published ? 'published' : 'draft'}
             onChange={(e) => setPublished(e.target.value === 'published')}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
           >
-            <option value="draft">{language === 'pt' ? 'Rascunho' : 'Draft'}</option>
-            <option value="published">{language === 'pt' ? 'Publicado' : 'Published'}</option>
+            <option value="draft">{t('admin.draft')}</option>
+            <option value="published">{t('admin.published_status')}</option>
           </select>
         </div>
       </div>
@@ -1068,7 +1068,7 @@ function SettingsTab({ t, language }: { t: (key: string) => string; language: st
   return (
     <div>
       <h3 className="text-xl font-bold text-gray-900 mb-6">
-        {language === 'pt' ? 'Configurações' : 'Settings'}
+        {t('admin.settings')}
       </h3>
       <div className="bg-white rounded-lg shadow p-6 max-w-2xl">
         <div className="space-y-6">

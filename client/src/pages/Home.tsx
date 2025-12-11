@@ -70,7 +70,6 @@ export default function Home() {
         {/* Content */}
         <div className="relative z-10 container text-center text-white">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <img src={APP_LOGO} alt="FOOD SHIELD" className="w-8 h-8" />
             <span className="text-lg font-semibold">{t('hero.tagline')}</span>
           </div>
           <h1 className="text-6xl md:text-7xl font-bold mb-6 leading-tight">

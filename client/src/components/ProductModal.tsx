@@ -25,6 +25,7 @@ export function ProductModal({ isOpen, onClose, product, onSuccess, language }: 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>('');
   const [isUploading, setIsUploading] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
 
   const uploadImageMutation = trpc.admin.products.uploadImage.useMutation();
 
@@ -136,20 +137,17 @@ export function ProductModal({ isOpen, onClose, product, onSuccess, language }: 
     });
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
+  const processFile = (file: File) => {
     // Validate file type
     if (!file.type.startsWith('image/')) {
       toast.error(language === 'pt' ? 'Por favor selecione uma imagem' : 'Please select an image');
-      return;
+      return false;
     }
 
     // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
       toast.error(language === 'pt' ? 'Imagem muito grande (máx 5MB)' : 'Image too large (max 5MB)');
-      return;
+      return false;
     }
 
     setSelectedFile(file);
@@ -160,6 +158,37 @@ export function ProductModal({ isOpen, onClose, product, onSuccess, language }: 
       setPreviewUrl(reader.result as string);
     };
     reader.readAsDataURL(file);
+    return true;
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      processFile(file);
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      processFile(file);
+    }
   };
 
   if (!isOpen) return null;
@@ -292,21 +321,75 @@ export function ProductModal({ isOpen, onClose, product, onSuccess, language }: 
             <label className="block text-sm font-medium text-gray-700 mb-1">
               {language === 'pt' ? 'Imagem do Produto *' : 'Product Image *'}
             </label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100"
-            />
-            {previewUrl && (
-              <div className="mt-2">
-                <img 
-                  src={previewUrl} 
-                  alt="Preview" 
-                  className="w-full h-48 object-cover rounded-lg"
-                />
-              </div>
-            )}
+            
+            {/* Drag and Drop Area */}
+            <div
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              className={`relative border-2 border-dashed rounded-lg p-6 transition-all ${
+                isDragging
+                  ? 'border-emerald-500 bg-emerald-50'
+                  : 'border-gray-300 bg-gray-50 hover:border-emerald-400 hover:bg-emerald-50/50'
+              }`}
+            >
+              {previewUrl ? (
+                <div className="relative">
+                  <img
+                    src={previewUrl}
+                    alt="Preview"
+                    className="w-full h-48 object-cover rounded-lg"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setPreviewUrl('');
+                      setSelectedFile(null);
+                    }}
+                    className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              ) : (
+                <div className="text-center">
+                  <svg
+                    className="mx-auto h-12 w-12 text-gray-400"
+                    stroke="currentColor"
+                    fill="none"
+                    viewBox="0 0 48 48"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                      strokeWidth={2}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  <div className="mt-4 flex text-sm leading-6 text-gray-600">
+                    <label
+                      htmlFor="file-upload"
+                      className="relative cursor-pointer rounded-md font-semibold text-emerald-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-emerald-600 focus-within:ring-offset-2 hover:text-emerald-500"
+                    >
+                      <span>{language === 'pt' ? 'Escolha um arquivo' : 'Choose a file'}</span>
+                      <input
+                        id="file-upload"
+                        name="file-upload"
+                        type="file"
+                        accept="image/*"
+                        className="sr-only"
+                        onChange={handleFileChange}
+                      />
+                    </label>
+                    <p className="pl-1">{language === 'pt' ? 'ou arraste e solte' : 'or drag and drop'}</p>
+                  </div>
+                  <p className="text-xs leading-5 text-gray-600">
+                    {language === 'pt' ? 'PNG, JPG, GIF até 5MB' : 'PNG, JPG, GIF up to 5MB'}
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Footer */}

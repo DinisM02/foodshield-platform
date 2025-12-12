@@ -317,3 +317,11 @@
 - [x] Integrar com S3 storage
 - [x] Testar upload e criação de produtos
 - [x] Validar tamanho e tipo de arquivo
+
+## Drag-and-Drop para Upload de Imagens (CONCLUÍDO - 12/12)
+- [x] Criar área de drag-and-drop no ProductModal
+- [x] Implementar handlers de drag events (dragover, dragleave, drop)
+- [x] Adicionar estados visuais (hover, dragging)
+- [x] Manter compatibilidade com botão Choose File
+- [x] Testar drag-and-drop com diferentes tipos de arquivo
+- [x] Validar UX em diferentes navegadores

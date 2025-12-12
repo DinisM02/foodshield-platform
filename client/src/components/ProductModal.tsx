@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { trpc } from '@/lib/trpc';
 import { toast } from 'sonner';
 import imageCompression from 'browser-image-compression';
+import { ImageCropModal } from './ImageCropModal';
 
 interface ProductModalProps {
   isOpen: boolean;
@@ -28,6 +29,8 @@ export function ProductModal({ isOpen, onClose, product, onSuccess, language }: 
   const [isUploading, setIsUploading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [isCompressing, setIsCompressing] = useState(false);
+  const [showCropModal, setShowCropModal] = useState(false);
+  const [tempImageUrl, setTempImageUrl] = useState<string>('');
 
   const uploadImageMutation = trpc.admin.products.uploadImage.useMutation();
 
@@ -152,39 +155,53 @@ export function ProductModal({ isOpen, onClose, product, onSuccess, language }: 
       return false;
     }
 
+    // Create temporary preview for crop modal
+    const reader = new FileReader();
+    reader.onload = () => {
+      setTempImageUrl(reader.result as string);
+      setShowCropModal(true);
+    };
+    reader.readAsDataURL(file);
+    return true;
+  };
+
+  const handleCropComplete = async (croppedBlob: Blob) => {
     try {
       setIsCompressing(true);
       
+      // Convert blob to file
+      const croppedFile = new File([croppedBlob], 'cropped-image.jpg', { type: 'image/jpeg' });
+      
       // Compression options
       const options = {
-        maxSizeMB: 1, // Max file size in MB
-        maxWidthOrHeight: 1920, // Max width or height
-        useWebWorker: true, // Use web worker for better performance
-        fileType: file.type as 'image/jpeg' | 'image/png' | 'image/webp',
+        maxSizeMB: 1,
+        maxWidthOrHeight: 1920,
+        useWebWorker: true,
+        fileType: 'image/jpeg' as const,
       };
 
       // Show compression toast
-      const originalSize = (file.size / 1024 / 1024).toFixed(2);
+      const originalSize = (croppedFile.size / 1024 / 1024).toFixed(2);
       toast.info(
         language === 'pt' 
           ? `Comprimindo imagem (${originalSize}MB)...` 
           : `Compressing image (${originalSize}MB)...`
       );
 
-      // Compress the image
-      const compressedFile = await imageCompression(file, options);
+      // Compress the cropped image
+      const compressedFile = await imageCompression(croppedFile, options);
       const compressedSize = (compressedFile.size / 1024 / 1024).toFixed(2);
       
-      // Show success message with size reduction
+      // Show success message
       toast.success(
         language === 'pt'
-          ? `Imagem comprimida: ${originalSize}MB → ${compressedSize}MB`
-          : `Image compressed: ${originalSize}MB → ${compressedSize}MB`
+          ? `Imagem processada: ${originalSize}MB → ${compressedSize}MB`
+          : `Image processed: ${originalSize}MB → ${compressedSize}MB`
       );
 
       setSelectedFile(compressedFile);
 
-      // Create preview
+      // Create final preview
       const reader = new FileReader();
       reader.onload = () => {
         setPreviewUrl(reader.result as string);
@@ -192,16 +209,14 @@ export function ProductModal({ isOpen, onClose, product, onSuccess, language }: 
       reader.readAsDataURL(compressedFile);
       
       setIsCompressing(false);
-      return true;
     } catch (error) {
-      console.error('Compression error:', error);
+      console.error('Processing error:', error);
       setIsCompressing(false);
       toast.error(
         language === 'pt'
-          ? 'Erro ao comprimir imagem'
-          : 'Error compressing image'
+          ? 'Erro ao processar imagem'
+          : 'Error processing image'
       );
-      return false;
     }
   };
 
@@ -467,6 +482,15 @@ export function ProductModal({ isOpen, onClose, product, onSuccess, language }: 
           </div>
         </form>
       </div>
+
+      {/* Image Crop Modal */}
+      <ImageCropModal
+        isOpen={showCropModal}
+        imageUrl={tempImageUrl}
+        onCropComplete={handleCropComplete}
+        onClose={() => setShowCropModal(false)}
+        language={language}
+      />
     </div>
   );
 }

@@ -333,3 +333,11 @@
 - [x] Configurar qualidade e tamanho máximo
 - [x] Testar com imagens grandes (>5MB)
 - [x] Validar qualidade visual após compressão
+
+## Ferramenta de Crop de Imagens (CONCLUÍDO - 12/12)
+- [x] Instalar biblioteca react-image-crop
+- [x] Criar componente ImageCropModal
+- [x] Implementar interface de seleção de área
+- [x] Adicionar botões de ação (Recortar, Cancelar)
+- [x] Integrar com fluxo de upload existente
+- [x] Testar com diferentes proporções e tamanhos

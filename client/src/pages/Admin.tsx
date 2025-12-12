@@ -5,6 +5,7 @@ import { useLocation } from 'wouter';
 import { trpc } from '@/lib/trpc';
 import { Button } from '@/components/ui/button';
 import { AdminModal } from '@/components/AdminModal';
+import { ProductModal } from '@/components/ProductModal';
 import { toast } from 'sonner';
 import {
   Users,
@@ -1206,7 +1207,20 @@ function ProductsTab({ t, language }: { t: (key: string) => string; language: st
         </div>
       )}
 
-      {/* TODO: Implementar modal de criação/edição de produtos */}
+      <ProductModal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedProduct(null);
+        }}
+        product={selectedProduct}
+        onSuccess={() => {
+          refetch();
+          setIsModalOpen(false);
+          setSelectedProduct(null);
+        }}
+        language={language}
+      />
     </div>
   );
 }

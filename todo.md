@@ -301,3 +301,11 @@
 - [ ] Testar painel Admin
 - [ ] Validar bilinguismo
 - [ ] Salvar checkpoint final
+
+## Modal de Criação/Edição de Produtos (CONCLUÍDO - 12/12)
+- [x] Criar componente ProductModal com formulário completo
+- [x] Integrar modal com ProductsTab
+- [x] Implementar criação de produtos
+- [x] Implementar edição de produtos
+- [x] Adicionar validação de formulários
+- [x] Testar criação e edição

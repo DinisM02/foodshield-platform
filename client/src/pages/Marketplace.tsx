@@ -10,6 +10,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { trpc } from "@/lib/trpc";
+import { useCart } from "@/contexts/CartContext";
 
 interface Product {
   id: number;
@@ -27,7 +28,7 @@ interface Product {
 export default function Marketplace() {
   const { t } = useLanguage();
   const { user, loading, isAuthenticated } = useAuth();
-  const [cart, setCart] = useState<{ product: Product; quantity: number }[]>([]);
+  const { addToCart: addToCartContext, totalItems, totalPrice } = useCart();
   const [selectedCategory, setSelectedCategory] = useState<string>(t('marketplace.category_all'));
 
   const { data: products, isLoading: productsLoading } = trpc.admin.products.list.useQuery();
@@ -40,20 +41,13 @@ export default function Marketplace() {
     : products.filter(p => p.category === selectedCategory));
 
   const addToCart = (product: Product) => {
-    const existing = cart.find(item => item.product.id === product.id);
-    if (existing) {
-      setCart(cart.map(item => 
-        item.product.id === product.id 
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
-      ));
-    } else {
-      setCart([...cart, { product, quantity: 1 }]);
-    }
+    addToCartContext({
+      productId: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.imageUrl
+    });
   };
-
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
 
   if (!isAuthenticated) {
     return (

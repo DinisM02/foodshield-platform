@@ -12,16 +12,12 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { ShoppingCart, CreditCard, Truck } from "lucide-react";
+import { useCart } from "@/contexts/CartContext";
 
 export default function Checkout() {
   const { t } = useLanguage();
   const [, setLocation] = useLocation();
-  
-  // Get cart from localStorage
-  const [cart] = useState(() => {
-    const stored = localStorage.getItem("cart");
-    return stored ? JSON.parse(stored) : [];
-  });
+  const { cart, totalPrice, clearCart } = useCart();
 
   const [formData, setFormData] = useState({
     deliveryAddress: "",
@@ -34,15 +30,13 @@ export default function Checkout() {
   const createOrderMutation = trpc.orders.create.useMutation({
     onSuccess: (data) => {
       toast.success(t("checkout.success"));
-      localStorage.removeItem("cart");
+      clearCart();
       setLocation(`/my-area`);
     },
     onError: (error) => {
       toast.error(t("checkout.error") + ": " + error.message);
     },
   });
-
-  const totalAmount = cart.reduce((sum: number, item: any) => sum + (item.price * item.quantity), 0);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,7 +54,7 @@ export default function Checkout() {
     createOrderMutation.mutate({
       ...formData,
       items: cart.map((item: any) => ({
-        productId: item.id,
+        productId: item.productId,
         productName: item.name,
         quantity: item.quantity,
         price: item.price,
@@ -206,7 +200,7 @@ export default function Checkout() {
                 <div className="border-t pt-4">
                   <div className="flex justify-between items-center text-lg font-bold">
                     <span>{t("checkout.total")}</span>
-                    <span>{totalAmount} MZN</span>
+                    <span>{totalPrice.toFixed(2)} MZN</span>
                   </div>
                 </div>
               </CardContent>

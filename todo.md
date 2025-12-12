@@ -258,3 +258,13 @@
 - [x] Adicionar dados de seed para popular banco
 - [x] Testar todas as funcionalidades
 - [x] Salvar checkpoint
+
+## Bugs Encontrados Durante Testes (PARCIALMENTE RESOLVIDO)
+- [x] Carrinho não está persistindo itens adicionados (RESOLVIDO - CartContext com localStorage)
+- [x] Checkout mostra "Carrinho Vazio" mesmo após adicionar produtos (RESOLVIDO - useCart funcionando)
+- [x] Verificar se cart está sendo armazenado corretamente no localStorage ou estado (RESOLVIDO)
+- [x] Corrigir Checkout para ler dados do carrinho (RESOLVIDO)
+- [ ] Botão "Confirmar Pedido" não responde (EM INVESTIGAÇÃO - handleSubmit não sendo chamado)
+- [ ] Testar fluxo completo: adicionar ao carrinho → checkout → finalizar pedido
+- [ ] Testar painel Admin
+- [ ] Salvar checkpoint final

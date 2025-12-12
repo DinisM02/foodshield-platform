@@ -9,6 +9,7 @@ import { ShoppingCart, Leaf, Package, Star } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { trpc } from "@/lib/trpc";
 
 interface Product {
   id: number;
@@ -21,68 +22,7 @@ interface Product {
   stock: number;
 }
 
-const mockProducts: Product[] = [
-  {
-    id: 1,
-    name: "Sementes Orgânicas de Milho",
-    description: "Sementes certificadas, livres de OGM, ideais para agricultura sustentável",
-    price: 250,
-    category: "Sementes",
-    imageUrl: "https://images.unsplash.com/photo-1574943320219-553eb213f72d?q=80&w=800",
-    sustainabilityScore: 95,
-    stock: 50
-  },
-  {
-    id: 2,
-    name: "Fertilizante Orgânico",
-    description: "Composto natural rico em nutrientes para solo saudável",
-    price: 180,
-    category: "Insumos",
-    imageUrl: "https://images.unsplash.com/photo-1464226184884-fa280b87c399?q=80&w=800",
-    sustainabilityScore: 90,
-    stock: 100
-  },
-  {
-    id: 3,
-    name: "Sistema de Irrigação por Gotejamento",
-    description: "Economize até 70% de água com tecnologia eficiente",
-    price: 1500,
-    category: "Equipamentos",
-    imageUrl: "https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?q=80&w=800",
-    sustainabilityScore: 88,
-    stock: 20
-  },
-  {
-    id: 4,
-    name: "Kit de Compostagem",
-    description: "Transforme resíduos orgânicos em adubo de qualidade",
-    price: 450,
-    category: "Equipamentos",
-    imageUrl: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=800",
-    sustainabilityScore: 92,
-    stock: 35
-  },
-  {
-    id: 5,
-    name: "Tomate Orgânico Local",
-    description: "Produção local certificada, colhido na hora certa",
-    price: 80,
-    category: "Produtos Frescos",
-    imageUrl: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?q=80&w=800",
-    sustainabilityScore: 85,
-    stock: 200
-  },
-  {
-    id: 6,
-    name: "Mel Silvestre",
-    description: "Mel puro de abelhas nativas, sem processamento",
-    price: 350,
-    category: "Produtos Frescos",
-    imageUrl: "https://images.unsplash.com/photo-1587049352846-4a222e784720?q=80&w=800",
-    sustainabilityScore: 93,
-    stock: 45
-  }
-];
+
 
 export default function Marketplace() {
   const { t } = useLanguage();
@@ -90,12 +30,14 @@ export default function Marketplace() {
   const [cart, setCart] = useState<{ product: Product; quantity: number }[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>(t('marketplace.category_all'));
 
+  const { data: products, isLoading: productsLoading } = trpc.admin.products.list.useQuery();
+
   const categories = [t('marketplace.category_all'), t('marketplace.category_seeds'), t('marketplace.category_inputs'), t('marketplace.category_equipment'), t('marketplace.category_fresh')];
 
   const allCategoryLabel = t('marketplace.category_all');
-  const filteredProducts = selectedCategory === allCategoryLabel || selectedCategory === 'Todos'
-    ? mockProducts 
-    : mockProducts.filter(p => p.category === selectedCategory);
+  const filteredProducts = !products ? [] : (selectedCategory === allCategoryLabel || selectedCategory === 'Todos'
+    ? products 
+    : products.filter(p => p.category === selectedCategory));
 
   const addToCart = (product: Product) => {
     const existing = cart.find(item => item.product.id === product.id);
@@ -150,6 +92,13 @@ export default function Marketplace() {
       </div>
 
       <div className="container py-12">
+        {productsLoading ? (
+          <div className="text-center py-20">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+            <p className="mt-4 text-gray-600">{t('common.loading')}</p>
+          </div>
+        ) : (
+          <>
         {/* Category Filter */}
         <div className="flex flex-wrap gap-3 mb-8">
           {categories.map(category => (
@@ -239,6 +188,8 @@ export default function Marketplace() {
             </Card>
           ))}
         </div>
+        </>
+        )}
       </div>
 
       <Footer />

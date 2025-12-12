@@ -345,6 +345,43 @@ export const appRouter = router({
         return { success: true };
       }),
   }),
+
+  // Seed procedure (admin only)
+  seed: router({
+    all: adminProcedure.mutation(async () => {
+      const { getDb } = await import('./db.js');
+      const { products, blogPosts, services } = await import('../drizzle/schema.js');
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+
+      const seedProducts = [
+        { name: "Sementes Orgânicas de Milho", description: "Sementes certificadas, livres de OGM", price: 250, category: "Sementes", imageUrl: "https://images.unsplash.com/photo-1574943320219-553eb213f72d?q=80&w=800", sustainabilityScore: 95, stock: 50 },
+        { name: "Fertilizante Orgânico", description: "Composto natural rico em nutrientes", price: 180, category: "Insumos", imageUrl: "https://images.unsplash.com/photo-1464226184884-fa280b87c399?q=80&w=800", sustainabilityScore: 90, stock: 100 },
+        { name: "Sistema de Irrigação por Gotejamento", description: "Economize até 70% de água", price: 1500, category: "Equipamentos", imageUrl: "https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?q=80&w=800", sustainabilityScore: 88, stock: 20 },
+        { name: "Kit de Compostagem", description: "Transforme resíduos orgânicos em adubo", price: 450, category: "Equipamentos", imageUrl: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=800", sustainabilityScore: 92, stock: 35 },
+        { name: "Tomate Orgânico Local", description: "Produção local certificada", price: 80, category: "Produtos Frescos", imageUrl: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?q=80&w=800", sustainabilityScore: 85, stock: 200 },
+        { name: "Mel Silvestre", description: "Mel puro de abelhas nativas", price: 350, category: "Produtos Frescos", imageUrl: "https://images.unsplash.com/photo-1587049352846-4a222e784720?q=80&w=800", sustainabilityScore: 93, stock: 45 },
+      ];
+
+      const seedBlogPosts = [
+        { titlePt: "Agricultura Sustentável", titleEn: "Sustainable Agriculture", excerptPt: "Descubra as melhores práticas", excerptEn: "Discover best practices", contentPt: "A agricultura sustentável é fundamental para garantir a segurança alimentar e preservar o meio ambiente para as próximas gerações.", contentEn: "Sustainable agriculture is fundamental to ensure food security and preserve the environment for future generations.", author: "Admin", category: "Agricultura", imageUrl: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=800", readTime: 5, published: true },
+        { titlePt: "Compostagem", titleEn: "Composting", excerptPt: "Aprenda a fazer compostagem", excerptEn: "Learn how to compost", contentPt: "A compostagem é uma técnica simples e eficaz para reduzir resíduos orgânicos e criar adubo natural de alta qualidade.", contentEn: "Composting is a simple and effective technique to reduce organic waste and create high-quality natural fertilizer.", author: "Admin", category: "Sustentabilidade", imageUrl: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=800", readTime: 4, published: true },
+        { titlePt: "Irrigação Eficiente", titleEn: "Efficient Irrigation", excerptPt: "Técnicas modernas de irrigação", excerptEn: "Modern irrigation techniques", contentPt: "Sistemas eficientes podem reduzir 70% do consumo de água, economizando recursos e aumentando a produtividade.", contentEn: "Efficient systems can reduce water consumption by 70%, saving resources and increasing productivity.", author: "Admin", category: "Tecnologia", imageUrl: "https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?q=80&w=800", readTime: 6, published: true },
+      ];
+
+      const seedServices = [
+        { titlePt: "Consultoria em Agricultura", titleEn: "Agriculture Consulting", descriptionPt: "Orientação especializada", descriptionEn: "Specialized guidance", specialist: "Dr. Silva", price: 500, priceType: "hourly" as const, features: JSON.stringify(["Análise", "Planejamento"]), available: true },
+        { titlePt: "Análise de Solo", titleEn: "Soil Analysis", descriptionPt: "Análise completa do solo", descriptionEn: "Complete soil analysis", specialist: "Eng. Santos", price: 300, priceType: "project" as const, features: JSON.stringify(["Coleta", "Relatório"]), available: true },
+        { titlePt: "Treinamento em Compostagem", titleEn: "Composting Training", descriptionPt: "Workshop prático", descriptionEn: "Practical workshop", specialist: "Prof. Costa", price: 200, priceType: "daily" as const, features: JSON.stringify(["Teoria", "Prática"]), available: true },
+      ];
+
+      await Promise.all(seedProducts.map(p => db.insert(products).values(p)));
+      await Promise.all(seedBlogPosts.map(p => db.insert(blogPosts).values(p)));
+      await Promise.all(seedServices.map(s => db.insert(services).values(s)));
+
+      return { success: true, message: 'Database seeded successfully!' };
+    }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

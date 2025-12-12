@@ -1234,11 +1234,39 @@ function AnalyticsTab({ t, language }: { t: (key: string) => string; language: s
 }
 
 function SettingsTab({ t, language }: { t: (key: string) => string; language: string }) {
+  const seedMutation = trpc.seed.all.useMutation({
+    onSuccess: () => {
+      toast.success(language === 'pt' ? 'Banco de dados populado com sucesso!' : 'Database seeded successfully!');
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
   return (
     <div>
       <h3 className="text-xl font-bold text-gray-900 mb-6">
         {t('admin.settings')}
       </h3>
+      <div className="bg-white rounded-lg shadow p-6 max-w-2xl mb-6">
+        <h4 className="text-lg font-bold mb-4">
+          {language === 'pt' ? 'Dados Iniciais' : 'Initial Data'}
+        </h4>
+        <p className="text-sm text-gray-600 mb-4">
+          {language === 'pt' 
+            ? 'Popule o banco de dados com produtos, artigos e serviços de exemplo. Use apenas se o banco estiver vazio.'
+            : 'Populate database with sample products, articles and services. Use only if database is empty.'}
+        </p>
+        <Button 
+          onClick={() => seedMutation.mutate()}
+          disabled={seedMutation.isPending}
+          className="bg-green-600 hover:bg-green-700"
+        >
+          {seedMutation.isPending 
+            ? (language === 'pt' ? 'Populando...' : 'Seeding...') 
+            : (language === 'pt' ? 'Popular Banco de Dados' : 'Seed Database')}
+        </Button>
+      </div>
       <div className="bg-white rounded-lg shadow p-6 max-w-2xl">
         <div className="space-y-6">
           <div>

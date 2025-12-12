@@ -22,6 +22,11 @@ import {
   createService,
   updateService,
   deleteService,
+  createOrder,
+  getUserOrders,
+  getOrderById,
+  updateOrderStatus,
+  getAllOrders,
 } from "./db";
 
 // Admin-only procedure
@@ -265,6 +270,80 @@ export const appRouter = router({
         return { success: true };
       }),
     }),
+  }),
+
+  // ===== ORDERS =====
+  orders: router({
+    create: protectedProcedure
+      .input(z.object({
+        deliveryAddress: z.string().min(1),
+        deliveryCity: z.string().min(1),
+        deliveryPhone: z.string().min(1),
+        paymentMethod: z.string().min(1),
+        notes: z.string().optional(),
+        items: z.array(z.object({
+          productId: z.number(),
+          productName: z.string(),
+          quantity: z.number(),
+          price: z.number(),
+        })),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const totalAmount = input.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        
+        const orderId = await createOrder({
+          userId: ctx.user!.id,
+          totalAmount,
+          deliveryAddress: input.deliveryAddress,
+          deliveryCity: input.deliveryCity,
+          deliveryPhone: input.deliveryPhone,
+          paymentMethod: input.paymentMethod,
+          notes: input.notes || null,
+          status: "pending",
+        }, input.items);
+
+        if (!orderId) {
+          throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to create order" });
+        }
+
+        return { orderId, success: true };
+      }),
+
+    myOrders: protectedProcedure.query(async ({ ctx }) => {
+      return await getUserOrders(ctx.user!.id);
+    }),
+
+    getById: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ ctx, input }) => {
+        const order = await getOrderById(input.id);
+        if (!order) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "Order not found" });
+        }
+        // Verify ownership
+        if (order.userId !== ctx.user!.id && ctx.user!.role !== "admin") {
+          throw new TRPCError({ code: "FORBIDDEN", message: "Not authorized" });
+        }
+        return order;
+      }),
+
+    // Admin procedures
+    all: adminProcedure.query(async () => {
+      return await getAllOrders();
+    }),
+
+    updateStatus: adminProcedure
+      .input(z.object({
+        id: z.number(),
+        status: z.enum(["pending", "processing", "shipped", "delivered", "cancelled"]),
+      }))
+      .mutation(async ({ input }) => {
+        const success = await updateOrderStatus(input.id, input.status);
+        if (!success) {
+          throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to update order status" });
+        }
+        return { success: true };
+      }),
   }),
 });
 

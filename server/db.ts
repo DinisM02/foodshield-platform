@@ -286,3 +286,71 @@ export async function deleteService(id: number) {
   await db.delete(services).where(eq(services.id, id));
   return true;
 }
+
+// ===== ORDER QUERIES =====
+import { orders, orderItems, InsertOrder, InsertOrderItem } from "../drizzle/schema";
+
+export async function createOrder(order: InsertOrder, items: Omit<InsertOrderItem, 'orderId'>[]) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot create order: database not available");
+    return null;
+  }
+
+  const orderResult = await db.insert(orders).values(order);
+  const orderId = Number((orderResult as any).insertId);
+
+  const itemsWithOrderId = items.map(item => ({ ...item, orderId }));
+  await db.insert(orderItems).values(itemsWithOrderId);
+
+  return orderId;
+}
+
+export async function getUserOrders(userId: number) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get user orders: database not available");
+    return [];
+  }
+
+  return await db.select().from(orders).where(eq(orders.userId, userId)).orderBy(desc(orders.createdAt));
+}
+
+export async function getOrderById(id: number) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get order: database not available");
+    return null;
+  }
+
+  const orderResult = await db.select().from(orders).where(eq(orders.id, id)).limit(1);
+  if (orderResult.length === 0) return null;
+
+  const itemsResult = await db.select().from(orderItems).where(eq(orderItems.orderId, id));
+
+  return {
+    ...orderResult[0],
+    items: itemsResult
+  };
+}
+
+export async function updateOrderStatus(id: number, status: string) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot update order status: database not available");
+    return false;
+  }
+
+  await db.update(orders).set({ status: status as any }).where(eq(orders.id, id));
+  return true;
+}
+
+export async function getAllOrders() {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get all orders: database not available");
+    return [];
+  }
+
+  return await db.select().from(orders).orderBy(desc(orders.createdAt));
+}

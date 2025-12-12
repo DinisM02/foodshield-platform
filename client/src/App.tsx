@@ -8,6 +8,8 @@ import { LanguageProvider } from "./contexts/LanguageContext";
 import Home from "./pages/Home";
 import Knowledge from "./pages/Knowledge";
 import Marketplace from "./pages/Marketplace";
+import Checkout from "./pages/Checkout";
+import MyOrders from "./pages/MyOrders";
 import Services from "./pages/Services";
 import Tools from "./pages/Tools";
 
@@ -22,6 +24,8 @@ function Router() {
       <Route path={"/"} component={Home} />
       <Route path={"/knowledge"} component={Knowledge} />
       <Route path={"/marketplace"} component={Marketplace} />
+      <Route path={"/checkout"} component={Checkout} />
+      <Route path={"/my-orders"} component={MyOrders} />
       <Route path={"/services"} component={Services} />
       <Route path={"/tools"} component={Tools} />
 

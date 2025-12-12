@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "wouter";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -174,7 +175,9 @@ export default function Marketplace() {
                 </div>
                 <div className="text-right">
                   <div className="text-2xl font-bold text-primary">{totalPrice.toLocaleString('pt-MZ')} MZN</div>
-                  <Button size="sm" className="mt-2">{t('marketplace.checkout')}</Button>
+                  <Link href="/checkout">
+                    <Button size="sm" className="mt-2">{t('marketplace.checkout')}</Button>
+                  </Link>
                 </div>
               </div>
             </CardContent>

@@ -1,10 +1,11 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { useAuth } from '@/_core/hooks/useAuth';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useLocation } from 'wouter';
 import { trpc } from '@/lib/trpc';
 import { Button } from '@/components/ui/button';
 import { AdminModal } from '@/components/AdminModal';
+import { toast } from 'sonner';
 import {
   Users,
   FileText,
@@ -1012,13 +1013,180 @@ function BlogForm({ language, t, onSuccess }: { language: string; t: (key: strin
 }
 
 function MarketplaceTab({ t, language }: { t: (key: string) => string; language: string }) {
+  const { data: orders, isLoading, refetch } = trpc.orders.all.useQuery();
+  const { data: products } = trpc.admin.products.list.useQuery();
+  const updateStatusMutation = trpc.orders.updateStatus.useMutation({
+    onSuccess: () => {
+      refetch();
+      toast.success(language === 'pt' ? 'Status atualizado!' : 'Status updated!');
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const [selectedOrder, setSelectedOrder] = useState<any>(null);
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+
+  const filteredOrders = orders?.filter(order => 
+    statusFilter === 'all' || order.status === statusFilter
+  ) || [];
+
+  const handleStatusChange = (orderId: number, newStatus: string) => {
+    updateStatusMutation.mutate({ id: orderId, status: newStatus as any });
+  };
+
+  const getStatusBadge = (status: string) => {
+    const colors: Record<string, string> = {
+      pending: 'bg-yellow-100 text-yellow-800',
+      processing: 'bg-blue-100 text-blue-800',
+      shipped: 'bg-purple-100 text-purple-800',
+      delivered: 'bg-green-100 text-green-800',
+      cancelled: 'bg-red-100 text-red-800',
+    };
+    return (
+      <span className={`px-2 py-1 rounded-full text-xs font-medium ${colors[status] || 'bg-gray-100 text-gray-800'}`}>
+        {language === 'pt' ? t(`orders.status.${status}`) : t(`orders.status.${status}`)}
+      </span>
+    );
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
   return (
     <div>
-      <h3 className="text-xl font-bold text-gray-900 mb-6">
-        {language === 'pt' ? 'Gerenciar Marketplace' : 'Manage Marketplace'}
-      </h3>
-      <div className="bg-white rounded-lg shadow p-6 text-center text-gray-500">
-        {language === 'pt' ? 'Em desenvolvimento...' : 'Coming soon...'}
+      <div className="flex justify-between items-center mb-6">
+        <h3 className="text-xl font-bold text-gray-900">
+          {language === 'pt' ? 'Gerenciar Pedidos' : 'Manage Orders'}
+        </h3>
+        <div className="flex gap-2">
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="px-4 py-2 border rounded-lg"
+          >
+            <option value="all">{language === 'pt' ? 'Todos' : 'All'}</option>
+            <option value="pending">{t('orders.status.pending')}</option>
+            <option value="processing">{t('orders.status.processing')}</option>
+            <option value="shipped">{t('orders.status.shipped')}</option>
+            <option value="delivered">{t('orders.status.delivered')}</option>
+            <option value="cancelled">{t('orders.status.cancelled')}</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-lg shadow overflow-hidden">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                {language === 'pt' ? 'ID' : 'ID'}
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                {language === 'pt' ? 'Cliente' : 'Customer'}
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                {language === 'pt' ? 'Total' : 'Total'}
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                {language === 'pt' ? 'Status' : 'Status'}
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                {language === 'pt' ? 'Data' : 'Date'}
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                {language === 'pt' ? 'Ações' : 'Actions'}
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {filteredOrders.length === 0 ? (
+              <tr>
+                <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
+                  {language === 'pt' ? 'Nenhum pedido encontrado' : 'No orders found'}
+                </td>
+              </tr>
+            ) : (
+              filteredOrders.map((order) => (
+                <tr key={order.id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    #{order.id}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {order.deliveryPhone}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-semibold">
+                    {order.totalAmount.toLocaleString('pt-MZ')} MZN
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {getStatusBadge(order.status)}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {new Date(order.createdAt).toLocaleDateString(language === 'pt' ? 'pt-MZ' : 'en-US')}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm">
+                    <select
+                      value={order.status}
+                      onChange={(e) => handleStatusChange(order.id, e.target.value)}
+                      className="px-2 py-1 border rounded text-xs"
+                      disabled={updateStatusMutation.isPending}
+                    >
+                      <option value="pending">{t('orders.status.pending')}</option>
+                      <option value="processing">{t('orders.status.processing')}</option>
+                      <option value="shipped">{t('orders.status.shipped')}</option>
+                      <option value="delivered">{t('orders.status.delivered')}</option>
+                      <option value="cancelled">{t('orders.status.cancelled')}</option>
+                    </select>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="mt-6 bg-white rounded-lg shadow p-6">
+        <h4 className="text-lg font-bold mb-4">
+          {language === 'pt' ? 'Estatísticas de Pedidos' : 'Order Statistics'}
+        </h4>
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+          <div className="bg-yellow-50 p-4 rounded-lg">
+            <p className="text-sm text-yellow-600">{t('orders.status.pending')}</p>
+            <p className="text-2xl font-bold text-yellow-700">
+              {orders?.filter(o => o.status === 'pending').length || 0}
+            </p>
+          </div>
+          <div className="bg-blue-50 p-4 rounded-lg">
+            <p className="text-sm text-blue-600">{t('orders.status.processing')}</p>
+            <p className="text-2xl font-bold text-blue-700">
+              {orders?.filter(o => o.status === 'processing').length || 0}
+            </p>
+          </div>
+          <div className="bg-purple-50 p-4 rounded-lg">
+            <p className="text-sm text-purple-600">{t('orders.status.shipped')}</p>
+            <p className="text-2xl font-bold text-purple-700">
+              {orders?.filter(o => o.status === 'shipped').length || 0}
+            </p>
+          </div>
+          <div className="bg-green-50 p-4 rounded-lg">
+            <p className="text-sm text-green-600">{t('orders.status.delivered')}</p>
+            <p className="text-2xl font-bold text-green-700">
+              {orders?.filter(o => o.status === 'delivered').length || 0}
+            </p>
+          </div>
+          <div className="bg-red-50 p-4 rounded-lg">
+            <p className="text-sm text-red-600">{t('orders.status.cancelled')}</p>
+            <p className="text-2xl font-bold text-red-700">
+              {orders?.filter(o => o.status === 'cancelled').length || 0}
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

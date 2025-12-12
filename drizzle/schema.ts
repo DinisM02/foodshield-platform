@@ -43,7 +43,23 @@ export const orders = mysqlTable("orders", {
   id: int("id").autoincrement().primaryKey(),
   userId: int("userId").notNull(),
   totalAmount: int("totalAmount").notNull(),
-  status: mysqlEnum("status", ["pending", "completed", "cancelled"]).default("pending").notNull(),
+  status: mysqlEnum("status", ["pending", "processing", "shipped", "delivered", "cancelled"]).default("pending").notNull(),
+  deliveryAddress: text("deliveryAddress").notNull(),
+  deliveryCity: varchar("deliveryCity", { length: 100 }).notNull(),
+  deliveryPhone: varchar("deliveryPhone", { length: 20 }).notNull(),
+  paymentMethod: varchar("paymentMethod", { length: 50 }).notNull(),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export const orderItems = mysqlTable("orderItems", {
+  id: int("id").autoincrement().primaryKey(),
+  orderId: int("orderId").notNull(),
+  productId: int("productId").notNull(),
+  productName: text("productName").notNull(),
+  quantity: int("quantity").notNull(),
+  price: int("price").notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
@@ -94,6 +110,9 @@ export type InsertUser = typeof users.$inferInsert;
 export type Content = typeof contents.$inferSelect;
 export type Product = typeof products.$inferSelect;
 export type Order = typeof orders.$inferSelect;
+export type InsertOrder = typeof orders.$inferInsert;
+export type OrderItem = typeof orderItems.$inferSelect;
+export type InsertOrderItem = typeof orderItems.$inferInsert;
 export type Consultation = typeof consultations.$inferSelect;
 export type BlogPost = typeof blogPosts.$inferSelect;
 export type InsertBlogPost = typeof blogPosts.$inferInsert;

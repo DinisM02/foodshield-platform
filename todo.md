@@ -325,3 +325,11 @@
 - [x] Manter compatibilidade com botão Choose File
 - [x] Testar drag-and-drop com diferentes tipos de arquivo
 - [x] Validar UX em diferentes navegadores
+
+## Compressão Automática de Imagens (CONCLUÍDO - 12/12)
+- [x] Instalar biblioteca browser-image-compression
+- [x] Implementar função de compressão no ProductModal
+- [x] Adicionar indicador de progresso durante compressão
+- [x] Configurar qualidade e tamanho máximo
+- [x] Testar com imagens grandes (>5MB)
+- [x] Validar qualidade visual após compressão

@@ -3,6 +3,7 @@ import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { trpc } from '@/lib/trpc';
 import { toast } from 'sonner';
+import imageCompression from 'browser-image-compression';
 
 interface ProductModalProps {
   isOpen: boolean;
@@ -26,6 +27,7 @@ export function ProductModal({ isOpen, onClose, product, onSuccess, language }: 
   const [previewUrl, setPreviewUrl] = useState<string>('');
   const [isUploading, setIsUploading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [isCompressing, setIsCompressing] = useState(false);
 
   const uploadImageMutation = trpc.admin.products.uploadImage.useMutation();
 
@@ -137,28 +139,70 @@ export function ProductModal({ isOpen, onClose, product, onSuccess, language }: 
     });
   };
 
-  const processFile = (file: File) => {
+  const processFile = async (file: File) => {
     // Validate file type
     if (!file.type.startsWith('image/')) {
       toast.error(language === 'pt' ? 'Por favor selecione uma imagem' : 'Please select an image');
       return false;
     }
 
-    // Validate file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error(language === 'pt' ? 'Imagem muito grande (máx 5MB)' : 'Image too large (max 5MB)');
+    // Validate file size (max 10MB before compression)
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error(language === 'pt' ? 'Imagem muito grande (máx 10MB)' : 'Image too large (max 10MB)');
       return false;
     }
 
-    setSelectedFile(file);
+    try {
+      setIsCompressing(true);
+      
+      // Compression options
+      const options = {
+        maxSizeMB: 1, // Max file size in MB
+        maxWidthOrHeight: 1920, // Max width or height
+        useWebWorker: true, // Use web worker for better performance
+        fileType: file.type as 'image/jpeg' | 'image/png' | 'image/webp',
+      };
 
-    // Create preview
-    const reader = new FileReader();
-    reader.onload = () => {
-      setPreviewUrl(reader.result as string);
-    };
-    reader.readAsDataURL(file);
-    return true;
+      // Show compression toast
+      const originalSize = (file.size / 1024 / 1024).toFixed(2);
+      toast.info(
+        language === 'pt' 
+          ? `Comprimindo imagem (${originalSize}MB)...` 
+          : `Compressing image (${originalSize}MB)...`
+      );
+
+      // Compress the image
+      const compressedFile = await imageCompression(file, options);
+      const compressedSize = (compressedFile.size / 1024 / 1024).toFixed(2);
+      
+      // Show success message with size reduction
+      toast.success(
+        language === 'pt'
+          ? `Imagem comprimida: ${originalSize}MB → ${compressedSize}MB`
+          : `Image compressed: ${originalSize}MB → ${compressedSize}MB`
+      );
+
+      setSelectedFile(compressedFile);
+
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = () => {
+        setPreviewUrl(reader.result as string);
+      };
+      reader.readAsDataURL(compressedFile);
+      
+      setIsCompressing(false);
+      return true;
+    } catch (error) {
+      console.error('Compression error:', error);
+      setIsCompressing(false);
+      toast.error(
+        language === 'pt'
+          ? 'Erro ao comprimir imagem'
+          : 'Error compressing image'
+      );
+      return false;
+    }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -193,7 +237,7 @@ export function ProductModal({ isOpen, onClose, product, onSuccess, language }: 
 
   if (!isOpen) return null;
 
-  const isLoading = createMutation.isPending || updateMutation.isPending || isUploading;
+  const isLoading = createMutation.isPending || updateMutation.isPending || isUploading || isCompressing;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -385,8 +429,13 @@ export function ProductModal({ isOpen, onClose, product, onSuccess, language }: 
                     <p className="pl-1">{language === 'pt' ? 'ou arraste e solte' : 'or drag and drop'}</p>
                   </div>
                   <p className="text-xs leading-5 text-gray-600">
-                    {language === 'pt' ? 'PNG, JPG, GIF até 5MB' : 'PNG, JPG, GIF up to 5MB'}
+                    {language === 'pt' ? 'PNG, JPG, GIF até 10MB (compressão automática)' : 'PNG, JPG, GIF up to 10MB (auto-compression)'}
                   </p>
+                  {isCompressing && (
+                    <p className="text-xs leading-5 text-emerald-600 font-semibold mt-2">
+                      {language === 'pt' ? 'Comprimindo imagem...' : 'Compressing image...'}
+                    </p>
+                  )}
                 </div>
               )}
             </div>

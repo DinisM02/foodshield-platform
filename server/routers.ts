@@ -274,6 +274,9 @@ export const appRouter = router({
 
   // ===== ORDERS =====
   orders: router({
+    getUserOrders: protectedProcedure.query(async ({ ctx }) => {
+      return await getUserOrders(ctx.user.id);
+    }),
     create: protectedProcedure
       .input(z.object({
         deliveryAddress: z.string().min(1),

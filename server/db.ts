@@ -298,12 +298,18 @@ export async function createOrder(order: InsertOrder, items: Omit<InsertOrderIte
   }
 
   const orderResult = await db.insert(orders).values(order);
-  const orderId = Number((orderResult as any).insertId);
+  
+  // Get the inserted order ID
+  const orderId = orderResult[0]?.insertId || (orderResult as any).insertId || (orderResult as any)[0]?.insertId;
+  
+  if (!orderId) {
+    throw new Error('Failed to get order ID after insert');
+  }
 
-  const itemsWithOrderId = items.map(item => ({ ...item, orderId }));
+  const itemsWithOrderId = items.map(item => ({ ...item, orderId: Number(orderId) }));
   await db.insert(orderItems).values(itemsWithOrderId);
 
-  return orderId;
+  return Number(orderId);
 }
 
 export async function getUserOrders(userId: number) {

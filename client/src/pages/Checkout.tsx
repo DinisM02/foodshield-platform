@@ -38,19 +38,10 @@ export default function Checkout() {
     },
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     
-    if (cart.length === 0) {
-      toast.error(t("checkout.empty_cart"));
-      return;
-    }
-
-    if (!formData.deliveryAddress || !formData.deliveryCity || !formData.deliveryPhone) {
-      toast.error(t("checkout.fill_required"));
-      return;
-    }
-
     createOrderMutation.mutate({
       ...formData,
       items: cart.map((item: any) => ({
@@ -175,7 +166,12 @@ export default function Checkout() {
                 </CardContent>
               </Card>
 
-              <Button type="submit" size="lg" className="w-full" disabled={createOrderMutation.isPending}>
+              <Button 
+                type="submit" 
+                size="lg" 
+                className="w-full" 
+                disabled={createOrderMutation.isPending}
+              >
                 {createOrderMutation.isPending ? t("checkout.processing") : t("checkout.place_order")}
               </Button>
             </form>

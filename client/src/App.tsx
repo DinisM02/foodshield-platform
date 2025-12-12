@@ -10,6 +10,7 @@ import Knowledge from "./pages/Knowledge";
 import Marketplace from "./pages/Marketplace";
 import Checkout from "./pages/Checkout";
 import MyOrders from "./pages/MyOrders";
+import MyArea from "./pages/MyArea";
 import Services from "./pages/Services";
 import Tools from "./pages/Tools";
 
@@ -25,7 +26,8 @@ function Router() {
       <Route path={"/knowledge"} component={Knowledge} />
       <Route path={"/marketplace"} component={Marketplace} />
       <Route path={"/checkout"} component={Checkout} />
-      <Route path={"/my-orders"} component={MyOrders} />
+      <Route path="/my-orders" component={MyOrders} />
+      <Route path="/my-area" component={MyArea} />
       <Route path={"/services"} component={Services} />
       <Route path={"/tools"} component={Tools} />
 

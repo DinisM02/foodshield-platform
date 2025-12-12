@@ -268,3 +268,36 @@
 - [ ] Testar fluxo completo: adicionar ao carrinho → checkout → finalizar pedido
 - [ ] Testar painel Admin
 - [ ] Salvar checkpoint final
+
+## Integração Completa de Todas as Funcionalidades (EM PROGRESSO)
+
+### 1. Corrigir Checkout
+- [ ] Investigar e corrigir botão Confirmar Pedido
+- [ ] Testar fluxo completo de compra
+- [ ] Validar criação de pedidos no banco
+
+### 2. Centro de Conhecimento
+- [ ] Tornar artigos dinâmicos do banco
+- [ ] Implementar busca de artigos
+- [ ] Adicionar filtros por categoria
+- [ ] Criar página de visualização de artigo completo
+- [ ] Implementar sistema de favoritos
+
+### 3. Serviços
+- [ ] Tornar serviços dinâmicos do banco
+- [ ] Implementar sistema de agendamento
+- [ ] Criar formulário de solicitação de consulta
+- [ ] Adicionar confirmação de agendamento
+- [ ] Implementar histórico de consultas
+
+### 4. Ferramentas
+- [ ] Criar calculadora de sustentabilidade
+- [ ] Implementar calculadora de custos
+- [ ] Adicionar dashboard de métricas
+- [ ] Criar gráficos interativos
+
+### 5. Testes Finais
+- [ ] Testar todos os fluxos de usuário
+- [ ] Testar painel Admin
+- [ ] Validar bilinguismo
+- [ ] Salvar checkpoint final

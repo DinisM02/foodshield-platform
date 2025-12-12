@@ -22,6 +22,11 @@ export function ProductModal({ isOpen, onClose, product, onSuccess, language }: 
     stock: '',
     sustainabilityScore: '85',
   });
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string>('');
+  const [isUploading, setIsUploading] = useState(false);
+
+  const uploadImageMutation = trpc.admin.products.uploadImage.useMutation();
 
   const createMutation = trpc.admin.products.create.useMutation({
     onSuccess: () => {
@@ -52,10 +57,11 @@ export function ProductModal({ isOpen, onClose, product, onSuccess, language }: 
         description: product.description || '',
         price: product.price?.toString() || '',
         category: product.category || 'Sementes',
-        image: product.image || '',
+        image: product.imageUrl || '',
         stock: product.stock?.toString() || '',
         sustainabilityScore: product.sustainabilityScore?.toString() || '85',
       });
+      setPreviewUrl(product.imageUrl || '');
     } else {
       setFormData({
         name: '',
@@ -66,18 +72,52 @@ export function ProductModal({ isOpen, onClose, product, onSuccess, language }: 
         stock: '',
         sustainabilityScore: '85',
       });
+      setPreviewUrl('');
     }
-  }, [product]);
+    setSelectedFile(null);
+  }, [product, isOpen]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    let imageUrl = formData.image;
+
+    // Upload image if a file is selected
+    if (selectedFile) {
+      setIsUploading(true);
+      try {
+        // Convert file to base64
+        const reader = new FileReader();
+        const base64Promise = new Promise<string>((resolve, reject) => {
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = reject;
+          reader.readAsDataURL(selectedFile);
+        });
+        
+        const base64 = await base64Promise;
+        
+        // Upload to S3
+        const uploadResult = await uploadImageMutation.mutateAsync({
+          file: base64,
+          filename: selectedFile.name,
+          contentType: selectedFile.type,
+        });
+        
+        imageUrl = uploadResult.url;
+      } catch (error) {
+        toast.error(language === 'pt' ? 'Erro ao fazer upload da imagem' : 'Error uploading image');
+        setIsUploading(false);
+        return;
+      }
+      setIsUploading(false);
+    }
 
     const data = {
       name: formData.name,
       description: formData.description,
       price: parseInt(formData.price),
       category: formData.category,
-      imageUrl: formData.image,
+      imageUrl,
       stock: parseInt(formData.stock),
       sustainabilityScore: parseInt(formData.sustainabilityScore),
     };
@@ -96,9 +136,35 @@ export function ProductModal({ isOpen, onClose, product, onSuccess, language }: 
     });
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast.error(language === 'pt' ? 'Por favor selecione uma imagem' : 'Please select an image');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error(language === 'pt' ? 'Imagem muito grande (máx 5MB)' : 'Image too large (max 5MB)');
+      return;
+    }
+
+    setSelectedFile(file);
+
+    // Create preview
+    const reader = new FileReader();
+    reader.onload = () => {
+      setPreviewUrl(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
   if (!isOpen) return null;
 
-  const isLoading = createMutation.isPending || updateMutation.isPending;
+  const isLoading = createMutation.isPending || updateMutation.isPending || isUploading;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -224,26 +290,20 @@ export function ProductModal({ isOpen, onClose, product, onSuccess, language }: 
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              {language === 'pt' ? 'URL da Imagem *' : 'Image URL *'}
+              {language === 'pt' ? 'Imagem do Produto *' : 'Product Image *'}
             </label>
             <input
-              type="url"
-              name="image"
-              value={formData.image}
-              onChange={handleChange}
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-              placeholder="https://images.unsplash.com/..."
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100"
             />
-            {formData.image && (
+            {previewUrl && (
               <div className="mt-2">
                 <img 
-                  src={formData.image} 
+                  src={previewUrl} 
                   alt="Preview" 
                   className="w-full h-48 object-cover rounded-lg"
-                  onError={(e) => {
-                    e.currentTarget.src = 'https://via.placeholder.com/400x300?text=Invalid+Image+URL';
-                  }}
                 />
               </div>
             )}

@@ -309,3 +309,11 @@
 - [x] Implementar edição de produtos
 - [x] Adicionar validação de formulários
 - [x] Testar criação e edição
+
+## Upload Direto de Imagens (CONCLUÍDO - 12/12)
+- [x] Criar procedure tRPC para upload de imagens
+- [x] Atualizar ProductModal com input file
+- [x] Implementar preview de imagem local
+- [x] Integrar com S3 storage
+- [x] Testar upload e criação de produtos
+- [x] Validar tamanho e tipo de arquivo

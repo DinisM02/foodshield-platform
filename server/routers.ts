@@ -154,6 +154,32 @@ export const appRouter = router({
 
     // ===== ADMIN PRODUCTS MANAGEMENT =====
     products: router({
+      uploadImage: adminProcedure
+        .input(
+          z.object({
+            file: z.string(), // base64 encoded image
+            filename: z.string(),
+            contentType: z.string(),
+          })
+        )
+        .mutation(async ({ input }) => {
+          const { storagePut } = await import("./storage");
+          
+          // Convert base64 to buffer
+          const base64Data = input.file.split(',')[1] || input.file;
+          const buffer = Buffer.from(base64Data, 'base64');
+          
+          // Generate unique filename
+          const timestamp = Date.now();
+          const randomSuffix = Math.random().toString(36).substring(2, 8);
+          const ext = input.filename.split('.').pop() || 'jpg';
+          const key = `products/${timestamp}-${randomSuffix}.${ext}`;
+          
+          // Upload to S3
+          const { url } = await storagePut(key, buffer, input.contentType);
+          
+          return { url, key };
+        }),
       list: adminProcedure.query(async () => {
         return await getAllProducts();
       }),

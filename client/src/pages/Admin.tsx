@@ -90,10 +90,16 @@ export default function Admin() {
       href: '#blog',
     },
     {
-      id: 'marketplace',
-      label: language === 'pt' ? t('admin.marketplace') : t('admin.marketplace'),
+      id: 'products',
+      label: t('admin.products'),
       icon: <ShoppingCart className="w-5 h-5" />,
-      href: '#marketplace',
+      href: '#products',
+    },
+    {
+      id: 'orders',
+      label: t('admin.orders'),
+      icon: <ShoppingCart className="w-5 h-5" />,
+      href: '#orders',
     },
     {
       id: 'services',
@@ -211,7 +217,8 @@ export default function Admin() {
           {activeTab === 'overview' && <OverviewTab t={t} language={language} />}
           {activeTab === 'users' && <UsersTab t={t} language={language} />}
           {activeTab === 'blog' && <BlogTab t={t} language={language} />}
-          {activeTab === 'marketplace' && <MarketplaceTab t={t} language={language} />}
+          {activeTab === 'products' && <ProductsTab t={t} language={language} />}
+          {activeTab === 'orders' && <OrdersTab t={t} language={language} />}
           {activeTab === 'services' && <ServicesTab t={t} language={language} />}
           {activeTab === 'analytics' && <AnalyticsTab t={t} language={language} />}
           {activeTab === 'settings' && <SettingsTab t={t} language={language} />}
@@ -1012,7 +1019,199 @@ function BlogForm({ language, t, onSuccess }: { language: string; t: (key: strin
   );
 }
 
-function MarketplaceTab({ t, language }: { t: (key: string) => string; language: string }) {
+function ProductsTab({ t, language }: { t: (key: string) => string; language: string }) {
+  const { data: products, isLoading, refetch } = trpc.admin.products.list.useQuery();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<any>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [pagination, setPagination] = useState<PaginationState>({
+    page: 1,
+    pageSize: 10,
+    search: '',
+    sortBy: 'name',
+    sortOrder: 'asc',
+  });
+
+  const deleteProductMutation = trpc.admin.products.delete.useMutation({
+    onSuccess: () => {
+      refetch();
+      toast.success(language === 'pt' ? 'Produto deletado!' : 'Product deleted!');
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const handleDelete = (id: number) => {
+    if (confirm(language === 'pt' ? 'Tem certeza que deseja deletar este produto?' : 'Are you sure you want to delete this product?')) {
+      deleteProductMutation.mutate({ id });
+    }
+  };
+
+  const handleEdit = (product: any) => {
+    setSelectedProduct(product);
+    setIsModalOpen(true);
+  };
+
+  const handleCreate = () => {
+    setSelectedProduct(null);
+    setIsModalOpen(true);
+  };
+
+  const filteredProducts = products?.filter(product =>
+    product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    product.category.toLowerCase().includes(searchTerm.toLowerCase())
+  ) || [];
+
+  const paginatedProducts = filteredProducts.slice(
+    (pagination.page - 1) * pagination.pageSize,
+    pagination.page * pagination.pageSize
+  );
+
+  const totalPages = Math.ceil(filteredProducts.length / pagination.pageSize);
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <div className="flex justify-between items-center mb-6">
+        <h3 className="text-xl font-bold text-gray-900">
+          {language === 'pt' ? 'Gerenciar Produtos' : 'Manage Products'}
+        </h3>
+        <Button onClick={handleCreate} className="bg-emerald-600 hover:bg-emerald-700">
+          <Plus className="w-4 h-4 mr-2" />
+          {language === 'pt' ? 'Novo Produto' : 'New Product'}
+        </Button>
+      </div>
+
+      <div className="mb-4 flex gap-4">
+        <div className="flex-1 relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+          <input
+            type="text"
+            placeholder={language === 'pt' ? 'Buscar por nome ou categoria...' : 'Search by name or category...'}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 border rounded-lg"
+          />
+        </div>
+        <select
+          value={pagination.pageSize}
+          onChange={(e) => setPagination({ ...pagination, pageSize: Number(e.target.value), page: 1 })}
+          className="px-4 py-2 border rounded-lg"
+        >
+          <option value="10">{language === 'pt' ? '10 por página' : '10 per page'}</option>
+          <option value="25">{language === 'pt' ? '25 por página' : '25 per page'}</option>
+          <option value="50">{language === 'pt' ? '50 por página' : '50 per page'}</option>
+        </select>
+      </div>
+
+      <div className="bg-white rounded-lg shadow overflow-hidden">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                {language === 'pt' ? 'Nome' : 'Name'}
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                {language === 'pt' ? 'Categoria' : 'Category'}
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                {language === 'pt' ? 'Preço' : 'Price'}
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                {language === 'pt' ? 'Estoque' : 'Stock'}
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                {language === 'pt' ? 'Ações' : 'Actions'}
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {paginatedProducts.length === 0 ? (
+              <tr>
+                <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
+                  {language === 'pt' ? 'Nenhum produto encontrado' : 'No products found'}
+                </td>
+              </tr>
+            ) : (
+              paginatedProducts.map((product) => (
+                <tr key={product.id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm font-medium text-gray-900">{product.name}</div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {product.category}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-semibold">
+                    {product.price} MZN
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {product.stock}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                    <button
+                      onClick={() => handleEdit(product)}
+                      className="text-blue-600 hover:text-blue-900"
+                    >
+                      <Edit className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(product.id)}
+                      className="text-red-600 hover:text-red-900"
+                      disabled={deleteProductMutation.isPending}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {totalPages > 1 && (
+        <div className="mt-4 flex justify-between items-center">
+          <p className="text-sm text-gray-700">
+            {language === 'pt' ? 'Mostrando' : 'Showing'} {(pagination.page - 1) * pagination.pageSize + 1} {language === 'pt' ? 'a' : 'to'} {Math.min(pagination.page * pagination.pageSize, filteredProducts.length)} {language === 'pt' ? 'de' : 'of'} {filteredProducts.length} {language === 'pt' ? 'produtos' : 'products'}
+          </p>
+          <div className="flex gap-2">
+            <Button
+              onClick={() => setPagination({ ...pagination, page: pagination.page - 1 })}
+              disabled={pagination.page === 1}
+              variant="outline"
+              size="sm"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </Button>
+            <span className="px-4 py-2 text-sm">
+              {language === 'pt' ? 'Página' : 'Page'} {pagination.page} {language === 'pt' ? 'de' : 'of'} {totalPages}
+            </span>
+            <Button
+              onClick={() => setPagination({ ...pagination, page: pagination.page + 1 })}
+              disabled={pagination.page === totalPages}
+              variant="outline"
+              size="sm"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {/* TODO: Implementar modal de criação/edição de produtos */}
+    </div>
+  );
+}
+
+function OrdersTab({ t, language }: { t: (key: string) => string; language: string }) {
   const { data: orders, isLoading, refetch } = trpc.orders.all.useQuery();
   const { data: products } = trpc.admin.products.list.useQuery();
   const updateStatusMutation = trpc.orders.updateStatus.useMutation({
@@ -1206,26 +1405,160 @@ function ServicesTab({ t, language }: { t: (key: string) => string; language: st
 }
 
 function AnalyticsTab({ t, language }: { t: (key: string) => string; language: string }) {
+  const { data: orders } = trpc.orders.all.useQuery();
+  const { data: products } = trpc.admin.products.list.useQuery();
+  const { data: users } = trpc.admin.users.list.useQuery();
+
+  const totalRevenue = orders?.reduce((sum, order) => sum + order.totalAmount, 0) || 0;
+  const totalOrders = orders?.length || 0;
+  const averageOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
+
+  const ordersByStatus = {
+    pending: orders?.filter(o => o.status === 'pending').length || 0,
+    processing: orders?.filter(o => o.status === 'processing').length || 0,
+    shipped: orders?.filter(o => o.status === 'shipped').length || 0,
+    delivered: orders?.filter(o => o.status === 'delivered').length || 0,
+    cancelled: orders?.filter(o => o.status === 'cancelled').length || 0,
+  };
+
   return (
     <div>
       <h3 className="text-xl font-bold text-gray-900 mb-6">
         {language === 'pt' ? 'Relatórios e Analytics' : 'Reports and Analytics'}
       </h3>
+
+      {/* KPIs */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+        <div className="bg-white rounded-lg shadow p-6">
+          <p className="text-sm text-gray-600 mb-1">
+            {language === 'pt' ? 'Receita Total' : 'Total Revenue'}
+          </p>
+          <p className="text-3xl font-bold text-emerald-600">
+            {totalRevenue.toLocaleString('pt-MZ')} MZN
+          </p>
+        </div>
+        <div className="bg-white rounded-lg shadow p-6">
+          <p className="text-sm text-gray-600 mb-1">
+            {language === 'pt' ? 'Total de Pedidos' : 'Total Orders'}
+          </p>
+          <p className="text-3xl font-bold text-blue-600">
+            {totalOrders}
+          </p>
+        </div>
+        <div className="bg-white rounded-lg shadow p-6">
+          <p className="text-sm text-gray-600 mb-1">
+            {language === 'pt' ? 'Ticket Médio' : 'Average Order Value'}
+          </p>
+          <p className="text-3xl font-bold text-purple-600">
+            {averageOrderValue.toLocaleString('pt-MZ', { maximumFractionDigits: 0 })} MZN
+          </p>
+        </div>
+        <div className="bg-white rounded-lg shadow p-6">
+          <p className="text-sm text-gray-600 mb-1">
+            {language === 'pt' ? 'Produtos Ativos' : 'Active Products'}
+          </p>
+          <p className="text-3xl font-bold text-orange-600">
+            {products?.length || 0}
+          </p>
+        </div>
+      </div>
+
+      {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white rounded-lg shadow p-6">
           <h4 className="text-lg font-semibold text-gray-900 mb-4">
-            {language === 'pt' ? 'Visitantes por Mês' : 'Visitors per Month'}
+            {language === 'pt' ? 'Pedidos por Status' : 'Orders by Status'}
           </h4>
-          <div className="h-64 bg-gray-100 rounded flex items-center justify-center text-gray-500">
-            {language === 'pt' ? 'Gráfico de visitantes' : 'Visitor chart'}
+          <div className="space-y-3">
+            <div>
+              <div className="flex justify-between mb-1">
+                <span className="text-sm text-gray-600">{t('orders.status.pending')}</span>
+                <span className="text-sm font-semibold">{ordersByStatus.pending}</span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2">
+                <div 
+                  className="bg-yellow-500 h-2 rounded-full" 
+                  style={{ width: `${totalOrders > 0 ? (ordersByStatus.pending / totalOrders) * 100 : 0}%` }}
+                />
+              </div>
+            </div>
+            <div>
+              <div className="flex justify-between mb-1">
+                <span className="text-sm text-gray-600">{t('orders.status.processing')}</span>
+                <span className="text-sm font-semibold">{ordersByStatus.processing}</span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2">
+                <div 
+                  className="bg-blue-500 h-2 rounded-full" 
+                  style={{ width: `${totalOrders > 0 ? (ordersByStatus.processing / totalOrders) * 100 : 0}%` }}
+                />
+              </div>
+            </div>
+            <div>
+              <div className="flex justify-between mb-1">
+                <span className="text-sm text-gray-600">{t('orders.status.shipped')}</span>
+                <span className="text-sm font-semibold">{ordersByStatus.shipped}</span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2">
+                <div 
+                  className="bg-purple-500 h-2 rounded-full" 
+                  style={{ width: `${totalOrders > 0 ? (ordersByStatus.shipped / totalOrders) * 100 : 0}%` }}
+                />
+              </div>
+            </div>
+            <div>
+              <div className="flex justify-between mb-1">
+                <span className="text-sm text-gray-600">{t('orders.status.delivered')}</span>
+                <span className="text-sm font-semibold">{ordersByStatus.delivered}</span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2">
+                <div 
+                  className="bg-green-500 h-2 rounded-full" 
+                  style={{ width: `${totalOrders > 0 ? (ordersByStatus.delivered / totalOrders) * 100 : 0}%` }}
+                />
+              </div>
+            </div>
+            <div>
+              <div className="flex justify-between mb-1">
+                <span className="text-sm text-gray-600">{t('orders.status.cancelled')}</span>
+                <span className="text-sm font-semibold">{ordersByStatus.cancelled}</span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2">
+                <div 
+                  className="bg-red-500 h-2 rounded-full" 
+                  style={{ width: `${totalOrders > 0 ? (ordersByStatus.cancelled / totalOrders) * 100 : 0}%` }}
+                />
+              </div>
+            </div>
           </div>
         </div>
+
         <div className="bg-white rounded-lg shadow p-6">
           <h4 className="text-lg font-semibold text-gray-900 mb-4">
-            {language === 'pt' ? 'Vendas por Produto' : 'Sales by Product'}
+            {language === 'pt' ? 'Top 5 Produtos' : 'Top 5 Products'}
           </h4>
-          <div className="h-64 bg-gray-100 rounded flex items-center justify-center text-gray-500">
-            {language === 'pt' ? 'Gráfico de vendas' : 'Sales chart'}
+          <div className="space-y-3">
+            {products?.slice(0, 5).map((product, index) => (
+              <div key={product.id} className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center">
+                    <span className="text-sm font-bold text-emerald-600">#{index + 1}</span>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-900">{product.name}</p>
+                    <p className="text-xs text-gray-500">{product.category}</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm font-semibold text-gray-900">{product.price} MZN</p>
+                  <p className="text-xs text-gray-500">{language === 'pt' ? 'Estoque' : 'Stock'}: {product.stock}</p>
+                </div>
+              </div>
+            )) || (
+              <p className="text-center text-gray-500 py-8">
+                {language === 'pt' ? 'Nenhum produto encontrado' : 'No products found'}
+              </p>
+            )}
           </div>
         </div>
       </div>

@@ -341,3 +341,14 @@
 - [x] Adicionar botões de ação (Recortar, Cancelar)
 - [x] Integrar com fluxo de upload existente
 - [x] Testar com diferentes proporções e tamanhos
+
+## Área de Consumidor - Portal do Usuário (CONCLUÍDO - 12/12)
+- [x] Criar layout da área de consumidor com sidebar
+- [x] Implementar dashboard do usuário com estatísticas
+- [x] Criar seção de Blog com artigos favoritos e leitura
+- [x] Implementar seção de Marketplace com histórico de compras
+- [x] Criar seção de Serviços com agendamentos
+- [ ] Adicionar perfil do usuário editável
+- [ ] Implementar sistema de notificações
+- [x] Adicionar traduções PT/EN
+- [x] Testar todas as funcionalidades

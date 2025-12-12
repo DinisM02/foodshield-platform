@@ -18,6 +18,10 @@ import Blog from "./pages/Blog";
 import FAQ from "./pages/FAQ";
 import Dashboard from "./pages/Dashboard";
 import Admin from "./pages/Admin";
+import Consumer from "./pages/Consumer";
+import ConsumerBlog from "./pages/ConsumerBlog";
+import ConsumerMarketplace from "./pages/ConsumerMarketplace";
+import ConsumerServices from "./pages/ConsumerServices";
 
 function Router() {
   return (
@@ -34,7 +38,11 @@ function Router() {
       <Route path={"/blog"} component={Blog} />
       <Route path={"/faq"} component={FAQ} />
       <Route path={"/@dashboard"} component={Dashboard} />
-      <Route path={"/@admin"} component={Admin} />
+      <Route path={"/consumer"} component={Consumer} />
+      <Route path={"/consumer/blog"} component={ConsumerBlog} />
+      <Route path={"/consumer/marketplace"} component={ConsumerMarketplace} />
+      <Route path={"/consumer/services"} component={ConsumerServices} />
+      <Route path={"/"} component={Home} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>

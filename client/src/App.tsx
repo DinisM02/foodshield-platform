@@ -7,7 +7,6 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import Home from "./pages/Home";
 import Knowledge from "./pages/Knowledge";
-import KnowledgeArticle from "./pages/KnowledgeArticle";
 import Marketplace from "./pages/Marketplace";
 import Checkout from "./pages/Checkout";
 import MyOrders from "./pages/MyOrders";
@@ -20,7 +19,6 @@ import FAQ from "./pages/FAQ";
 import Dashboard from "./pages/Dashboard";
 import Admin from "./pages/Admin";
 import Consumer from "./pages/Consumer";
-import ConsumerProfile from "./pages/ConsumerProfile";
 import ConsumerBlog from "./pages/ConsumerBlog";
 import ConsumerMarketplace from "./pages/ConsumerMarketplace";
 import ConsumerServices from "./pages/ConsumerServices";
@@ -30,7 +28,6 @@ function Router() {
     <Switch>
       <Route path={"/"} component={Home} />
       <Route path={"/knowledge"} component={Knowledge} />
-      <Route path="/knowledge/:id" component={KnowledgeArticle} />
       <Route path={"/marketplace"} component={Marketplace} />
       <Route path={"/checkout"} component={Checkout} />
       <Route path="/my-orders" component={MyOrders} />
@@ -44,8 +41,7 @@ function Router() {
       <Route path={"/consumer"} component={Consumer} />
       <Route path={"/consumer/blog"} component={ConsumerBlog} />
       <Route path={"/consumer/marketplace"} component={ConsumerMarketplace} />
-      <Route path="/consumer/services" component={ConsumerServices} />
-      <Route path="/consumer/profile" component={ConsumerProfile} />
+      <Route path={"/consumer/services"} component={ConsumerServices} />
       <Route path={"/"} component={Home} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />

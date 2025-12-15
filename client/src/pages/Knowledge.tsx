@@ -1,37 +1,139 @@
 import { useState } from "react";
-import { Link } from "wouter";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { BookOpen, Search, Clock, User } from "lucide-react";
+import { BookOpen, Video, FileText, Search, Clock, User } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { trpc } from "@/lib/trpc";
+
+interface Content {
+  id: number;
+  title: string;
+  description: string;
+  type: "article" | "video" | "guide" | "research";
+  category: string;
+  imageUrl: string;
+  author: string;
+  readTime: string;
+  accessLevel: "free" | "login" | "premium";
+}
+
+const mockContents: Content[] = [
+  {
+    id: 1,
+    title: "Agricultura Regenerativa: O Futuro da Produção Alimentar",
+    description: "Descubra como práticas regenerativas podem restaurar o solo e aumentar a produtividade",
+    type: "article",
+    category: "Agricultura",
+    imageUrl: "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=800",
+    author: "Dr. João Silva",
+    readTime: "8 min",
+    accessLevel: "free"
+  },
+  {
+    id: 2,
+    title: "Gestão Sustentável de Recursos Hídricos",
+    description: "Técnicas modernas para otimizar o uso da água na agricultura",
+    type: "video",
+    category: "Recursos Hídricos",
+    imageUrl: "https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?q=80&w=800",
+    author: "Maria Santos",
+    readTime: "15 min",
+    accessLevel: "login"
+  },
+  {
+    id: 3,
+    title: "Guia Completo de Compostagem Orgânica",
+    description: "Passo a passo para criar seu próprio sistema de compostagem",
+    type: "guide",
+    category: "Compostagem",
+    imageUrl: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=800",
+    author: "Carlos Mendes",
+    readTime: "12 min",
+    accessLevel: "free"
+  },
+  {
+    id: 4,
+    title: "Biodiversidade e Sistemas Agroflorestais",
+    description: "Pesquisa sobre o impacto da diversificação na produtividade",
+    type: "research",
+    category: "Biodiversidade",
+    imageUrl: "https://images.unsplash.com/photo-1473773508845-188df298d2d1?q=80&w=800",
+    author: "Instituto de Pesquisa",
+    readTime: "20 min",
+    accessLevel: "premium"
+  },
+  {
+    id: 5,
+    title: "Controle Biológico de Pragas",
+    description: "Alternativas naturais aos pesticidas químicos",
+    type: "article",
+    category: "Controle de Pragas",
+    imageUrl: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?q=80&w=800",
+    author: "Ana Costa",
+    readTime: "10 min",
+    accessLevel: "login"
+  },
+  {
+    id: 6,
+    title: "Segurança Alimentar em Moçambique",
+    description: "Análise dos desafios e oportunidades no contexto local",
+    type: "research",
+    category: "Segurança Alimentar",
+    imageUrl: "https://images.unsplash.com/photo-1488459716781-31db52582fe9?q=80&w=800",
+    author: "Dr. Pedro Alves",
+    readTime: "25 min",
+    accessLevel: "free"
+  }
+];
+
+const typeIcons = {
+  article: BookOpen,
+  video: Video,
+  guide: FileText,
+  research: Search
+};
+
+const getTypeLabels = (t: (key: string) => string) => ({
+  article: "Artigo",
+  video: "Vídeo",
+  guide: "Guia",
+  research: "Pesquisa"
+});
+
+const accessLevelColors = {
+  free: "bg-green-500",
+  login: "bg-blue-500",
+  premium: "bg-purple-500"
+};
+
+const getAccessLevelLabels = (t: (key: string) => string) => ({
+  free: "Gratuito",
+  login: "Membros",
+  premium: "Premium"
+});
 
 export default function Knowledge() {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("Todos");
+  const [selectedType, setSelectedType] = useState<string>("Todos");
+  const typeLabels = getTypeLabels(t);
+  const accessLevelLabels = getAccessLevelLabels(t);
 
-  const { data: articles, isLoading } = trpc.blog.list.useQuery();
+  const types = ["Todos", "Artigo", "Vídeo", "Guia", "Pesquisa"];
 
-  const categories = ["Todos", ...Array.from(new Set(articles?.map(a => a.category) || []))];
-
-  const filteredArticles = articles?.filter(article => {
-    const title = language === "pt" ? article.titlePt : article.titleEn;
-    const excerpt = language === "pt" ? article.excerptPt : article.excerptEn;
-    const matchesSearch = title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         excerpt.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === "Todos" || article.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  }) || [];
+  const filteredContents = mockContents.filter(content => {
+    const matchesSearch = content.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         content.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesType = selectedType === "Todos" || typeLabels[content.type] === selectedType;
+    return matchesSearch && matchesType;
+  });
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <Header />
-      
       {/* Header */}
       <div className="bg-primary text-white py-16">
         <div className="container">
@@ -58,84 +160,77 @@ export default function Knowledge() {
           </div>
 
           <div className="flex flex-wrap gap-3">
-            {categories.map(category => (
+            {types.map(type => (
               <Button
-                key={category}
-                variant={selectedCategory === category ? "default" : "outline"}
-                onClick={() => setSelectedCategory(category)}
+                key={type}
+                variant={selectedType === type ? "default" : "outline"}
+                onClick={() => setSelectedType(type)}
                 className="rounded-full"
               >
-                {category}
+                {type}
               </Button>
             ))}
           </div>
         </div>
 
-        {/* Loading State */}
-        {isLoading && (
-          <div className="flex justify-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-          </div>
-        )}
-
         {/* Content Grid */}
-        {!isLoading && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredArticles.map(article => {
-              const title = language === "pt" ? article.titlePt : article.titleEn;
-              const excerpt = language === "pt" ? article.excerptPt : article.excerptEn;
-              
-              return (
-                <Card key={article.id} className="hover-lift hover-glow overflow-hidden group cursor-pointer">
-                  <Link href={`/knowledge/${article.id}`}>
-                    <div className="relative h-56 overflow-hidden">
-                      <img 
-                        src={article.imageUrl} 
-                        alt={title}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                      />
-                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                        <Badge variant="secondary" className="bg-white/90">
-                          {article.category}
-                        </Badge>
-                      </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredContents.map(content => {
+            const Icon = typeIcons[content.type];
+            return (
+              <Card key={content.id} className="hover-lift hover-glow overflow-hidden group cursor-pointer">
+                <div className="relative h-56 overflow-hidden">
+                  <img 
+                    src={content.imageUrl} 
+                    alt={content.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                  <div className="absolute top-3 right-3 flex gap-2">
+                    <Badge className={`${accessLevelColors[content.accessLevel]} text-white`}>
+                      {accessLevelLabels[content.accessLevel]}
+                    </Badge>
+                  </div>
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                    <Badge variant="secondary" className="bg-white/90">
+                      <Icon className="w-3 h-3 mr-1" />
+                      {typeLabels[content.type]}
+                    </Badge>
+                  </div>
+                </div>
+                
+                <CardHeader>
+                  <CardTitle className="text-xl group-hover:text-primary transition-colors line-clamp-2">
+                    {content.title}
+                  </CardTitle>
+                  <CardDescription className="line-clamp-2">
+                    {content.description}
+                  </CardDescription>
+                </CardHeader>
+
+                <CardContent>
+                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-1">
+                      <User className="w-4 h-4" />
+                      <span>{content.author}</span>
                     </div>
-                    
-                    <CardHeader>
-                      <CardTitle className="text-xl group-hover:text-primary transition-colors line-clamp-2">
-                        {title}
-                      </CardTitle>
-                      <CardDescription className="line-clamp-2">
-                        {excerpt}
-                      </CardDescription>
-                    </CardHeader>
+                    <div className="flex items-center gap-1">
+                      <Clock className="w-4 h-4" />
+                      <span>{content.readTime}</span>
+                    </div>
+                  </div>
+                </CardContent>
 
-                    <CardContent>
-                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                        <div className="flex items-center gap-1">
-                          <User className="w-4 h-4" />
-                          <span>{article.author}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Clock className="w-4 h-4" />
-                          <span>{article.readTime} min</span>
-                        </div>
-                      </div>
-                    </CardContent>
+                <CardFooter>
+                  <Button variant="outline" className="w-full group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-colors">
+                    {t('blog.read_more')}
+                  </Button>
+                </CardFooter>
+              </Card>
+            );
+          })}
+        </div>
 
-                    <CardFooter>
-                      <Button variant="outline" className="w-full group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-colors">
-                        {t('blog.read_more')}
-                      </Button>
-                    </CardFooter>
-                  </Link>
-                </Card>
-              );
-            })}
-          </div>
-        )}
-
-        {!isLoading && filteredArticles.length === 0 && (
+        {filteredContents.length === 0 && (
           <div className="text-center py-20">
             <Search className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
             <h3 className="text-2xl font-semibold mb-2">{t('knowledge.no_results')}</h3>

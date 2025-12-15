@@ -133,6 +133,16 @@ export async function getAllBlogPosts() {
   return await db.select().from(blogPosts).orderBy(desc(blogPosts.createdAt));
 }
 
+export async function getPublishedBlogPosts() {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get published blog posts: database not available");
+    return [];
+  }
+
+  return await db.select().from(blogPosts).where(eq(blogPosts.published, true)).orderBy(desc(blogPosts.createdAt));
+}
+
 export async function getBlogPostById(id: number) {
   const db = await getDb();
   if (!db) {

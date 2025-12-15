@@ -8,6 +8,7 @@ import {
   getAllUsers,
   deleteUser,
   getAllBlogPosts,
+  getPublishedBlogPosts,
   getBlogPostById,
   createBlogPost,
   updateBlogPost,
@@ -373,6 +374,68 @@ export const appRouter = router({
         }
         return { success: true };
       }),
+  }),
+
+  // ===== PUBLIC CONTENT =====
+  blog: router({
+    list: publicProcedure.query(async () => {
+      return await getPublishedBlogPosts();
+    }),
+    get: publicProcedure.input(z.object({ id: z.number() })).query(async ({ input }) => {
+      const post = await getBlogPostById(input.id);
+      if (!post || !post.published) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Blog post not found" });
+      }
+      return post;
+    }),
+  }),
+
+  services: router({
+    list: publicProcedure.query(async () => {
+      return await getAllServices();
+    }),
+    get: publicProcedure.input(z.object({ id: z.number() })).query(async ({ input }) => {
+      const service = await getServiceById(input.id);
+      if (!service) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Service not found" });
+      }
+      return service;
+    }),
+  }),
+
+  consultations: router({
+    create: protectedProcedure
+      .input(z.object({
+        title: z.string(),
+        description: z.string(),
+        scheduledDate: z.string(),
+        serviceId: z.number().optional()
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const { getDb } = await import('./db.js');
+        const { consultations } = await import('../drizzle/schema.js');
+        const db = await getDb();
+        if (!db) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+        
+        await db.insert(consultations).values({
+          userId: ctx.user.id,
+          title: input.title,
+          description: input.description,
+          scheduledDate: new Date(input.scheduledDate),
+          status: 'pending'
+        });
+        
+        return { success: true };
+      }),
+    list: protectedProcedure.query(async ({ ctx }) => {
+      const { getDb } = await import('./db.js');
+      const { consultations } = await import('../drizzle/schema.js');
+      const { eq, desc } = await import('drizzle-orm');
+      const db = await getDb();
+      if (!db) return [];
+      
+      return await db.select().from(consultations).where(eq(consultations.userId, ctx.user.id)).orderBy(desc(consultations.createdAt));
+    }),
   }),
 
   // Seed procedure (admin only)

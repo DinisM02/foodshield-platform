@@ -348,7 +348,7 @@
 - [x] Criar seção de Blog com artigos favoritos e leitura
 - [x] Implementar seção de Marketplace com histórico de compras
 - [x] Criar seção de Serviços com agendamentos
-- [ ] Adicionar perfil do usuário editável
+- [x] Adicionar perfil do usuário editável
 - [ ] Implementar sistema de notificações
 - [x] Adicionar traduções PT/EN
 - [x] Testar todas as funcionalidades

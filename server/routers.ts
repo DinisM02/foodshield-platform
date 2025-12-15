@@ -375,6 +375,31 @@ export const appRouter = router({
       }),
   }),
 
+  // ===== CONSULTATIONS =====
+  consultations: router({
+    list: adminProcedure.query(async () => {
+      const { getDb } = await import('./db.js');
+      const { consultations } = await import('../drizzle/schema.js');
+      const db = await getDb();
+      if (!db) return [];
+      return await db.select().from(consultations).orderBy(consultations.createdAt);
+    }),
+    updateStatus: adminProcedure
+      .input(z.object({
+        id: z.number(),
+        status: z.enum(['pending', 'approved', 'completed', 'cancelled']),
+      }))
+      .mutation(async ({ input }) => {
+        const { getDb } = await import('./db.js');
+        const { consultations } = await import('../drizzle/schema.js');
+        const { eq } = await import('drizzle-orm');
+        const db = await getDb();
+        if (!db) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+        await db.update(consultations).set({ status: input.status }).where(eq(consultations.id, input.id));
+        return { success: true };
+      }),
+  }),
+
   // Seed procedure (admin only)
   seed: router({
     all: adminProcedure.mutation(async () => {

@@ -352,3 +352,14 @@
 - [ ] Implementar sistema de notificações
 - [x] Adicionar traduções PT/EN
 - [x] Testar todas as funcionalidades
+
+## Gestão de Serviços no Admin Panel (CONCLUÍDO)
+- [x] Criar aba de Serviços no Admin Panel
+- [x] Implementar listagem de serviços com busca e paginação
+- [x] Criar modal de criação de serviços
+- [x] Criar modal de edição de serviços
+- [x] Implementar delete de serviços
+- [x] Criar aba de Agendamentos/Consultas
+- [x] Listar todas as consultas agendadas
+- [x] Permitir alterar status de consultas
+- [x] Testar todas as funcionalidades

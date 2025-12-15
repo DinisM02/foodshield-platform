@@ -25,7 +25,13 @@ import {
   Search,
   ChevronLeft,
   ChevronRight,
+  Pencil,
+  Eye,
 } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 
 interface NavItem {
   id: string;
@@ -1406,14 +1412,365 @@ function OrdersTab({ t, language }: { t: (key: string) => string; language: stri
 }
 
 function ServicesTab({ t, language }: { t: (key: string) => string; language: string }) {
+  const [activeSubTab, setActiveSubTab] = useState<'services' | 'appointments'>('services');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingService, setEditingService] = useState<any>(null);
+  const [formData, setFormData] = useState({
+    titlePt: '',
+    titleEn: '',
+    descriptionPt: '',
+    descriptionEn: '',
+    specialist: '',
+    price: 0,
+    priceType: 'hourly' as 'hourly' | 'daily' | 'project',
+    features: '',
+    available: true
+  });
+
+  const servicesQuery = trpc.admin.services.list.useQuery();
+  const consultationsQuery = trpc.consultations.list.useQuery();
+  const createMutation = trpc.admin.services.create.useMutation({
+    onSuccess: () => {
+      servicesQuery.refetch();
+      setIsModalOpen(false);
+      resetForm();
+      toast.success(language === 'pt' ? 'Serviço criado!' : 'Service created!');
+    }
+  });
+  const updateMutation = trpc.admin.services.update.useMutation({
+    onSuccess: () => {
+      servicesQuery.refetch();
+      setIsModalOpen(false);
+      resetForm();
+      toast.success(language === 'pt' ? 'Serviço atualizado!' : 'Service updated!');
+    }
+  });
+  const deleteMutation = trpc.admin.services.delete.useMutation({
+    onSuccess: () => {
+      servicesQuery.refetch();
+      toast.success(language === 'pt' ? 'Serviço excluído!' : 'Service deleted!');
+    }
+  });
+  const updateConsultationMutation = trpc.consultations.updateStatus.useMutation({
+    onSuccess: () => {
+      consultationsQuery.refetch();
+      toast.success(language === 'pt' ? 'Status atualizado!' : 'Status updated!');
+    }
+  });
+
+  const resetForm = () => {
+    setFormData({
+      titlePt: '', titleEn: '', descriptionPt: '', descriptionEn: '',
+      specialist: '', price: 0, priceType: 'hourly', features: '', available: true
+    });
+    setEditingService(null);
+  };
+
+  const handleEdit = (service: any) => {
+    setEditingService(service);
+    setFormData({
+      titlePt: service.titlePt,
+      titleEn: service.titleEn,
+      descriptionPt: service.descriptionPt,
+      descriptionEn: service.descriptionEn,
+      specialist: service.specialist,
+      price: service.price,
+      priceType: service.priceType,
+      features: service.features || '',
+      available: service.available
+    });
+    setIsModalOpen(true);
+  };
+
+  const handleSubmit = () => {
+    if (editingService) {
+      updateMutation.mutate({ id: editingService.id, ...formData });
+    } else {
+      createMutation.mutate(formData);
+    }
+  };
+
+  const filteredServices = servicesQuery.data?.filter(s => 
+    s.titlePt.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    s.titleEn.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    s.specialist.toLowerCase().includes(searchTerm.toLowerCase())
+  ) || [];
+
+  const priceTypeLabel = (type: string) => {
+    const labels: Record<string, { pt: string; en: string }> = {
+      hourly: { pt: '/hora', en: '/hour' },
+      daily: { pt: '/dia', en: '/day' },
+      project: { pt: '/projeto', en: '/project' }
+    };
+    return labels[type]?.[language as 'pt' | 'en'] || type;
+  };
+
   return (
     <div>
-      <h3 className="text-xl font-bold text-gray-900 mb-6">
-        {language === 'pt' ? 'Gerenciar Serviços' : 'Manage Services'}
-      </h3>
-      <div className="bg-white rounded-lg shadow p-6 text-center text-gray-500">
-        {language === 'pt' ? 'Em desenvolvimento...' : 'Coming soon...'}
+      <div className="flex items-center justify-between mb-6">
+        <h3 className="text-xl font-bold text-gray-900">
+          {language === 'pt' ? 'Gerenciar Serviços' : 'Manage Services'}
+        </h3>
+        <div className="flex gap-2">
+          <Button
+            variant={activeSubTab === 'services' ? 'default' : 'outline'}
+            onClick={() => setActiveSubTab('services')}
+          >
+            {language === 'pt' ? 'Serviços' : 'Services'}
+          </Button>
+          <Button
+            variant={activeSubTab === 'appointments' ? 'default' : 'outline'}
+            onClick={() => setActiveSubTab('appointments')}
+          >
+            {language === 'pt' ? 'Agendamentos' : 'Appointments'}
+          </Button>
+        </div>
       </div>
+
+      {activeSubTab === 'services' && (
+        <>
+          <div className="flex items-center justify-between mb-4">
+            <div className="relative w-64">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <Input
+                placeholder={language === 'pt' ? 'Buscar serviços...' : 'Search services...'}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            <Button onClick={() => { resetForm(); setIsModalOpen(true); }}>
+              <Plus className="w-4 h-4 mr-2" />
+              {language === 'pt' ? 'Novo Serviço' : 'New Service'}
+            </Button>
+          </div>
+
+          <div className="bg-white rounded-lg shadow overflow-hidden">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    {language === 'pt' ? 'Serviço' : 'Service'}
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    {language === 'pt' ? 'Especialista' : 'Specialist'}
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    {language === 'pt' ? 'Preço' : 'Price'}
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">
+                    {language === 'pt' ? 'Ações' : 'Actions'}
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {filteredServices.map((service) => (
+                  <tr key={service.id}>
+                    <td className="px-6 py-4">
+                      <div className="font-medium text-gray-900">
+                        {language === 'pt' ? service.titlePt : service.titleEn}
+                      </div>
+                      <div className="text-sm text-gray-500 truncate max-w-xs">
+                        {language === 'pt' ? service.descriptionPt : service.descriptionEn}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-900">
+                      {service.specialist}
+                    </td>
+                    <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                      {service.price} MZN{priceTypeLabel(service.priceType)}
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={`px-2 py-1 text-xs rounded-full ${service.available ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                        {service.available ? (language === 'pt' ? 'Disponível' : 'Available') : (language === 'pt' ? 'Indisponível' : 'Unavailable')}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <Button variant="ghost" size="sm" onClick={() => handleEdit(service)}>
+                        <Pencil className="w-4 h-4" />
+                      </Button>
+                      <Button variant="ghost" size="sm" onClick={() => deleteMutation.mutate({ id: service.id })}>
+                        <Trash2 className="w-4 h-4 text-red-500" />
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
+
+      {activeSubTab === 'appointments' && (
+        <div className="bg-white rounded-lg shadow overflow-hidden">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  {language === 'pt' ? 'Título' : 'Title'}
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  {language === 'pt' ? 'Data Agendada' : 'Scheduled Date'}
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">
+                  {language === 'pt' ? 'Ações' : 'Actions'}
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {consultationsQuery.data?.map((consultation) => (
+                <tr key={consultation.id}>
+                  <td className="px-6 py-4 text-sm text-gray-900">#{consultation.id}</td>
+                  <td className="px-6 py-4">
+                    <div className="font-medium text-gray-900">{consultation.title}</div>
+                    <div className="text-sm text-gray-500 truncate max-w-xs">{consultation.description}</div>
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-900">
+                    {consultation.scheduledDate ? new Date(consultation.scheduledDate).toLocaleString(language === 'pt' ? 'pt-MZ' : 'en-US') : '-'}
+                  </td>
+                  <td className="px-6 py-4">
+                    <select
+                      value={consultation.status}
+                      onChange={(e) => updateConsultationMutation.mutate({ id: consultation.id, status: e.target.value as any })}
+                      className="text-xs border rounded px-2 py-1"
+                    >
+                      <option value="pending">{language === 'pt' ? 'Pendente' : 'Pending'}</option>
+                      <option value="approved">{language === 'pt' ? 'Aprovado' : 'Approved'}</option>
+                      <option value="completed">{language === 'pt' ? 'Concluído' : 'Completed'}</option>
+                      <option value="cancelled">{language === 'pt' ? 'Cancelado' : 'Cancelled'}</option>
+                    </select>
+                  </td>
+                  <td className="px-6 py-4 text-right">
+                    <Button variant="ghost" size="sm">
+                      <Eye className="w-4 h-4" />
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+              {(!consultationsQuery.data || consultationsQuery.data.length === 0) && (
+                <tr>
+                  <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
+                    {language === 'pt' ? 'Nenhum agendamento encontrado' : 'No appointments found'}
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* Modal de Criação/Edição */}
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>
+              {editingService 
+                ? (language === 'pt' ? 'Editar Serviço' : 'Edit Service')
+                : (language === 'pt' ? 'Novo Serviço' : 'New Service')}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label>{language === 'pt' ? 'Título (PT)' : 'Title (PT)'}</Label>
+                <Input
+                  value={formData.titlePt}
+                  onChange={(e) => setFormData({ ...formData, titlePt: e.target.value })}
+                  placeholder="Consultoria em Agricultura"
+                />
+              </div>
+              <div>
+                <Label>{language === 'pt' ? 'Título (EN)' : 'Title (EN)'}</Label>
+                <Input
+                  value={formData.titleEn}
+                  onChange={(e) => setFormData({ ...formData, titleEn: e.target.value })}
+                  placeholder="Agriculture Consulting"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label>{language === 'pt' ? 'Descrição (PT)' : 'Description (PT)'}</Label>
+                <Textarea
+                  value={formData.descriptionPt}
+                  onChange={(e) => setFormData({ ...formData, descriptionPt: e.target.value })}
+                  rows={3}
+                />
+              </div>
+              <div>
+                <Label>{language === 'pt' ? 'Descrição (EN)' : 'Description (EN)'}</Label>
+                <Textarea
+                  value={formData.descriptionEn}
+                  onChange={(e) => setFormData({ ...formData, descriptionEn: e.target.value })}
+                  rows={3}
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <Label>{language === 'pt' ? 'Especialista' : 'Specialist'}</Label>
+                <Input
+                  value={formData.specialist}
+                  onChange={(e) => setFormData({ ...formData, specialist: e.target.value })}
+                  placeholder="Dr. Silva"
+                />
+              </div>
+              <div>
+                <Label>{language === 'pt' ? 'Preço (MZN)' : 'Price (MZN)'}</Label>
+                <Input
+                  type="number"
+                  value={formData.price}
+                  onChange={(e) => setFormData({ ...formData, price: parseInt(e.target.value) || 0 })}
+                />
+              </div>
+              <div>
+                <Label>{language === 'pt' ? 'Tipo de Preço' : 'Price Type'}</Label>
+                <select
+                  value={formData.priceType}
+                  onChange={(e) => setFormData({ ...formData, priceType: e.target.value as any })}
+                  className="w-full border rounded-md px-3 py-2"
+                >
+                  <option value="hourly">{language === 'pt' ? 'Por Hora' : 'Hourly'}</option>
+                  <option value="daily">{language === 'pt' ? 'Por Dia' : 'Daily'}</option>
+                  <option value="project">{language === 'pt' ? 'Por Projeto' : 'Per Project'}</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <Label>{language === 'pt' ? 'Features (separadas por vírgula)' : 'Features (comma separated)'}</Label>
+              <Input
+                value={formData.features}
+                onChange={(e) => setFormData({ ...formData, features: e.target.value })}
+                placeholder="Análise, Planejamento, Relatório"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={formData.available}
+                onChange={(e) => setFormData({ ...formData, available: e.target.checked })}
+                className="w-4 h-4"
+              />
+              <Label>{language === 'pt' ? 'Disponível' : 'Available'}</Label>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsModalOpen(false)}>
+              {language === 'pt' ? 'Cancelar' : 'Cancel'}
+            </Button>
+            <Button onClick={handleSubmit} disabled={createMutation.isPending || updateMutation.isPending}>
+              {(createMutation.isPending || updateMutation.isPending) && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+              {editingService ? (language === 'pt' ? 'Atualizar' : 'Update') : (language === 'pt' ? 'Criar' : 'Create')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

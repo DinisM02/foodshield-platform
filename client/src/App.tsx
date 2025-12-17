@@ -40,6 +40,7 @@ function Router() {
 
       <Route path={"/blog"} component={Blog} />
       <Route path={"/faq"} component={FAQ} />
+      <Route path={"/admin"} component={Admin} />
       <Route path={"/@admin"} component={Admin} />
       <Route path={"/@dashboard"} component={Dashboard} />
        <Route path="/consumer" component={Consumer} />

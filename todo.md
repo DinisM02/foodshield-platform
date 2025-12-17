@@ -386,3 +386,4 @@
 - [x] Integrar página de perfil do consumidor ao banco de dados (telefone, endereço, bio, foto, preferências)
 - [x] Integrar página de perfil do consumidor ao banco de dados (telefone, endereço, bio, foto, preferências)
 - [x] Corrigir todos os nested anchor tags na aplicação (Consumer.tsx e outros componentes)
+- [x] Implementar gestão completa de blog no Admin Panel (CRUD, editor rico, upload de imagens)

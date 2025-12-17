@@ -6,6 +6,7 @@ import { trpc } from '@/lib/trpc';
 import { Button } from '@/components/ui/button';
 import { AdminModal } from '@/components/AdminModal';
 import { ProductModal } from '@/components/ProductModal';
+import { BlogEditor } from '@/components/BlogEditor';
 import { toast } from 'sonner';
 import {
   Users,
@@ -685,6 +686,7 @@ function BlogTab({ t, language }: { t: (key: string) => string; language: string
   const blogQuery = trpc.admin.blog.list.useQuery();
   const deleteBlogMutation = trpc.admin.blog.delete.useMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingPostId, setEditingPostId] = useState<number | undefined>(undefined);
   const [pagination, setPagination] = useState({ page: 1, pageSize: 10, search: '' });
 
   const filteredBlog = useMemo(() => {
@@ -740,17 +742,28 @@ function BlogTab({ t, language }: { t: (key: string) => string; language: string
         />
       </div>
 
-      <AdminModal
-        isOpen={isModalOpen}
-        title={t('admin.new_article')}
-        onClose={() => setIsModalOpen(false)}
-        onSubmit={() => {
-          setIsModalOpen(false);
-          blogQuery.refetch();
-        }}
-      >
-        <BlogForm language={language} t={t} onSuccess={() => setIsModalOpen(false)} />
-      </AdminModal>
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>
+              {editingPostId 
+                ? (language === 'pt' ? 'Editar Artigo' : 'Edit Article')
+                : (language === 'pt' ? 'Novo Artigo' : 'New Article')
+              }
+            </DialogTitle>
+          </DialogHeader>
+          <BlogEditor
+            postId={editingPostId}
+            onSuccess={() => {
+              setIsModalOpen(false);
+              setEditingPostId(undefined);
+              blogQuery.refetch();
+            }}
+            t={t}
+            language={language}
+          />
+        </DialogContent>
+      </Dialog>
 
       <div className="bg-white rounded-lg shadow overflow-hidden">
         {blogQuery.isLoading ? (
@@ -791,7 +804,14 @@ function BlogTab({ t, language }: { t: (key: string) => string; language: string
                       </span>
                     </td>
                     <td className="px-6 py-4 text-sm space-x-2">
-                      <Button variant="outline" size="sm">
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => {
+                          setEditingPostId(post.id);
+                          setIsModalOpen(true);
+                        }}
+                      >
                         <Edit className="w-4 h-4" />
                       </Button>
                       <Button 

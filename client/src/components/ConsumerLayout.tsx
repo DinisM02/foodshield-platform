@@ -98,9 +98,9 @@ export default function ConsumerLayout({ children }: ConsumerLayoutProps) {
               const isActive = location === item.path;
               return (
                 <Link key={item.path} href={item.path}>
-                  <a
+                  <div
                     className={`
-                      flex items-center gap-3 px-4 py-3 rounded-lg transition-colors
+                      flex items-center gap-3 px-4 py-3 rounded-lg transition-colors cursor-pointer
                       ${isActive 
                         ? 'bg-emerald-50 text-emerald-700 font-medium' 
                         : 'text-gray-700 hover:bg-gray-50'
@@ -110,7 +110,7 @@ export default function ConsumerLayout({ children }: ConsumerLayoutProps) {
                   >
                     <Icon size={20} />
                     <span>{item.label}</span>
-                  </a>
+                  </div>
                 </Link>
               );
             })}

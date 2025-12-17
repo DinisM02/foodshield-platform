@@ -27,6 +27,7 @@ import {
   getOrderById,
   updateOrderStatus,
   getAllOrders,
+  updateUserProfile,
 } from "./db";
 
 // Admin-only procedure
@@ -397,6 +398,60 @@ export const appRouter = router({
         if (!db) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
         await db.update(consultations).set({ status: input.status }).where(eq(consultations.id, input.id));
         return { success: true };
+      }),
+  }),
+
+  // ===== USER PROFILE =====
+  profile: router({
+    get: protectedProcedure.query(async ({ ctx }) => {
+      return ctx.user;
+    }),
+    uploadProfilePicture: protectedProcedure
+      .input(z.object({
+        file: z.string(), // base64 encoded image
+        filename: z.string(),
+        contentType: z.string(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const { storagePut } = await import("./storage");
+        
+        // Convert base64 to buffer
+        const base64Data = input.file.split(',')[1] || input.file;
+        const buffer = Buffer.from(base64Data, 'base64');
+        
+        // Generate unique filename
+        const timestamp = Date.now();
+        const randomSuffix = Math.random().toString(36).substring(2, 8);
+        const ext = input.filename.split('.').pop() || 'jpg';
+        const key = `profiles/${ctx.user!.id}-${timestamp}-${randomSuffix}.${ext}`;
+        
+        // Upload to S3
+        const { url } = await storagePut(key, buffer, input.contentType);
+        
+        // Update user profile picture
+        const updatedUser = await updateUserProfile(ctx.user!.id, { profilePicture: url });
+        if (!updatedUser) {
+          throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to update profile picture" });
+        }
+        
+        return { url, key };
+      }),
+    update: protectedProcedure
+      .input(z.object({
+        phone: z.string().optional().nullable(),
+        address: z.string().optional().nullable(),
+        bio: z.string().optional().nullable(),
+        profilePicture: z.string().optional().nullable(),
+        emailNotifications: z.boolean().optional(),
+        orderUpdates: z.boolean().optional(),
+        promotions: z.boolean().optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const updatedUser = await updateUserProfile(ctx.user!.id, input);
+        if (!updatedUser) {
+          throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to update profile" });
+        }
+        return updatedUser;
       }),
   }),
 

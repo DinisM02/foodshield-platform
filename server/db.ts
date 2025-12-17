@@ -122,6 +122,25 @@ export async function deleteUser(id: number) {
   return true;
 }
 
+export async function updateUserProfile(userId: number, data: {
+  phone?: string | null;
+  address?: string | null;
+  bio?: string | null;
+  profilePicture?: string | null;
+  emailNotifications?: boolean;
+  orderUpdates?: boolean;
+  promotions?: boolean;
+}) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot update user profile: database not available");
+    return undefined;
+  }
+
+  await db.update(users).set(data).where(eq(users.id, userId));
+  return await getUserById(userId);
+}
+
 // ===== BLOG POST QUERIES =====
 export async function getAllBlogPosts() {
   const db = await getDb();

@@ -363,3 +363,12 @@
 - [x] Listar todas as consultas agendadas
 - [x] Permitir alterar status de consultas
 - [x] Testar todas as funcionalidades
+
+## Centro de Conhecimento, Ferramentas e Blog na Área do Consumidor (CONCLUÍDO)
+- [x] Atualizar sidebar do ConsumerLayout com novos itens de menu
+- [x] Criar página Consumer Knowledge Center
+- [x] Criar página Consumer Tools
+- [x] Criar página Consumer Blog
+- [x] Adicionar rotas no App.tsx
+- [x] Adicionar traduções PT/EN
+- [x] Testar navegação e funcionalidades

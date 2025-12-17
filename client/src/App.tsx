@@ -18,7 +18,9 @@ import Blog from "./pages/Blog";
 import FAQ from "./pages/FAQ";
 import Dashboard from "./pages/Dashboard";
 import Admin from "./pages/Admin";
-import Consumer from "./pages/Consumer";
+import Consumer from '@/pages/Consumer';
+import ConsumerKnowledge from '@/pages/ConsumerKnowledge';
+import ConsumerTools from '@/pages/ConsumerTools';
 import ConsumerBlog from "./pages/ConsumerBlog";
 import ConsumerMarketplace from "./pages/ConsumerMarketplace";
 import ConsumerServices from "./pages/ConsumerServices";
@@ -39,7 +41,9 @@ function Router() {
       <Route path={"/faq"} component={FAQ} />
       <Route path={"/@admin"} component={Admin} />
       <Route path={"/@dashboard"} component={Dashboard} />
-      <Route path={"/consumer"} component={Consumer} />
+       <Route path="/consumer" component={Consumer} />
+      <Route path="/consumer/knowledge" component={ConsumerKnowledge} />
+      <Route path="/consumer/tools" component={ConsumerTools} />
       <Route path={"/consumer/blog"} component={ConsumerBlog} />
       <Route path={"/consumer/marketplace"} component={ConsumerMarketplace} />
       <Route path={"/consumer/services"} component={ConsumerServices} />

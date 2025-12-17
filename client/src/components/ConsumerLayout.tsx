@@ -11,7 +11,10 @@ import {
   Bell,
   LogOut,
   Menu,
-  X
+  X,
+  Library,
+  Calculator,
+  FileText
 } from 'lucide-react';
 import { useState } from 'react';
 import { APP_LOGO, APP_TITLE } from '@/const';
@@ -28,7 +31,9 @@ export default function ConsumerLayout({ children }: ConsumerLayoutProps) {
 
   const navItems = [
     { path: '/consumer', icon: Home, label: t('consumer.dashboard') },
-    { path: '/consumer/blog', icon: BookOpen, label: t('consumer.blog') },
+    { path: '/consumer/knowledge', icon: Library, label: t('consumer.knowledge') },
+    { path: '/consumer/tools', icon: Calculator, label: t('consumer.tools') },
+    { path: '/consumer/blog', icon: FileText, label: t('consumer.blog') },
     { path: '/consumer/marketplace', icon: ShoppingCart, label: t('consumer.marketplace') },
     { path: '/consumer/services', icon: Briefcase, label: t('consumer.services') },
     { path: '/consumer/profile', icon: User, label: t('consumer.profile') },

@@ -372,3 +372,8 @@
 - [x] Adicionar rotas no App.tsx
 - [x] Adicionar traduções PT/EN
 - [x] Testar navegação e funcionalidades
+
+## Link da Área do Consumidor na Navbar (CONCLUÍDO)
+- [x] Adicionar link "Área do Consumidor" no Header
+- [x] Testar navegação
+- [x] Salvar checkpoint

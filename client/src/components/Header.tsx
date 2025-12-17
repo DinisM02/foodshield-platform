@@ -49,6 +49,7 @@ export default function Header() {
     { label: t('nav.marketplace'), href: "/marketplace" },
     { label: t('nav.services'), href: "/services" },
     { label: t('nav.tools'), href: "/tools" },
+    { label: t('nav.consumer'), href: "/consumer" },
     { label: t('nav.dashboard'), href: "/@dashboard" }
   ];
 

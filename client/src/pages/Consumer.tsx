@@ -56,7 +56,7 @@ export default function Consumer() {
             const Icon = stat.icon;
             return (
               <Link key={stat.label} href={stat.link}>
-                <a className="block bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+                <div className="block bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow cursor-pointer">
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm text-gray-600">{stat.label}</p>
@@ -66,7 +66,7 @@ export default function Consumer() {
                       <Icon size={24} />
                     </div>
                   </div>
-                </a>
+                </div>
               </Link>
             );
           })}
@@ -77,9 +77,9 @@ export default function Consumer() {
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-semibold text-gray-900">{t('consumer.recentOrders')}</h2>
             <Link href="/consumer/marketplace">
-              <a className="text-emerald-600 hover:text-emerald-700 text-sm font-medium">
+              <span className="text-emerald-600 hover:text-emerald-700 text-sm font-medium cursor-pointer">
                 {t('consumer.viewAll')}
-              </a>
+              </span>
             </Link>
           </div>
 
@@ -88,9 +88,9 @@ export default function Consumer() {
               <ShoppingBag size={48} className="mx-auto text-gray-400 mb-4" />
               <p className="text-gray-600">{t('consumer.noOrders')}</p>
               <Link href="/marketplace">
-                <a className="inline-block mt-4 px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors">
+                <span className="inline-block mt-4 px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors cursor-pointer">
                   {t('consumer.startShopping')}
-                </a>
+                </span>
               </Link>
             </div>
           ) : (
@@ -126,27 +126,27 @@ export default function Consumer() {
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Link href="/marketplace">
-            <a className="block bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl p-6 text-white hover:from-emerald-600 hover:to-emerald-700 transition-all">
+            <div className="block bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl p-6 text-white hover:from-emerald-600 hover:to-emerald-700 transition-all cursor-pointer">
               <ShoppingBag size={32} className="mb-4" />
               <h3 className="text-lg font-semibold mb-2">{t('consumer.exploreMarketplace')}</h3>
               <p className="text-emerald-100 text-sm">{t('consumer.exploreMarketplaceDesc')}</p>
-            </a>
+            </div>
           </Link>
 
           <Link href="/knowledge">
-            <a className="block bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-6 text-white hover:from-purple-600 hover:to-purple-700 transition-all">
+            <div className="block bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-6 text-white hover:from-purple-600 hover:to-purple-700 transition-all cursor-pointer">
               <BookOpen size={32} className="mb-4" />
               <h3 className="text-lg font-semibold mb-2">{t('consumer.readArticles')}</h3>
               <p className="text-purple-100 text-sm">{t('consumer.readArticlesDesc')}</p>
-            </a>
+            </div>
           </Link>
 
           <Link href="/services">
-            <a className="block bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white hover:from-blue-600 hover:to-blue-700 transition-all">
+            <div className="block bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white hover:from-blue-600 hover:to-blue-700 transition-all cursor-pointer">
               <Briefcase size={32} className="mb-4" />
               <h3 className="text-lg font-semibold mb-2">{t('consumer.bookService')}</h3>
               <p className="text-blue-100 text-sm">{t('consumer.bookServiceDesc')}</p>
-            </a>
+            </div>
           </Link>
         </div>
       </div>

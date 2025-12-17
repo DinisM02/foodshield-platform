@@ -377,3 +377,9 @@
 - [x] Adicionar link "Área do Consumidor" no Header
 - [x] Testar navegação
 - [x] Salvar checkpoint
+
+## Corrigir Erro 404 na Página de Perfil (NOVA)
+- [ ] Verificar rota /consumer/profile no App.tsx
+- [ ] Verificar se componente ConsumerProfile existe
+- [ ] Testar navegação
+- [ ] Salvar checkpoint

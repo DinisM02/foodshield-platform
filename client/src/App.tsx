@@ -24,6 +24,7 @@ import ConsumerTools from '@/pages/ConsumerTools';
 import ConsumerBlog from "./pages/ConsumerBlog";
 import ConsumerMarketplace from "./pages/ConsumerMarketplace";
 import ConsumerServices from "./pages/ConsumerServices";
+import ConsumerProfile from "./pages/ConsumerProfile";
 
 function Router() {
   return (
@@ -42,11 +43,12 @@ function Router() {
       <Route path={"/@admin"} component={Admin} />
       <Route path={"/@dashboard"} component={Dashboard} />
        <Route path="/consumer" component={Consumer} />
-      <Route path="/consumer/knowledge" component={ConsumerKnowledge} />
+       <Route path="/consumer/knowledge" component={ConsumerKnowledge} />
       <Route path="/consumer/tools" component={ConsumerTools} />
       <Route path={"/consumer/blog"} component={ConsumerBlog} />
       <Route path={"/consumer/marketplace"} component={ConsumerMarketplace} />
       <Route path={"/consumer/services"} component={ConsumerServices} />
+      <Route path={"/consumer/profile"} component={ConsumerProfile} />
       <Route path={"/"} component={Home} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />

@@ -112,6 +112,14 @@ export const services = mysqlTable("services", {
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
 
+export const favorites = mysqlTable("favorites", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  itemType: mysqlEnum("itemType", ["product", "blog"]).notNull(),
+  itemId: int("itemId").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 export type Content = typeof contents.$inferSelect;
@@ -125,3 +133,5 @@ export type BlogPost = typeof blogPosts.$inferSelect;
 export type InsertBlogPost = typeof blogPosts.$inferInsert;
 export type Service = typeof services.$inferSelect;
 export type InsertService = typeof services.$inferInsert;
+export type Favorite = typeof favorites.$inferSelect;
+export type InsertFavorite = typeof favorites.$inferInsert;

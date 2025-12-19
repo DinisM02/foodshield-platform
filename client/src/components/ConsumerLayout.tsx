@@ -14,7 +14,8 @@ import {
   X,
   Library,
   Calculator,
-  FileText
+  FileText,
+  Heart
 } from 'lucide-react';
 import { useState } from 'react';
 import { APP_LOGO, APP_TITLE } from '@/const';
@@ -36,6 +37,7 @@ export default function ConsumerLayout({ children }: ConsumerLayoutProps) {
     { path: '/consumer/blog', icon: FileText, label: t('consumer.blog') },
     { path: '/consumer/marketplace', icon: ShoppingCart, label: t('consumer.marketplace') },
     { path: '/consumer/services', icon: Briefcase, label: t('consumer.services') },
+    { path: '/consumer/favorites', icon: Heart, label: t('consumer.favorites') },
     { path: '/consumer/profile', icon: User, label: t('consumer.profile') },
     { path: '/consumer/notifications', icon: Bell, label: t('consumer.notifications') },
   ];

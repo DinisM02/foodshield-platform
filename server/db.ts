@@ -1,6 +1,6 @@
 import { eq, desc, and } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, blogPosts, InsertBlogPost, products, services, InsertService } from "../drizzle/schema";
+import { InsertUser, users, blogPosts, InsertBlogPost, products, services, InsertService, favorites, InsertFavorite } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -378,4 +378,60 @@ export async function getAllOrders() {
   }
 
   return await db.select().from(orders).orderBy(desc(orders.createdAt));
+}
+
+// ===== FAVORITES QUERIES =====
+export async function getUserFavorites(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return await db.select().from(favorites).where(eq(favorites.userId, userId)).orderBy(desc(favorites.createdAt));
+}
+
+export async function addFavorite(favorite: InsertFavorite) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  // Check if already favorited
+  const existing = await db.select().from(favorites)
+    .where(and(
+      eq(favorites.userId, favorite.userId),
+      eq(favorites.itemType, favorite.itemType),
+      eq(favorites.itemId, favorite.itemId)
+    ))
+    .limit(1);
+  
+  if (existing.length > 0) {
+    return existing[0];
+  }
+  
+  const result = await db.insert(favorites).values(favorite);
+  return { id: Number(result[0].insertId), ...favorite };
+}
+
+export async function removeFavorite(userId: number, itemType: "product" | "blog", itemId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.delete(favorites)
+    .where(and(
+      eq(favorites.userId, userId),
+      eq(favorites.itemType, itemType),
+      eq(favorites.itemId, itemId)
+    ));
+}
+
+export async function isFavorited(userId: number, itemType: "product" | "blog", itemId: number): Promise<boolean> {
+  const db = await getDb();
+  if (!db) return false;
+  
+  const result = await db.select().from(favorites)
+    .where(and(
+      eq(favorites.userId, userId),
+      eq(favorites.itemType, itemType),
+      eq(favorites.itemId, itemId)
+    ))
+    .limit(1);
+  
+  return result.length > 0;
 }

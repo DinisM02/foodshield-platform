@@ -28,6 +28,10 @@ import {
   updateOrderStatus,
   getAllOrders,
   updateUserProfile,
+  getUserFavorites,
+  addFavorite,
+  removeFavorite,
+  isFavorited,
 } from "./db";
 
 // Admin-only procedure
@@ -452,6 +456,42 @@ export const appRouter = router({
           throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to update profile" });
         }
         return updatedUser;
+      }),
+  }),
+
+  // Favorites router
+  favorites: router({
+    list: protectedProcedure.query(async ({ ctx }) => {
+      return await getUserFavorites(ctx.user!.id);
+    }),
+    add: protectedProcedure
+      .input(z.object({
+        itemType: z.enum(["product", "blog"]),
+        itemId: z.number(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        return await addFavorite({
+          userId: ctx.user!.id,
+          itemType: input.itemType,
+          itemId: input.itemId,
+        });
+      }),
+    remove: protectedProcedure
+      .input(z.object({
+        itemType: z.enum(["product", "blog"]),
+        itemId: z.number(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        await removeFavorite(ctx.user!.id, input.itemType, input.itemId);
+        return { success: true };
+      }),
+    check: protectedProcedure
+      .input(z.object({
+        itemType: z.enum(["product", "blog"]),
+        itemId: z.number(),
+      }))
+      .query(async ({ ctx, input }) => {
+        return await isFavorited(ctx.user!.id, input.itemType, input.itemId);
       }),
   }),
 

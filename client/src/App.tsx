@@ -25,6 +25,8 @@ import ConsumerBlog from "./pages/ConsumerBlog";
 import ConsumerMarketplace from "./pages/ConsumerMarketplace";
 import ConsumerServices from "./pages/ConsumerServices";
 import ConsumerProfile from "./pages/ConsumerProfile";
+import ConsumerFavorites from "./pages/ConsumerFavorites";
+import About from "./pages/About";
 
 function Router() {
   return (
@@ -39,6 +41,7 @@ function Router() {
       <Route path={"/tools"} component={Tools} />
 
       <Route path={"/blog"} component={Blog} />
+      <Route path={"/about"} component={About} />
       <Route path={"/faq"} component={FAQ} />
       <Route path={"/admin"} component={Admin} />
       <Route path={"/@admin"} component={Admin} />
@@ -50,6 +53,7 @@ function Router() {
       <Route path={"/consumer/marketplace"} component={ConsumerMarketplace} />
       <Route path={"/consumer/services"} component={ConsumerServices} />
       <Route path={"/consumer/profile"} component={ConsumerProfile} />
+      <Route path={"/consumer/favorites"} component={ConsumerFavorites} />
       <Route path={"/"} component={Home} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />

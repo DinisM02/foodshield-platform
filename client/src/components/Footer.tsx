@@ -188,10 +188,10 @@ export default function Footer() {
             </h3>
             <ul className="space-y-3">
               <li>
-                <a href="#" className="text-gray-300 hover:text-emerald-400 transition-colors text-sm flex items-center gap-2 group">
+                <Link href="/about" className="text-gray-300 hover:text-emerald-400 transition-colors text-sm flex items-center gap-2 group">
                   <span className="w-1 h-1 bg-emerald-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
                   {t('footer.about')}
-                </a>
+                </Link>
               </li>
               <li>
                 <a href="#" className="text-gray-300 hover:text-emerald-400 transition-colors text-sm flex items-center gap-2 group">

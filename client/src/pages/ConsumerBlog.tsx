@@ -56,11 +56,13 @@ export default function ConsumerBlog() {
               >
                 {/* Image */}
                 <div className="relative h-48 bg-gray-200 overflow-hidden">
-                  <img
-                    src={post.imageUrl}
-                    alt={post.titlePt}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
+                  {post.imageUrl && (
+                    <img
+                      src={post.imageUrl}
+                      alt={post.titlePt}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  )}
                   <div className="absolute top-4 right-4">
                     <button className="p-2 bg-white rounded-full shadow-md hover:bg-emerald-50 transition-colors">
                       <Heart size={20} className="text-gray-600 hover:text-emerald-600" />
@@ -88,9 +90,9 @@ export default function ConsumerBlog() {
                       {post.category}
                     </span>
                     <Link href={`/knowledge`}>
-                      <a className="text-emerald-600 hover:text-emerald-700 font-medium text-sm">
+                      <span className="text-emerald-600 hover:text-emerald-700 font-medium text-sm cursor-pointer">
                         Ler mais →
-                      </a>
+                      </span>
                     </Link>
                   </div>
                 </div>

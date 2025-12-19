@@ -394,3 +394,4 @@
 - [x] Implementar sistema de favoritos funcional (produtos e artigos)
 - [x] Criar página Sobre Nós completa
 - [x] Testar todas as integrações
+- [x] Corrigir nested anchor tags no ConsumerBlog.tsx e erro de src vazio

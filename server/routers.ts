@@ -495,6 +495,64 @@ export const appRouter = router({
       }),
   }),
 
+  // Global search
+  search: router({
+    global: publicProcedure
+      .input(z.object({ query: z.string().min(1) }))
+      .query(async ({ input }) => {
+        const { query } = input;
+        const lowerQuery = query.toLowerCase();
+        
+        const products = await getAllProducts();
+        const blogPosts = await getAllBlogPosts();
+        const services = await getAllServices();
+        
+        const results = [
+          ...products
+            .filter(p => 
+              p.name.toLowerCase().includes(lowerQuery) || 
+              p.description.toLowerCase().includes(lowerQuery) ||
+              p.category.toLowerCase().includes(lowerQuery)
+            )
+            .map(p => ({
+              id: p.id,
+              title: p.name,
+              category: p.category,
+              type: 'marketplace' as const,
+              href: '/marketplace',
+            })),
+          ...blogPosts
+            .filter(b => 
+              b.titlePt.toLowerCase().includes(lowerQuery) || 
+              b.excerptPt.toLowerCase().includes(lowerQuery) ||
+              b.category.toLowerCase().includes(lowerQuery)
+            )
+            .map(b => ({
+              id: b.id,
+              title: b.titlePt,
+              category: b.category,
+              type: 'blog' as const,
+              href: '/knowledge',
+            })),
+          ...services
+            .filter(s => 
+              s.titlePt.toLowerCase().includes(lowerQuery) || 
+              s.descriptionPt.toLowerCase().includes(lowerQuery) ||
+              s.specialist.toLowerCase().includes(lowerQuery)
+            )
+            .map(s => ({
+              id: s.id,
+              title: s.titlePt,
+              category: 'Serviço',
+              type: 'services' as const,
+              href: '/services',
+            })),
+        ];
+        
+        return results;
+      }),
+  }),
+
   // Seed procedure (admin only)
   seed: router({
     all: adminProcedure.mutation(async () => {

@@ -395,3 +395,8 @@
 - [x] Criar página Sobre Nós completa
 - [x] Testar todas as integrações
 - [x] Corrigir nested anchor tags no ConsumerBlog.tsx e erro de src vazio
+
+## Melhorias Finais (19/12)
+- [x] Popular banco de dados com seed inicial (produtos, artigos, serviços)
+- [x] Implementar botões de favoritos funcionais nos cards de produtos e artigos
+- [x] Implementar busca funcional no header

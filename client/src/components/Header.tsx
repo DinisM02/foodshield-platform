@@ -8,38 +8,23 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl, APP_LOGO } from "@/const";
 import { trpc } from "@/lib/trpc";
 
-// Mock data for global search
-const searchableContent = [
-  // Knowledge
-  { id: 1, title: "Agricultura Sustentável", category: "Artigo", href: "/knowledge", type: "knowledge" },
-  { id: 2, title: "Técnicas de Irrigação", category: "Vídeo", href: "/knowledge", type: "knowledge" },
-  { id: 3, title: "Compostagem Orgânica", category: "Guia", href: "/knowledge", type: "knowledge" },
-  
-  // Marketplace
-  { id: 4, title: "Sementes Orgânicas", category: "Produto", href: "/marketplace", type: "marketplace" },
-  { id: 5, title: "Fertilizante Orgânico", category: "Produto", href: "/marketplace", type: "marketplace" },
-  { id: 6, title: "Sistema de Irrigação", category: "Equipamento", href: "/marketplace", type: "marketplace" },
-  
-  // Services
-  { id: 7, title: "Consultoria Técnica", category: "Serviço", href: "/services", type: "services" },
-  { id: 8, title: "Treinamento e Capacitação", category: "Serviço", href: "/services", type: "services" },
-  
-  // Blog
-  { id: 9, title: "Futuro da Agricultura", category: "Blog", href: "/blog", type: "blog" },
-  { id: 10, title: "Sustentabilidade Ambiental", category: "Blog", href: "/blog", type: "blog" },
-  
-  // Tools
-  { id: 11, title: "Calculadora de Carbono", category: "Ferramenta", href: "/tools", type: "tools" },
-  { id: 12, title: "Calculadora de Custos", category: "Ferramenta", href: "/tools", type: "tools" },
-];
+type SearchResult = {
+  id: number;
+  title: string;
+  category: string;
+  type: 'marketplace' | 'blog' | 'services';
+  href: string;
+};
 
 export default function Header() {
   const { language, setLanguage, t } = useLanguage();
   const { user, isAuthenticated } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState<typeof searchableContent>([]);
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [showSearchResults, setShowSearchResults] = useState(false);
+  
+  const utils = trpc.useUtils();
   const [showLanguageMenu, setShowLanguageMenu] = useState(false);
   const logoutMutation = trpc.auth.logout.useMutation();
 
@@ -53,7 +38,7 @@ export default function Header() {
     { label: t('nav.dashboard'), href: "/@dashboard" }
   ];
 
-  const handleSearch = (query: string) => {
+  const handleSearch = async (query: string) => {
     setSearchQuery(query);
     
     if (query.trim() === "") {
@@ -62,22 +47,22 @@ export default function Header() {
       return;
     }
 
-    const results = searchableContent.filter(item =>
-      item.title.toLowerCase().includes(query.toLowerCase()) ||
-      item.category.toLowerCase().includes(query.toLowerCase())
-    );
-
-    setSearchResults(results);
-    setShowSearchResults(true);
+    utils.search.global.fetch({ query })
+      .then(results => {
+        setSearchResults(results);
+        setShowSearchResults(true);
+      })
+      .catch(error => {
+        console.error('Search error:', error);
+        setSearchResults([]);
+      });
   };
 
   const getCategoryColor = (type: string) => {
     const colors: Record<string, string> = {
-      knowledge: "bg-blue-100 text-blue-800",
       marketplace: "bg-green-100 text-green-800",
       services: "bg-purple-100 text-purple-800",
-      blog: "bg-orange-100 text-orange-800",
-      tools: "bg-pink-100 text-pink-800"
+      blog: "bg-orange-100 text-orange-800"
     };
     return colors[type] || "bg-gray-100 text-gray-800";
   };
@@ -125,11 +110,9 @@ export default function Header() {
                             <p className="text-sm text-gray-500">{result.category}</p>
                           </div>
                           <span className={`text-xs px-2 py-1 rounded-full font-medium ${getCategoryColor(result.type)}`}>
-                            {result.type === "knowledge" && "Conhecimento"}
                             {result.type === "marketplace" && "Marketplace"}
                             {result.type === "services" && "Serviços"}
                             {result.type === "blog" && "Blog"}
-                            {result.type === "tools" && "Ferramentas"}
                           </span>
                       </div>
                     </Link>

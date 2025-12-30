@@ -400,3 +400,8 @@
 - [x] Popular banco de dados com seed inicial (produtos, artigos, serviços)
 - [x] Implementar botões de favoritos funcionais nos cards de produtos e artigos
 - [x] Implementar busca funcional no header
+
+## Funcionalidades Avançadas (19/12)
+- [x] Implementar sistema de avaliações de produtos (1-5 estrelas + comentários)
+- [x] Implementar carrinho de compras persistente no banco de dados
+- [x] Criar dashboard de analytics para admins (vendas, produtos populares, métricas)

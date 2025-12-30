@@ -11,6 +11,8 @@ import { getLoginUrl } from "@/const";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { trpc } from "@/lib/trpc";
 import { useCart } from "@/contexts/CartContext";
+import { toast } from 'sonner';
+import ProductRating from "@/components/ProductRating";
 
 interface Product {
   id: number;
@@ -149,12 +151,17 @@ export default function Marketplace() {
               </div>
               
               <CardHeader>
-                <CardTitle className="text-xl group-hover:text-primary transition-colors">
-                  {product.name}
-                </CardTitle>
-                <CardDescription className="line-clamp-2">
-                  {product.description}
-                </CardDescription>
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <CardTitle className="text-xl group-hover:text-primary transition-colors">
+                      {product.name}
+                    </CardTitle>
+                    <CardDescription className="line-clamp-2 mt-1">
+                      {product.description}
+                    </CardDescription>
+                  </div>
+                </div>
+                <ProductRating productId={product.id} />
               </CardHeader>
 
               <CardContent>

@@ -1,6 +1,6 @@
-import { eq, desc, and } from "drizzle-orm";
+import { eq, desc, and, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, blogPosts, InsertBlogPost, products, services, InsertService, favorites, InsertFavorite } from "../drizzle/schema";
+import { InsertUser, users, blogPosts, InsertBlogPost, products, services, InsertService, favorites, InsertFavorite, reviews, InsertReview, cartItems, InsertCartItem } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -434,4 +434,132 @@ export async function isFavorited(userId: number, itemType: "product" | "blog", 
     .limit(1);
   
   return result.length > 0;
+}
+
+// Reviews functions
+export async function getProductReviews(productId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const result = await db.select({
+    id: reviews.id,
+    userId: reviews.userId,
+    userName: users.name,
+    rating: reviews.rating,
+    comment: reviews.comment,
+    createdAt: reviews.createdAt,
+  })
+  .from(reviews)
+  .leftJoin(users, eq(reviews.userId, users.id))
+  .where(eq(reviews.productId, productId))
+  .orderBy(desc(reviews.createdAt));
+  
+  return result;
+}
+
+export async function createReview(review: InsertReview) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  // Check if user already reviewed this product
+  const existing = await db.select().from(reviews)
+    .where(and(
+      eq(reviews.userId, review.userId),
+      eq(reviews.productId, review.productId)
+    ))
+    .limit(1);
+  
+  if (existing.length > 0) {
+    throw new Error("You have already reviewed this product");
+  }
+  
+  const result = await db.insert(reviews).values(review);
+  return { id: Number(result[0].insertId), ...review };
+}
+
+export async function getProductAverageRating(productId: number): Promise<{ average: number; count: number }> {
+  const db = await getDb();
+  if (!db) return { average: 0, count: 0 };
+  
+  const result = await db.select({
+    average: sql<number>`AVG(${reviews.rating})`,
+    count: sql<number>`COUNT(*)`,
+  })
+  .from(reviews)
+  .where(eq(reviews.productId, productId));
+  
+  return {
+    average: result[0]?.average ? Number(result[0].average.toFixed(1)) : 0,
+    count: result[0]?.count ? Number(result[0].count) : 0,
+  };
+}
+
+// Cart functions
+export async function getUserCart(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const result = await db.select({
+    id: cartItems.id,
+    productId: cartItems.productId,
+    quantity: cartItems.quantity,
+    product: products,
+  })
+  .from(cartItems)
+  .leftJoin(products, eq(cartItems.productId, products.id))
+  .where(eq(cartItems.userId, userId));
+  
+  return result;
+}
+
+export async function addToCart(userId: number, productId: number, quantity: number = 1) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  // Check if item already in cart
+  const existing = await db.select().from(cartItems)
+    .where(and(
+      eq(cartItems.userId, userId),
+      eq(cartItems.productId, productId)
+    ))
+    .limit(1);
+  
+  if (existing.length > 0) {
+    // Update quantity
+    await db.update(cartItems)
+      .set({ quantity: existing[0].quantity + quantity })
+      .where(eq(cartItems.id, existing[0].id));
+    return existing[0];
+  }
+  
+  const result = await db.insert(cartItems).values({ userId, productId, quantity });
+  return { id: Number(result[0].insertId), userId, productId, quantity };
+}
+
+export async function updateCartItemQuantity(cartItemId: number, quantity: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  if (quantity <= 0) {
+    await db.delete(cartItems).where(eq(cartItems.id, cartItemId));
+    return;
+  }
+  
+  await db.update(cartItems)
+    .set({ quantity })
+    .where(eq(cartItems.id, cartItemId));
+}
+
+export async function removeFromCart(cartItemId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.delete(cartItems).where(eq(cartItems.id, cartItemId));
+}
+
+export async function clearCart(userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.delete(cartItems).where(eq(cartItems.userId, userId));
 }

@@ -43,6 +43,13 @@
       "when": 1765973368254,
       "tag": "0005_unknown_tiger_shark",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1767074411750,
+      "tag": "0006_good_justice",
+      "breakpoints": true
     }
   ]
 }

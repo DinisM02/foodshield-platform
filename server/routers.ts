@@ -32,6 +32,14 @@ import {
   addFavorite,
   removeFavorite,
   isFavorited,
+  getProductReviews,
+  createReview,
+  getProductAverageRating,
+  getUserCart,
+  addToCart,
+  updateCartItemQuantity,
+  removeFromCart,
+  clearCart,
 } from "./db";
 
 // Admin-only procedure
@@ -493,6 +501,68 @@ export const appRouter = router({
       .query(async ({ ctx, input }) => {
         return await isFavorited(ctx.user!.id, input.itemType, input.itemId);
       }),
+  }),
+
+  // Reviews
+  reviews: router({
+    list: publicProcedure
+      .input(z.object({ productId: z.number() }))
+      .query(async ({ input }) => {
+        return await getProductReviews(input.productId);
+      }),
+    create: protectedProcedure
+      .input(z.object({
+        productId: z.number(),
+        rating: z.number().min(1).max(5),
+        comment: z.string().optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        return await createReview({
+          userId: ctx.user!.id,
+          productId: input.productId,
+          rating: input.rating,
+          comment: input.comment || null,
+        });
+      }),
+    average: publicProcedure
+      .input(z.object({ productId: z.number() }))
+      .query(async ({ input }) => {
+        return await getProductAverageRating(input.productId);
+      }),
+  }),
+
+  // Cart
+  cart: router({
+    get: protectedProcedure.query(async ({ ctx }) => {
+      return await getUserCart(ctx.user!.id);
+    }),
+    add: protectedProcedure
+      .input(z.object({
+        productId: z.number(),
+        quantity: z.number().default(1),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        return await addToCart(ctx.user!.id, input.productId, input.quantity);
+      }),
+    updateQuantity: protectedProcedure
+      .input(z.object({
+        cartItemId: z.number(),
+        quantity: z.number(),
+      }))
+      .mutation(async ({ input }) => {
+        await updateCartItemQuantity(input.cartItemId, input.quantity);
+        return { success: true };
+      }),
+    remove: protectedProcedure
+      .input(z.object({ cartItemId: z.number() }))
+      .mutation(async ({ input }) => {
+        await removeFromCart(input.cartItemId);
+        return { success: true };
+      }),
+    clear: protectedProcedure.mutation(async ({ ctx }) => {
+      await clearCart(ctx.user!.id);
+      return { success: true };
+    }),
   }),
 
   // Global search

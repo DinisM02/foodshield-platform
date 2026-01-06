@@ -77,10 +77,10 @@ export default function ConsumerServices() {
                     <span className="text-sm text-gray-600">MZN</span>
                   </div>
                   <Link href="/services">
-                    <a className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors flex items-center gap-2">
+                    <span className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors flex items-center gap-2 cursor-pointer">
                       <Calendar size={16} />
                       Agendar
-                    </a>
+                    </span>
                   </Link>
                 </div>
               </div>

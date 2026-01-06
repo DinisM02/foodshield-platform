@@ -405,3 +405,4 @@
 - [x] Implementar sistema de avaliações de produtos (1-5 estrelas + comentários)
 - [x] Implementar carrinho de compras persistente no banco de dados
 - [x] Criar dashboard de analytics para admins (vendas, produtos populares, métricas)
+- [x] Corrigir nested anchor tags no ConsumerServices.tsx (linha 79-80)

@@ -406,3 +406,4 @@
 - [x] Implementar carrinho de compras persistente no banco de dados
 - [x] Criar dashboard de analytics para admins (vendas, produtos populares, métricas)
 - [x] Corrigir nested anchor tags no ConsumerServices.tsx (linha 79-80)
+- [x] Auditoria completa e correção de todos os nested anchor tags (ConsumerMarketplace.tsx e outros)

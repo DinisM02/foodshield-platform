@@ -415,3 +415,9 @@
 - [x] Testar Serviços e Área do Consumidor (agendamentos, pedidos, favoritos)
 - [x] Testar Admin Panel (CRUD de produtos, blog, serviços, usuários, pedidos)
 - [x] Validar integração do banco de dados (verificar persistência de todos os dados)
+
+## Página de Boas-Vindas (07/01)
+- [x] Adicionar campo isFirstLogin ao schema de usuários
+- [x] Criar página de boas-vindas com tour da plataforma
+- [x] Implementar lógica de redirecionamento após primeiro login
+- [x] Testar fluxo completo de novo usuário

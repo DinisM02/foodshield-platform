@@ -1,0 +1,1 @@
+ALTER TABLE `users` ADD `isFirstLogin` boolean DEFAULT true NOT NULL;

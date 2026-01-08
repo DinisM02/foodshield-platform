@@ -4,6 +4,9 @@ import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router, protectedProcedure } from "./_core/trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
+import { eq } from "drizzle-orm";
+import { users } from "../drizzle/schema";
+import { getDb } from "./db";
 import {
   getAllUsers,
   deleteUser,
@@ -60,6 +63,13 @@ export const appRouter = router({
       return {
         success: true,
       } as const;
+    }),
+    markWelcomeSeen: protectedProcedure.mutation(async ({ ctx }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+      
+      await db.update(users).set({ isFirstLogin: false }).where(eq(users.id, ctx.user.id));
+      return { success: true };
     }),
   }),
 

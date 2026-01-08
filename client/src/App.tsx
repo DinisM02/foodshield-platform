@@ -27,6 +27,7 @@ import ConsumerServices from "./pages/ConsumerServices";
 import ConsumerProfile from "./pages/ConsumerProfile";
 import ConsumerFavorites from "./pages/ConsumerFavorites";
 import About from "./pages/About";
+import Welcome from "./pages/Welcome";
 
 function Router() {
   return (
@@ -46,6 +47,7 @@ function Router() {
       <Route path={"/admin"} component={Admin} />
       <Route path={"/@admin"} component={Admin} />
       <Route path={"/@dashboard"} component={Dashboard} />
+      <Route path="/welcome" component={Welcome} />
        <Route path="/consumer" component={Consumer} />
        <Route path="/consumer/knowledge" component={ConsumerKnowledge} />
       <Route path="/consumer/tools" component={ConsumerTools} />

@@ -429,6 +429,43 @@ const translations = {
     'about.team_member_3_name': 'Carlos Nhaca',
     'about.team_member_3_role': 'Diretor de Operações',
     'about.team_member_3_bio': 'Agrônomo especializado em práticas sustentáveis e gestão de cadeias de valor',
+
+    // Welcome Page
+    'welcome.title': 'Bem-vindo ao SustainHub!',
+    'welcome.subtitle': 'Vamos conhecer a plataforma em 4 passos rápidos',
+    'welcome.complete': 'Bem-vindo! Explore a plataforma.',
+    'welcome.skip': 'Pular',
+    'welcome.back': 'Voltar',
+    'welcome.next': 'Próximo',
+    'welcome.start': 'Começar',
+    
+    'welcome.step1.title': 'Plataforma Completa de Sustentabilidade',
+    'welcome.step1.description': 'SustainHub é o seu hub central para transformar sistemas alimentares e promover práticas sustentáveis em Moçambique.',
+    'welcome.step1.feature1': 'Acesso a recursos educacionais e pesquisas',
+    'welcome.step1.feature2': 'Conexão com especialistas locais',
+    'welcome.step1.feature3': 'Ferramentas de análise e planejamento',
+    'welcome.step1.feature4': 'Comunidade ativa de produtores',
+    
+    'welcome.step2.title': 'Marketplace Sustentável',
+    'welcome.step2.description': 'Compre e venda produtos locais com indicadores de sustentabilidade e impacto ambiental transparentes.',
+    'welcome.step2.feature1': 'Produtos certificados e rastreáveis',
+    'welcome.step2.feature2': 'Indicadores de sustentabilidade',
+    'welcome.step2.feature3': 'Preços justos e transparentes',
+    'welcome.step2.feature4': 'Entrega rápida e segura',
+    
+    'welcome.step3.title': 'Centro de Conhecimento',
+    'welcome.step3.description': 'Acesse uma biblioteca digital completa com artigos, vídeos, guias práticos e pesquisas sobre agricultura sustentável.',
+    'welcome.step3.feature1': 'Artigos técnicos e científicos',
+    'welcome.step3.feature2': 'Vídeos tutoriais práticos',
+    'welcome.step3.feature3': 'Guias passo a passo',
+    'welcome.step3.feature4': 'Pesquisas e estudos de caso',
+    
+    'welcome.step4.title': 'Ferramentas e Serviços',
+    'welcome.step4.description': 'Utilize calculadoras especializadas, dashboards de análise e consulte especialistas para otimizar suas operações.',
+    'welcome.step4.feature1': 'Calculadoras de sustentabilidade',
+    'welcome.step4.feature2': 'Dashboards de análise',
+    'welcome.step4.feature3': 'Consultoria especializada',
+    'welcome.step4.feature4': 'Agendamento de serviços',
   },
   en: {
     // Header & Navigation
@@ -848,6 +885,43 @@ const translations = {
     'about.team_member_3_name': 'Carlos Nhaca',
     'about.team_member_3_role': 'Chief Operating Officer',
     'about.team_member_3_bio': 'Agronomist specialized in sustainable practices and value chain management',
+
+    // Welcome Page
+    'welcome.title': 'Welcome to SustainHub!',
+    'welcome.subtitle': "Let's explore the platform in 4 quick steps",
+    'welcome.complete': 'Welcome! Explore the platform.',
+    'welcome.skip': 'Skip',
+    'welcome.back': 'Back',
+    'welcome.next': 'Next',
+    'welcome.start': 'Get Started',
+    
+    'welcome.step1.title': 'Complete Sustainability Platform',
+    'welcome.step1.description': 'SustainHub is your central hub for transforming food systems and promoting sustainable practices in Mozambique.',
+    'welcome.step1.feature1': 'Access to educational resources and research',
+    'welcome.step1.feature2': 'Connection with local experts',
+    'welcome.step1.feature3': 'Analysis and planning tools',
+    'welcome.step1.feature4': 'Active community of producers',
+    
+    'welcome.step2.title': 'Sustainable Marketplace',
+    'welcome.step2.description': 'Buy and sell local products with transparent sustainability indicators and environmental impact.',
+    'welcome.step2.feature1': 'Certified and traceable products',
+    'welcome.step2.feature2': 'Sustainability indicators',
+    'welcome.step2.feature3': 'Fair and transparent prices',
+    'welcome.step2.feature4': 'Fast and secure delivery',
+    
+    'welcome.step3.title': 'Knowledge Center',
+    'welcome.step3.description': 'Access a complete digital library with articles, videos, practical guides and research on sustainable agriculture.',
+    'welcome.step3.feature1': 'Technical and scientific articles',
+    'welcome.step3.feature2': 'Practical tutorial videos',
+    'welcome.step3.feature3': 'Step-by-step guides',
+    'welcome.step3.feature4': 'Research and case studies',
+    
+    'welcome.step4.title': 'Tools and Services',
+    'welcome.step4.description': 'Use specialized calculators, analysis dashboards and consult experts to optimize your operations.',
+    'welcome.step4.feature1': 'Sustainability calculators',
+    'welcome.step4.feature2': 'Analysis dashboards',
+    'welcome.step4.feature3': 'Specialized consulting',
+    'welcome.step4.feature4': 'Service scheduling',
   },
 };
 

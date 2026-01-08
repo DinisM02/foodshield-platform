@@ -16,6 +16,7 @@ export const users = mysqlTable("users", {
   emailNotifications: boolean("emailNotifications").default(true).notNull(),
   orderUpdates: boolean("orderUpdates").default(true).notNull(),
   promotions: boolean("promotions").default(false).notNull(),
+  isFirstLogin: boolean("isFirstLogin").default(true).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
   lastSignedIn: timestamp("lastSignedIn").defaultNow().notNull(),

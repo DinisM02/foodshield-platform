@@ -3,8 +3,19 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { trpc } from '@/lib/trpc';
 import { ShoppingBag, BookOpen, Briefcase, TrendingUp } from 'lucide-react';
 import { Link } from 'wouter';
+import { WelcomeGuard } from '@/components/WelcomeGuard';
 
 export default function Consumer() {
+  const { t } = useLanguage();
+  
+  return (
+    <WelcomeGuard>
+      <ConsumerContent />
+    </WelcomeGuard>
+  );
+}
+
+function ConsumerContent() {
   const { t } = useLanguage();
   const { data: orders } = trpc.orders.getUserOrders.useQuery();
   

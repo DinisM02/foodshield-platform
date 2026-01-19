@@ -323,7 +323,7 @@ const translations = {
     'myArea.memberSince': 'Membro desde',
 
     // Consumer Area
-    'consumer.title': 'Área do Consumidor',
+    'consumer.title': 'Minha Área',
     'consumer.dashboard': 'Dashboard',
     'consumer.blog': 'Blog',
     'consumer.knowledge': 'Centro de Conhecimento',
@@ -779,7 +779,7 @@ const translations = {
     'myArea.memberSince': 'Member since',
 
     // Consumer Area
-    'consumer.title': 'Consumer Area',
+    'consumer.title': 'My Area',
     'consumer.dashboard': 'Dashboard',
     'consumer.blog': 'Blog',
     'consumer.knowledge': 'Knowledge Center',

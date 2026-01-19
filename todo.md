@@ -427,3 +427,7 @@
 
 ## Melhorias Homepage (07/01)
 - [x] Modificar botão "Explorar Plataforma" para exibir dropdown com 4 áreas principais (Centro de Conhecimento, Marketplace, Área do Consumidor, Ferramentas)
+
+## Renomeação (07/01)
+- [x] Renomear "Área do Consumidor" para "Minha Área" em traduções PT/EN
+- [x] Atualizar referências nos componentes (Header, Home, etc)

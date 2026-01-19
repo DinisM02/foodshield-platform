@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { BookOpen, ShoppingCart, Users, Wrench, TrendingUp, Globe, ChevronDown } from "lucide-react";
 import { Link } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
@@ -79,11 +80,52 @@ export default function Home() {
             {t('hero.description')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Link href="/knowledge">
-              <Button size="lg" className="bg-emerald-600 text-white hover:bg-emerald-700 text-lg px-8 py-6 h-auto font-semibold">
-                {t('hero.explore')}
-              </Button>
-            </Link>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button size="lg" className="bg-emerald-600 text-white hover:bg-emerald-700 text-lg px-8 py-6 h-auto font-semibold">
+                  {t('hero.explore')}
+                  <ChevronDown className="ml-2 w-5 h-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-64 bg-white">
+                <Link href="/knowledge">
+                  <DropdownMenuItem className="cursor-pointer py-3">
+                    <BookOpen className="mr-3 w-5 h-5 text-purple-600" />
+                    <div>
+                      <div className="font-semibold">{t('features.knowledge')}</div>
+                      <div className="text-xs text-gray-500">{t('nav.knowledge')}</div>
+                    </div>
+                  </DropdownMenuItem>
+                </Link>
+                <Link href="/marketplace">
+                  <DropdownMenuItem className="cursor-pointer py-3">
+                    <ShoppingCart className="mr-3 w-5 h-5 text-blue-600" />
+                    <div>
+                      <div className="font-semibold">{t('features.marketplace')}</div>
+                      <div className="text-xs text-gray-500">{t('nav.marketplace')}</div>
+                    </div>
+                  </DropdownMenuItem>
+                </Link>
+                <Link href="/consumer">
+                  <DropdownMenuItem className="cursor-pointer py-3">
+                    <Users className="mr-3 w-5 h-5 text-emerald-600" />
+                    <div>
+                      <div className="font-semibold">{t('nav.consumer')}</div>
+                      <div className="text-xs text-gray-500">{t('consumer.title')}</div>
+                    </div>
+                  </DropdownMenuItem>
+                </Link>
+                <Link href="/tools">
+                  <DropdownMenuItem className="cursor-pointer py-3">
+                    <Wrench className="mr-3 w-5 h-5 text-orange-600" />
+                    <div>
+                      <div className="font-semibold">{t('features.tools')}</div>
+                      <div className="text-xs text-gray-500">{t('nav.tools')}</div>
+                    </div>
+                  </DropdownMenuItem>
+                </Link>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <Button 
               size="lg" 
               variant="outline" 

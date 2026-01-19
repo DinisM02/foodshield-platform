@@ -421,3 +421,9 @@
 - [x] Criar página de boas-vindas com tour da plataforma
 - [x] Implementar lógica de redirecionamento após primeiro login
 - [x] Testar fluxo completo de novo usuário
+
+## Melhorias Homepage (07/01)
+- [x] Modificar botão "Explorar Plataforma" para exibir dropdown com 4 áreas principais (Centro de Conhecimento, Marketplace, Área do Consumidor, Ferramentas)
+
+## Melhorias Homepage (07/01)
+- [x] Modificar botão "Explorar Plataforma" para exibir dropdown com 4 áreas principais (Centro de Conhecimento, Marketplace, Área do Consumidor, Ferramentas)

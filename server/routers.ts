@@ -43,6 +43,16 @@ import {
   updateCartItemQuantity,
   removeFromCart,
   clearCart,
+  getAllEvents,
+  getEventById,
+  createEvent,
+  updateEvent,
+  deleteEvent,
+  getAllNews,
+  getNewsById,
+  createNews,
+  updateNews,
+  deleteNews,
 } from "./db";
 
 // Admin-only procedure
@@ -573,6 +583,133 @@ export const appRouter = router({
       await clearCart(ctx.user!.id);
       return { success: true };
     }),
+  }),
+
+  // Public Blog Posts
+  blogPosts: router({
+    list: publicProcedure.query(async () => {
+      const posts = await getAllBlogPosts();
+      return posts.filter(p => p.published);
+    }),
+    getById: publicProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        return await getBlogPostById(input.id);
+      }),
+  }),
+
+  // Events
+  events: router({
+    list: publicProcedure.query(async () => {
+      return await getAllEvents();
+    }),
+    getById: publicProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        return await getEventById(input.id);
+      }),
+    create: adminProcedure
+      .input(z.object({
+        titlePt: z.string(),
+        titleEn: z.string(),
+        descriptionPt: z.string(),
+        descriptionEn: z.string(),
+        location: z.string(),
+        eventDate: z.date(),
+        imageUrl: z.string().optional(),
+        category: z.string(),
+        organizerName: z.string(),
+        maxParticipants: z.number().optional(),
+        registrationDeadline: z.date().optional(),
+        status: z.enum(["upcoming", "ongoing", "completed", "cancelled"]).optional(),
+      }))
+      .mutation(async ({ input }) => {
+        return await createEvent(input);
+      }),
+    update: adminProcedure
+      .input(z.object({
+        id: z.number(),
+        titlePt: z.string().optional(),
+        titleEn: z.string().optional(),
+        descriptionPt: z.string().optional(),
+        descriptionEn: z.string().optional(),
+        location: z.string().optional(),
+        eventDate: z.date().optional(),
+        imageUrl: z.string().optional(),
+        category: z.string().optional(),
+        organizerName: z.string().optional(),
+        maxParticipants: z.number().optional(),
+        registrationDeadline: z.date().optional(),
+        status: z.enum(["upcoming", "ongoing", "completed", "cancelled"]).optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const { id, ...data } = input;
+        await updateEvent(id, data);
+        return { success: true };
+      }),
+    delete: adminProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        await deleteEvent(input.id);
+        return { success: true };
+      }),
+  }),
+
+  // News
+  news: router({
+    list: publicProcedure.query(async () => {
+      return await getAllNews();
+    }),
+    getById: publicProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        return await getNewsById(input.id);
+      }),
+    create: adminProcedure
+      .input(z.object({
+        titlePt: z.string(),
+        titleEn: z.string(),
+        contentPt: z.string(),
+        contentEn: z.string(),
+        summaryPt: z.string(),
+        summaryEn: z.string(),
+        imageUrl: z.string().optional(),
+        category: z.string(),
+        author: z.string(),
+        source: z.string().optional(),
+        status: z.enum(["draft", "published"]).optional(),
+        publishedAt: z.date().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        return await createNews(input);
+      }),
+    update: adminProcedure
+      .input(z.object({
+        id: z.number(),
+        titlePt: z.string().optional(),
+        titleEn: z.string().optional(),
+        contentPt: z.string().optional(),
+        contentEn: z.string().optional(),
+        summaryPt: z.string().optional(),
+        summaryEn: z.string().optional(),
+        imageUrl: z.string().optional(),
+        category: z.string().optional(),
+        author: z.string().optional(),
+        source: z.string().optional(),
+        status: z.enum(["draft", "published"]).optional(),
+        publishedAt: z.date().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const { id, ...data } = input;
+        await updateNews(id, data);
+        return { success: true };
+      }),
+    delete: adminProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        await deleteNews(input.id);
+        return { success: true };
+      }),
   }),
 
   // Global search

@@ -1,6 +1,6 @@
 import { eq, desc, and, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, blogPosts, InsertBlogPost, products, services, InsertService, favorites, InsertFavorite, reviews, InsertReview, cartItems, InsertCartItem } from "../drizzle/schema";
+import { InsertUser, users, blogPosts, InsertBlogPost, products, services, InsertService, favorites, InsertFavorite, reviews, InsertReview, cartItems, InsertCartItem, events, InsertEvent, news, InsertNews } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -562,4 +562,80 @@ export async function clearCart(userId: number) {
   if (!db) throw new Error("Database not available");
   
   await db.delete(cartItems).where(eq(cartItems.userId, userId));
+}
+
+// Events functions
+export async function getAllEvents() {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return await db.select().from(events).orderBy(events.eventDate);
+}
+
+export async function getEventById(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+  
+  const result = await db.select().from(events).where(eq(events.id, id)).limit(1);
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function createEvent(event: InsertEvent) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.insert(events).values(event);
+  return true;
+}
+
+export async function updateEvent(id: number, event: Partial<InsertEvent>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.update(events).set(event).where(eq(events.id, id));
+}
+
+export async function deleteEvent(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.delete(events).where(eq(events.id, id));
+}
+
+// News functions
+export async function getAllNews() {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return await db.select().from(news).orderBy(desc(news.publishedAt));
+}
+
+export async function getNewsById(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+  
+  const result = await db.select().from(news).where(eq(news.id, id)).limit(1);
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function createNews(newsItem: InsertNews) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.insert(news).values(newsItem);
+  return true;
+}
+
+export async function updateNews(id: number, newsItem: Partial<InsertNews>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.update(news).set(newsItem).where(eq(news.id, id));
+}
+
+export async function deleteNews(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.delete(news).where(eq(news.id, id));
 }

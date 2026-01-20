@@ -28,6 +28,7 @@ import ConsumerProfile from "./pages/ConsumerProfile";
 import ConsumerFavorites from "./pages/ConsumerFavorites";
 import About from "./pages/About";
 import Welcome from "./pages/Welcome";
+import ConsumerArea from "./pages/ConsumerArea";
 
 function Router() {
   return (
@@ -48,6 +49,7 @@ function Router() {
       <Route path={"/@admin"} component={Admin} />
       <Route path={"/@dashboard"} component={Dashboard} />
       <Route path="/welcome" component={Welcome} />
+      <Route path="/consumer-area" component={ConsumerArea} />
        <Route path="/consumer" component={Consumer} />
        <Route path="/consumer/knowledge" component={ConsumerKnowledge} />
       <Route path="/consumer/tools" component={ConsumerTools} />

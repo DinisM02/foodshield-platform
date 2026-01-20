@@ -140,6 +140,42 @@ export const cartItems = mysqlTable("cartItems", {
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
 
+export const events = mysqlTable("events", {
+  id: int("id").autoincrement().primaryKey(),
+  titlePt: text("titlePt").notNull(),
+  titleEn: text("titleEn").notNull(),
+  descriptionPt: text("descriptionPt").notNull(),
+  descriptionEn: text("descriptionEn").notNull(),
+  location: text("location").notNull(),
+  eventDate: timestamp("eventDate").notNull(),
+  imageUrl: text("imageUrl"),
+  category: varchar("category", { length: 100 }).notNull(),
+  organizerName: text("organizerName").notNull(),
+  maxParticipants: int("maxParticipants"),
+  registrationDeadline: timestamp("registrationDeadline"),
+  status: mysqlEnum("status", ["upcoming", "ongoing", "completed", "cancelled"]).default("upcoming").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export const news = mysqlTable("news", {
+  id: int("id").autoincrement().primaryKey(),
+  titlePt: text("titlePt").notNull(),
+  titleEn: text("titleEn").notNull(),
+  contentPt: text("contentPt").notNull(),
+  contentEn: text("contentEn").notNull(),
+  summaryPt: text("summaryPt").notNull(),
+  summaryEn: text("summaryEn").notNull(),
+  imageUrl: text("imageUrl"),
+  category: varchar("category", { length: 100 }).notNull(),
+  author: text("author").notNull(),
+  source: text("source"),
+  status: mysqlEnum("status", ["draft", "published"]).default("draft").notNull(),
+  publishedAt: timestamp("publishedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 export type Content = typeof contents.$inferSelect;
@@ -159,3 +195,7 @@ export type Review = typeof reviews.$inferSelect;
 export type InsertReview = typeof reviews.$inferInsert;
 export type CartItem = typeof cartItems.$inferSelect;
 export type InsertCartItem = typeof cartItems.$inferInsert;
+export type Event = typeof events.$inferSelect;
+export type InsertEvent = typeof events.$inferInsert;
+export type News = typeof news.$inferSelect;
+export type InsertNews = typeof news.$inferInsert;

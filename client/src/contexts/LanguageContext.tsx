@@ -466,6 +466,23 @@ const translations = {
     'welcome.step4.feature2': 'Dashboards de análise',
     'welcome.step4.feature3': 'Consultoria especializada',
     'welcome.step4.feature4': 'Agendamento de serviços',
+
+    // Consumer Area (Public)
+    'consumerArea.title': 'Área de Consumidor',
+    'consumerArea.subtitle': 'Conteúdo público sobre agricultura sustentável',
+    'consumerArea.tabs.blog': 'Blog',
+    'consumerArea.tabs.events': 'Eventos',
+    'consumerArea.tabs.news': 'Notícias',
+    'consumerArea.noBlog': 'Nenhum artigo de blog disponível',
+    'consumerArea.noEvents': 'Nenhum evento disponível',
+    'consumerArea.noNews': 'Nenhuma notícia disponível',
+    'consumerArea.readMore': 'Ler Mais',
+    'consumerArea.viewDetails': 'Ver Detalhes',
+    'consumerArea.eventDate': 'Data do Evento',
+    'consumerArea.eventLocation': 'Local',
+    'consumerArea.newsDate': 'Data da Notícia',
+    'consumerArea.by': 'Por',
+    'consumerArea.category': 'Categoria',
   },
   en: {
     // Header & Navigation
@@ -922,6 +939,23 @@ const translations = {
     'welcome.step4.feature2': 'Analysis dashboards',
     'welcome.step4.feature3': 'Specialized consulting',
     'welcome.step4.feature4': 'Service scheduling',
+
+    // Consumer Area (Public)
+    'consumerArea.title': 'Consumer Area',
+    'consumerArea.subtitle': 'Public content about sustainable agriculture',
+    'consumerArea.tabs.blog': 'Blog',
+    'consumerArea.tabs.events': 'Events',
+    'consumerArea.tabs.news': 'News',
+    'consumerArea.noBlog': 'No blog articles available',
+    'consumerArea.noEvents': 'No events available',
+    'consumerArea.noNews': 'No news available',
+    'consumerArea.readMore': 'Read More',
+    'consumerArea.viewDetails': 'View Details',
+    'consumerArea.eventDate': 'Event Date',
+    'consumerArea.eventLocation': 'Location',
+    'consumerArea.newsDate': 'News Date',
+    'consumerArea.by': 'By',
+    'consumerArea.category': 'Category',
   },
 };
 

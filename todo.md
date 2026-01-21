@@ -436,10 +436,11 @@
 - [x] Buscar todas as referências a "Área do Consumidor" em arquivos PT/EN
 - [x] Atualizar todas as referências encontradas para "Minha Área"
 
-## Nova Área de Consumidor (07/01)
-- [ ] Criar tabelas de eventos e notícias no schema
-- [ ] Criar procedures tRPC para eventos e notícias (CRUD)
-- [ ] Criar página ConsumerArea.tsx com 3 seções (Blog, Eventos, Notícias)
-- [ ] Adicionar gestão de eventos e notícias no Admin Panel
-- [ ] Popular banco com dados de exemplo
-- [ ] Testar funcionalidades completas
+## Nova Área de Consumidor (07/01) - CONCLUÍDO (21/01)
+- [x] Criar tabelas de eventos e notícias no schema
+- [x] Criar procedures tRPC para eventos e notícias (CRUD)
+- [x] Criar página ConsumerArea.tsx com 3 seções (Blog, Eventos, Notícias)
+- [x] Adicionar gestão de eventos e notícias no Admin Panel
+- [x] Popular banco com dados de exemplo (seed)
+- [x] Adicionar traduções PT/EN completas
+- [x] Testar funcionalidades completas

@@ -51,15 +51,15 @@ export default function ConsumerArea() {
               <TabsList className="grid w-full md:w-auto grid-cols-3 mb-8">
                 <TabsTrigger value="blog" className="flex items-center gap-2">
                   <BookOpen className="h-4 w-4" />
-                  {t('consumerArea.blog')}
+                  {t('consumerArea.tabs.blog')}
                 </TabsTrigger>
                 <TabsTrigger value="events" className="flex items-center gap-2">
                   <Calendar className="h-4 w-4" />
-                  {t('consumerArea.events')}
+                  {t('consumerArea.tabs.events')}
                 </TabsTrigger>
                 <TabsTrigger value="news" className="flex items-center gap-2">
                   <Newspaper className="h-4 w-4" />
-                  {t('consumerArea.news')}
+                  {t('consumerArea.tabs.news')}
                 </TabsTrigger>
               </TabsList>
 
@@ -138,7 +138,7 @@ export default function ConsumerArea() {
                           <div className="flex items-center justify-between mb-2">
                             <Badge variant="secondary">{event.category}</Badge>
                             <Badge variant={event.status === "upcoming" ? "default" : "outline"}>
-                              {t(`consumerArea.eventStatus.${event.status}`)}
+                              {event.status}
                             </Badge>
                           </div>
                           <CardTitle className="line-clamp-2">
@@ -161,13 +161,8 @@ export default function ConsumerArea() {
                             <User className="h-4 w-4" />
                             {event.organizerName}
                           </div>
-                          {event.maxParticipants && (
-                            <p className="text-sm text-gray-500">
-                              {t('consumerArea.maxParticipants')}: {event.maxParticipants}
-                            </p>
-                          )}
                           <Button className="w-full mt-4">
-                            {t('consumerArea.register')}
+                            {t('consumerArea.viewDetails')}
                           </Button>
                         </CardContent>
                       </Card>

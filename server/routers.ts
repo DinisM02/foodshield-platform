@@ -774,7 +774,7 @@ export const appRouter = router({
   seed: router({
     all: adminProcedure.mutation(async () => {
       const { getDb } = await import('./db.js');
-      const { products, blogPosts, services } = await import('../drizzle/schema.js');
+      const { products, blogPosts, services, events, news } = await import('../drizzle/schema.js');
       const db = await getDb();
       if (!db) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
 
@@ -799,11 +799,127 @@ export const appRouter = router({
         { titlePt: "Treinamento em Compostagem", titleEn: "Composting Training", descriptionPt: "Workshop prático", descriptionEn: "Practical workshop", specialist: "Prof. Costa", price: 200, priceType: "daily" as const, features: JSON.stringify(["Teoria", "Prática"]), available: true },
       ];
 
+      const seedEvents = [
+        {
+          titlePt: "Workshop de Agricultura Orgânica",
+          titleEn: "Organic Agriculture Workshop",
+          descriptionPt: "Aprenda técnicas práticas de agricultura orgânica com especialistas locais. Workshop de 2 dias com certificação.",
+          descriptionEn: "Learn practical organic agriculture techniques with local experts. 2-day workshop with certification.",
+          location: "Maputo, Moçambique",
+          eventDate: new Date('2026-02-15'),
+          imageUrl: "https://images.unsplash.com/photo-1464226184884-fa280b87c399?q=80&w=800",
+          category: "Workshop",
+          organizerName: "SustainHub",
+          maxParticipants: 30,
+          registrationDeadline: new Date('2026-02-10'),
+          status: "upcoming" as const,
+        },
+        {
+          titlePt: "Feira de Produtos Sustentáveis",
+          titleEn: "Sustainable Products Fair",
+          descriptionPt: "Encontro de produtores locais e consumidores conscientes. Produtos orgânicos, artesanato e muito mais.",
+          descriptionEn: "Meeting of local producers and conscious consumers. Organic products, crafts and more.",
+          location: "Matola, Moçambique",
+          eventDate: new Date('2026-03-20'),
+          imageUrl: "https://images.unsplash.com/photo-1488459716781-31db52582fe9?q=80&w=800",
+          category: "Feira",
+          organizerName: "SustainHub",
+          maxParticipants: 200,
+          registrationDeadline: new Date('2026-03-15'),
+          status: "upcoming" as const,
+        },
+        {
+          titlePt: "Seminário de Segurança Alimentar",
+          titleEn: "Food Security Seminar",
+          descriptionPt: "Discussão sobre desafios e soluções para segurança alimentar em Moçambique com palestrantes internacionais.",
+          descriptionEn: "Discussion on challenges and solutions for food security in Mozambique with international speakers.",
+          location: "Beira, Moçambique",
+          eventDate: new Date('2026-04-10'),
+          imageUrl: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=800",
+          category: "Seminário",
+          organizerName: "SustainHub",
+          maxParticipants: 150,
+          registrationDeadline: new Date('2026-04-05'),
+          status: "upcoming" as const,
+        },
+        {
+          titlePt: "Curso de Compostagem Doméstica",
+          titleEn: "Home Composting Course",
+          descriptionPt: "Curso prático de 1 dia sobre como fazer compostagem em casa. Inclui kit inicial de compostagem.",
+          descriptionEn: "1-day practical course on how to compost at home. Includes starter composting kit.",
+          location: "Nampula, Moçambique",
+          eventDate: new Date('2026-02-28'),
+          imageUrl: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=800",
+          category: "Curso",
+          organizerName: "SustainHub",
+          maxParticipants: 25,
+          registrationDeadline: new Date('2026-02-25'),
+          status: "upcoming" as const,
+        },
+      ];
+
+      const seedNews = [
+        {
+          titlePt: "Nova Parceria com Produtores Locais",
+          titleEn: "New Partnership with Local Producers",
+          summaryPt: "SustainHub anuncia parceria com 50 produtores locais",
+          summaryEn: "SustainHub announces partnership with 50 local producers",
+          contentPt: "SustainHub anuncia parceria estratégica com 50 produtores locais de Maputo e Matola para expandir o marketplace de produtos orgânicos. A iniciativa visa fortalecer a cadeia de valor local e garantir preços justos para agricultores.",
+          contentEn: "SustainHub announces strategic partnership with 50 local producers from Maputo and Matola to expand the organic products marketplace. The initiative aims to strengthen the local value chain and ensure fair prices for farmers.",
+          category: "Parceria",
+          author: "Equipe SustainHub",
+          imageUrl: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=800",
+          status: "published" as const,
+          publishedAt: new Date('2026-01-15'),
+        },
+        {
+          titlePt: "Recorde de Vendas de Produtos Sustentáveis",
+          titleEn: "Record Sales of Sustainable Products",
+          summaryPt: "Dezembro registrou recorde de vendas com aumento de 150%",
+          summaryEn: "December recorded sales record with 150% increase",
+          contentPt: "Dezembro de 2025 registrou recorde histórico de vendas na plataforma SustainHub, com aumento de 150% em relação ao mês anterior. Sementes orgânicas e sistemas de irrigação eficiente foram os produtos mais procurados.",
+          contentEn: "December 2025 recorded historic sales record on the SustainHub platform, with a 150% increase compared to the previous month. Organic seeds and efficient irrigation systems were the most sought-after products.",
+          category: "Mercado",
+          author: "Equipe SustainHub",
+          imageUrl: "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?q=80&w=800",
+          status: "published" as const,
+          publishedAt: new Date('2026-01-10'),
+        },
+        {
+          titlePt: "Novo Centro de Conhecimento Online",
+          titleEn: "New Online Knowledge Center",
+          summaryPt: "Biblioteca digital com mais de 100 recursos disponíveis",
+          summaryEn: "Digital library with over 100 resources available",
+          contentPt: "Lançamento da biblioteca digital com mais de 100 artigos, vídeos e guias práticos sobre agricultura sustentável. O conteúdo está disponível gratuitamente em português e inglês para todos os usuários.",
+          contentEn: "Launch of digital library with over 100 articles, videos and practical guides on sustainable agriculture. Content is available for free in Portuguese and English for all users.",
+          category: "Tecnologia",
+          author: "Equipe SustainHub",
+          imageUrl: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=800",
+          status: "published" as const,
+          publishedAt: new Date('2026-01-05'),
+        },
+        {
+          titlePt: "Prêmio de Inovação em Sustentabilidade",
+          titleEn: "Sustainability Innovation Award",
+          summaryPt: "SustainHub recebe Prêmio Nacional de Inovação 2025",
+          summaryEn: "SustainHub receives National Innovation Award 2025",
+          contentPt: "SustainHub foi reconhecida com o Prêmio Nacional de Inovação em Sustentabilidade 2025 pelo impacto positivo na transformação de sistemas alimentares em Moçambique. A cerimônia de premiação aconteceu em Maputo.",
+          contentEn: "SustainHub was recognized with the National Sustainability Innovation Award 2025 for its positive impact on transforming food systems in Mozambique. The award ceremony took place in Maputo.",
+          category: "Prêmio",
+          author: "Equipe SustainHub",
+          imageUrl: "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=800",
+          status: "published" as const,
+          publishedAt: new Date('2025-12-20'),
+        },
+      ];
+
       await Promise.all(seedProducts.map(p => db.insert(products).values(p)));
       await Promise.all(seedBlogPosts.map(p => db.insert(blogPosts).values(p)));
       await Promise.all(seedServices.map(s => db.insert(services).values(s)));
+      await Promise.all(seedEvents.map(e => db.insert(events).values(e)));
+      await Promise.all(seedNews.map(n => db.insert(news).values(n)));
 
-      return { success: true, message: 'Database seeded successfully!' };
+      return { success: true, message: 'Database seeded successfully with products, blog posts, services, events and news!' };
     }),
   }),
 });

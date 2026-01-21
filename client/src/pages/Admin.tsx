@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useAuth } from '@/_core/hooks/useAuth';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useLocation } from 'wouter';
@@ -28,6 +28,8 @@ import {
   ChevronRight,
   Pencil,
   Eye,
+  Calendar,
+  Newspaper,
 } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -114,6 +116,18 @@ export default function Admin() {
       label: t('admin.services'),
       icon: <Briefcase className="w-5 h-5" />,
       href: '#services',
+    },
+    {
+      id: 'events',
+      label: language === 'pt' ? 'Eventos' : 'Events',
+      icon: <Calendar className="w-5 h-5" />,
+      href: '#events',
+    },
+    {
+      id: 'news',
+      label: language === 'pt' ? 'Notícias' : 'News',
+      icon: <Newspaper className="w-5 h-5" />,
+      href: '#news',
     },
     {
       id: 'analytics',
@@ -228,6 +242,8 @@ export default function Admin() {
           {activeTab === 'products' && <ProductsTab t={t} language={language} />}
           {activeTab === 'orders' && <OrdersTab t={t} language={language} />}
           {activeTab === 'services' && <ServicesTab t={t} language={language} />}
+          {activeTab === 'events' && <EventsTab t={t} language={language} />}
+          {activeTab === 'news' && <NewsTab t={t} language={language} />}
           {activeTab === 'analytics' && <AnalyticsTab t={t} language={language} />}
           {activeTab === 'settings' && <SettingsTab t={t} language={language} />}
         </div>
@@ -2019,5 +2035,650 @@ function SettingsTab({ t, language }: { t: (key: string) => string; language: st
         </div>
       </div>
     </div>
+  );
+}
+
+// Events Tab
+function EventsTab({ t, language }: { t: (key: string) => string; language: string }) {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingEvent, setEditingEvent] = useState<any>(null);
+
+  const eventsQuery = trpc.events.list.useQuery();
+  const createMutation = trpc.events.create.useMutation({
+    onSuccess: () => {
+      toast.success(language === 'pt' ? 'Evento criado com sucesso!' : 'Event created successfully!');
+      eventsQuery.refetch();
+      setIsModalOpen(false);
+      setEditingEvent(null);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const updateMutation = trpc.events.update.useMutation({
+    onSuccess: () => {
+      toast.success(language === 'pt' ? 'Evento atualizado com sucesso!' : 'Event updated successfully!');
+      eventsQuery.refetch();
+      setIsModalOpen(false);
+      setEditingEvent(null);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const deleteMutation = trpc.events.delete.useMutation({
+    onSuccess: () => {
+      toast.success(language === 'pt' ? 'Evento deletado com sucesso!' : 'Event deleted successfully!');
+      eventsQuery.refetch();
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const filteredEvents = eventsQuery.data?.filter(event =>
+    event.titlePt.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    event.titleEn.toLowerCase().includes(searchTerm.toLowerCase())
+  ) || [];
+
+  const handleSubmit = (formData: any) => {
+    if (editingEvent) {
+      updateMutation.mutate({ id: editingEvent.id, ...formData });
+    } else {
+      createMutation.mutate(formData);
+    }
+  };
+
+  return (
+    <div>
+      <div className="flex justify-between items-center mb-6">
+        <h3 className="text-xl font-bold text-gray-900">
+          {language === 'pt' ? 'Gerenciar Eventos' : 'Manage Events'}
+        </h3>
+        <Button
+          onClick={() => {
+            setEditingEvent(null);
+            setIsModalOpen(true);
+          }}
+          className="bg-primary hover:bg-primary/90"
+        >
+          <Plus className="w-4 h-4 mr-2" />
+          {language === 'pt' ? 'Novo Evento' : 'New Event'}
+        </Button>
+      </div>
+
+      {/* Search */}
+      <div className="mb-6">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <Input
+            type="text"
+            placeholder={language === 'pt' ? 'Buscar eventos...' : 'Search events...'}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10"
+          />
+        </div>
+      </div>
+
+      {/* Events List */}
+      <div className="bg-white rounded-lg shadow overflow-hidden">
+        {eventsQuery.isLoading ? (
+          <div className="flex items-center justify-center p-12">
+            <Loader2 className="w-8 h-8 animate-spin text-primary" />
+          </div>
+        ) : filteredEvents.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-gray-500">
+              {language === 'pt' ? 'Nenhum evento encontrado' : 'No events found'}
+            </p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-50 border-b border-gray-200">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    {language === 'pt' ? 'Título' : 'Title'}
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    {language === 'pt' ? 'Data' : 'Date'}
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    {language === 'pt' ? 'Local' : 'Location'}
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    {language === 'pt' ? 'Categoria' : 'Category'}
+                  </th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    {language === 'pt' ? 'Ações' : 'Actions'}
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {filteredEvents.map((event) => (
+                  <tr key={event.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4">
+                      <div className="text-sm font-medium text-gray-900">
+                        {language === 'pt' ? event.titlePt : event.titleEn}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="text-sm text-gray-500">
+                        {event.eventDate ? new Date(event.eventDate).toLocaleDateString(language === 'pt' ? 'pt-MZ' : 'en-US') : '-'}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="text-sm text-gray-500">{event.location}</div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="text-sm text-gray-500">{event.category}</div>
+                    </td>
+                    <td className="px-6 py-4 text-right space-x-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                          setEditingEvent(event);
+                          setIsModalOpen(true);
+                        }}
+                      >
+                        <Edit className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                          if (confirm(language === 'pt' ? 'Tem certeza que deseja deletar este evento?' : 'Are you sure you want to delete this event?')) {
+                            deleteMutation.mutate({ id: event.id });
+                          }
+                        }}
+                      >
+                        <Trash2 className="w-4 h-4 text-red-600" />
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {/* Event Modal */}
+      <EventModal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setEditingEvent(null);
+        }}
+        onSubmit={handleSubmit}
+        event={editingEvent}
+        language={language}
+      />
+    </div>
+  );
+}
+
+// News Tab
+function NewsTab({ t, language }: { t: (key: string) => string; language: string }) {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingNews, setEditingNews] = useState<any>(null);
+
+  const newsQuery = trpc.news.list.useQuery();
+  const createMutation = trpc.news.create.useMutation({
+    onSuccess: () => {
+      toast.success(language === 'pt' ? 'Notícia criada com sucesso!' : 'News created successfully!');
+      newsQuery.refetch();
+      setIsModalOpen(false);
+      setEditingNews(null);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const updateMutation = trpc.news.update.useMutation({
+    onSuccess: () => {
+      toast.success(language === 'pt' ? 'Notícia atualizada com sucesso!' : 'News updated successfully!');
+      newsQuery.refetch();
+      setIsModalOpen(false);
+      setEditingNews(null);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const deleteMutation = trpc.news.delete.useMutation({
+    onSuccess: () => {
+      toast.success(language === 'pt' ? 'Notícia deletada com sucesso!' : 'News deleted successfully!');
+      newsQuery.refetch();
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const filteredNews = newsQuery.data?.filter(news =>
+    news.titlePt.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    news.titleEn.toLowerCase().includes(searchTerm.toLowerCase())
+  ) || [];
+
+  const handleSubmit = (formData: any) => {
+    if (editingNews) {
+      updateMutation.mutate({ id: editingNews.id, ...formData });
+    } else {
+      createMutation.mutate(formData);
+    }
+  };
+
+  return (
+    <div>
+      <div className="flex justify-between items-center mb-6">
+        <h3 className="text-xl font-bold text-gray-900">
+          {language === 'pt' ? 'Gerenciar Notícias' : 'Manage News'}
+        </h3>
+        <Button
+          onClick={() => {
+            setEditingNews(null);
+            setIsModalOpen(true);
+          }}
+          className="bg-primary hover:bg-primary/90"
+        >
+          <Plus className="w-4 h-4 mr-2" />
+          {language === 'pt' ? 'Nova Notícia' : 'New News'}
+        </Button>
+      </div>
+
+      {/* Search */}
+      <div className="mb-6">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <Input
+            type="text"
+            placeholder={language === 'pt' ? 'Buscar notícias...' : 'Search news...'}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10"
+          />
+        </div>
+      </div>
+
+      {/* News List */}
+      <div className="bg-white rounded-lg shadow overflow-hidden">
+        {newsQuery.isLoading ? (
+          <div className="flex items-center justify-center p-12">
+            <Loader2 className="w-8 h-8 animate-spin text-primary" />
+          </div>
+        ) : filteredNews.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-gray-500">
+              {language === 'pt' ? 'Nenhuma notícia encontrada' : 'No news found'}
+            </p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-50 border-b border-gray-200">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    {language === 'pt' ? 'Título' : 'Title'}
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    {language === 'pt' ? 'Data' : 'Date'}
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    {language === 'pt' ? 'Categoria' : 'Category'}
+                  </th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    {language === 'pt' ? 'Ações' : 'Actions'}
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {filteredNews.map((news) => (
+                  <tr key={news.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4">
+                      <div className="text-sm font-medium text-gray-900">
+                        {language === 'pt' ? news.titlePt : news.titleEn}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="text-sm text-gray-500">
+                        {news.publishedAt ? new Date(news.publishedAt).toLocaleDateString(language === 'pt' ? 'pt-MZ' : 'en-US') : '-'}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="text-sm text-gray-500">{news.category}</div>
+                    </td>
+                    <td className="px-6 py-4 text-right space-x-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                          setEditingNews(news);
+                          setIsModalOpen(true);
+                        }}
+                      >
+                        <Edit className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                          if (confirm(language === 'pt' ? 'Tem certeza que deseja deletar esta notícia?' : 'Are you sure you want to delete this news?')) {
+                            deleteMutation.mutate({ id: news.id });
+                          }
+                        }}
+                      >
+                        <Trash2 className="w-4 h-4 text-red-600" />
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {/* News Modal */}
+      <NewsModal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setEditingNews(null);
+        }}
+        onSubmit={handleSubmit}
+        news={editingNews}
+        language={language}
+      />
+    </div>
+  );
+}
+
+// Event Modal Component
+function EventModal({
+  isOpen,
+  onClose,
+  onSubmit,
+  event,
+  language,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (data: any) => void;
+  event: any;
+  language: string;
+}) {
+  const [formData, setFormData] = useState({
+    titlePt: '',
+    titleEn: '',
+    descriptionPt: '',
+    descriptionEn: '',
+    eventDate: '',
+    location: '',
+    category: '',
+    imageUrl: '',
+  });
+
+  useEffect(() => {
+    if (event) {
+      setFormData({
+        titlePt: event.titlePt || '',
+        titleEn: event.titleEn || '',
+        descriptionPt: event.descriptionPt || '',
+        descriptionEn: event.descriptionEn || '',
+        eventDate: event.eventDate ? (typeof event.eventDate === 'string' ? event.eventDate.split('T')[0] : new Date(event.eventDate).toISOString().split('T')[0]) : '',
+        location: event.location || '',
+        category: event.category || '',
+        imageUrl: event.imageUrl || '',
+      });
+    } else {
+      setFormData({
+        titlePt: '',
+        titleEn: '',
+        descriptionPt: '',
+        descriptionEn: '',
+        eventDate: '',
+        location: '',
+        category: '',
+        imageUrl: '',
+      });
+    }
+  }, [event, isOpen]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSubmit(formData);
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>
+            {event
+              ? (language === 'pt' ? 'Editar Evento' : 'Edit Event')
+              : (language === 'pt' ? 'Novo Evento' : 'New Event')}
+          </DialogTitle>
+        </DialogHeader>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label>{language === 'pt' ? 'Título (PT)' : 'Title (PT)'}</Label>
+              <Input
+                value={formData.titlePt}
+                onChange={(e) => setFormData({ ...formData, titlePt: e.target.value })}
+                required
+              />
+            </div>
+            <div>
+              <Label>{language === 'pt' ? 'Título (EN)' : 'Title (EN)'}</Label>
+              <Input
+                value={formData.titleEn}
+                onChange={(e) => setFormData({ ...formData, titleEn: e.target.value })}
+                required
+              />
+            </div>
+          </div>
+          <div>
+            <Label>{language === 'pt' ? 'Descrição (PT)' : 'Description (PT)'}</Label>
+            <Textarea
+              value={formData.descriptionPt}
+              onChange={(e) => setFormData({ ...formData, descriptionPt: e.target.value })}
+              rows={3}
+              required
+            />
+          </div>
+          <div>
+            <Label>{language === 'pt' ? 'Descrição (EN)' : 'Description (EN)'}</Label>
+            <Textarea
+              value={formData.descriptionEn}
+              onChange={(e) => setFormData({ ...formData, descriptionEn: e.target.value })}
+              rows={3}
+              required
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label>{language === 'pt' ? 'Data do Evento' : 'Event Date'}</Label>
+              <Input
+                type="date"
+                value={formData.eventDate}
+                onChange={(e) => setFormData({ ...formData, eventDate: e.target.value })}
+                required
+              />
+            </div>
+            <div>
+              <Label>{language === 'pt' ? 'Local' : 'Location'}</Label>
+              <Input
+                value={formData.location}
+                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                required
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label>{language === 'pt' ? 'Categoria' : 'Category'}</Label>
+              <Input
+                value={formData.category}
+                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                required
+              />
+            </div>
+            <div>
+              <Label>{language === 'pt' ? 'URL da Imagem' : 'Image URL'}</Label>
+              <Input
+                value={formData.imageUrl}
+                onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={onClose}>
+              {language === 'pt' ? 'Cancelar' : 'Cancel'}
+            </Button>
+            <Button type="submit" className="bg-primary hover:bg-primary/90">
+              {language === 'pt' ? 'Salvar' : 'Save'}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+// News Modal Component
+function NewsModal({
+  isOpen,
+  onClose,
+  onSubmit,
+  news,
+  language,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (data: any) => void;
+  news: any;
+  language: string;
+}) {
+  const [formData, setFormData] = useState({
+    titlePt: '',
+    titleEn: '',
+    contentPt: '',
+    contentEn: '',
+    category: '',
+    imageUrl: '',
+  });
+
+  useEffect(() => {
+    if (news) {
+      setFormData({
+        titlePt: news.titlePt || '',
+        titleEn: news.titleEn || '',
+        contentPt: news.contentPt || '',
+        contentEn: news.contentEn || '',
+        category: news.category || '',
+        imageUrl: news.imageUrl || '',
+      });
+    } else {
+      setFormData({
+        titlePt: '',
+        titleEn: '',
+        contentPt: '',
+        contentEn: '',
+        category: '',
+        imageUrl: '',
+      });
+    }
+  }, [news, isOpen]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSubmit(formData);
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>
+            {news
+              ? (language === 'pt' ? 'Editar Notícia' : 'Edit News')
+              : (language === 'pt' ? 'Nova Notícia' : 'New News')}
+          </DialogTitle>
+        </DialogHeader>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label>{language === 'pt' ? 'Título (PT)' : 'Title (PT)'}</Label>
+              <Input
+                value={formData.titlePt}
+                onChange={(e) => setFormData({ ...formData, titlePt: e.target.value })}
+                required
+              />
+            </div>
+            <div>
+              <Label>{language === 'pt' ? 'Título (EN)' : 'Title (EN)'}</Label>
+              <Input
+                value={formData.titleEn}
+                onChange={(e) => setFormData({ ...formData, titleEn: e.target.value })}
+                required
+              />
+            </div>
+          </div>
+          <div>
+            <Label>{language === 'pt' ? 'Conteúdo (PT)' : 'Content (PT)'}</Label>
+            <Textarea
+              value={formData.contentPt}
+              onChange={(e) => setFormData({ ...formData, contentPt: e.target.value })}
+              rows={5}
+              required
+            />
+          </div>
+          <div>
+            <Label>{language === 'pt' ? 'Conteúdo (EN)' : 'Content (EN)'}</Label>
+            <Textarea
+              value={formData.contentEn}
+              onChange={(e) => setFormData({ ...formData, contentEn: e.target.value })}
+              rows={5}
+              required
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label>{language === 'pt' ? 'Categoria' : 'Category'}</Label>
+              <Input
+                value={formData.category}
+                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                required
+              />
+            </div>
+            <div>
+              <Label>{language === 'pt' ? 'URL da Imagem' : 'Image URL'}</Label>
+              <Input
+                value={formData.imageUrl}
+                onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={onClose}>
+              {language === 'pt' ? 'Cancelar' : 'Cancel'}
+            </Button>
+            <Button type="submit" className="bg-primary hover:bg-primary/90">
+              {language === 'pt' ? 'Salvar' : 'Save'}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 }

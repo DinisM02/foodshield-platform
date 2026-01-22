@@ -155,7 +155,7 @@ export default function Footer() {
               <li className="flex items-start gap-3">
                 <Mail className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-gray-400 text-sm">Email</p>
+                  <p className="text-gray-400 text-sm">{t('footer.email')}</p>
                   <a href="mailto:info@sustainhub.com" className="text-white hover:text-primary transition-colors text-sm font-medium">
                     info@sustainhub.com
                   </a>
@@ -164,7 +164,7 @@ export default function Footer() {
               <li className="flex items-start gap-3">
                 <Phone className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-gray-400 text-sm">Telefone</p>
+                  <p className="text-gray-400 text-sm">{t('footer.phone')}</p>
                   <a href="tel:+258123456789" className="text-white hover:text-primary transition-colors text-sm font-medium">
                     +258 (1) 2345-6789
                   </a>
@@ -173,7 +173,7 @@ export default function Footer() {
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-gray-400 text-sm">Localização</p>
+                  <p className="text-gray-400 text-sm">{t('footer.location')}</p>
                   <p className="text-white text-sm font-medium">Maputo, Moçambique</p>
                 </div>
               </li>
@@ -202,13 +202,13 @@ export default function Footer() {
               <li>
                 <a href="#" className="text-gray-300 hover:text-emerald-400 transition-colors text-sm flex items-center gap-2 group">
                   <span className="w-1 h-1 bg-emerald-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                  Parceiros
+                  {t('footer.partners')}
                 </a>
               </li>
               <li>
                 <a href="#" className="text-gray-300 hover:text-emerald-400 transition-colors text-sm flex items-center gap-2 group">
                   <span className="w-1 h-1 bg-emerald-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                  Imprensa
+                  {t('footer.press')}
                 </a>
               </li>
             </ul>
@@ -223,20 +223,20 @@ export default function Footer() {
       <div className="container py-8">
         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
           <p className="text-gray-400 text-sm">
-            &copy; {currentYear} SustainHub. Todos os direitos reservados.
+            &copy; {currentYear} SustainHub. {t('footer.rights')}.
           </p>
           <div className="flex flex-wrap gap-6 justify-center md:justify-end">
             <a href="#" className="text-gray-400 hover:text-primary transition-colors text-sm">
-              Política de Privacidade
+              {t('footer.privacy')}
             </a>
             <a href="#" className="text-gray-400 hover:text-primary transition-colors text-sm">
-              Termos de Serviço
+              {t('footer.terms')}
             </a>
             <a href="#" className="text-gray-400 hover:text-primary transition-colors text-sm">
-              Cookies
+              {t('footer.cookies')}
             </a>
             <a href="#" className="text-gray-400 hover:text-primary transition-colors text-sm">
-              Acessibilidade
+              {t('footer.accessibility')}
             </a>
           </div>
         </div>
@@ -246,7 +246,7 @@ export default function Footer() {
       <button
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         className="fixed bottom-8 right-8 w-12 h-12 bg-primary hover:bg-primary/90 text-white rounded-full flex items-center justify-center shadow-lg transition-all opacity-0 hover:opacity-100 pointer-events-none hover:pointer-events-auto"
-        title="Voltar ao topo"
+        title={t('footer.back_to_top')}
       >
         <ArrowRight className="w-5 h-5 rotate-[-90deg]" />
       </button>

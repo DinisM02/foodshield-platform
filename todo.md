@@ -444,3 +444,26 @@
 - [x] Popular banco com dados de exemplo (seed)
 - [x] Adicionar traduções PT/EN completas
 - [x] Testar funcionalidades completas
+
+## Correção de Bilinguismo 100% (21/01) - EM PROGRESSO
+- [ ] Varrer todas as páginas e identificar strings hardcoded em português
+- [ ] Adicionar traduções faltantes ao LanguageContext
+- [ ] Corrigir Home.tsx
+- [ ] Corrigir ConsumerArea.tsx
+- [ ] Corrigir Admin.tsx
+- [ ] Corrigir Marketplace.tsx
+- [ ] Corrigir Services.tsx
+- [ ] Corrigir Tools.tsx
+- [ ] Corrigir Knowledge.tsx
+- [ ] Corrigir Dashboard.tsx
+- [ ] Corrigir Checkout.tsx
+- [ ] Testar todas as páginas em PT e EN
+- [ ] Salvar checkpoint
+
+## Correção de Bilinguismo 100% PT/EN (22/01) - EM PROGRESSO
+- [x] Varrer todas as páginas e identificar strings hardcoded em português
+- [x] Adicionar traduções faltantes ao LanguageContext (footer.*, press, rights, email, phone, location, back_to_top)
+- [x] Atualizar Footer.tsx com chaves de tradução (100% bilíngue)
+- [x] Testar bilinguismo na Home e Footer (OK)
+- [ ] Investigar problema de reset de idioma no ConsumerArea
+- [ ] Verificar e corrigir outras páginas (Admin, Marketplace, Services, Tools)

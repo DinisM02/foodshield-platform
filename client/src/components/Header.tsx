@@ -111,7 +111,7 @@ export default function Header() {
                           </div>
                           <span className={`text-xs px-2 py-1 rounded-full font-medium ${getCategoryColor(result.type)}`}>
                             {result.type === "marketplace" && "Marketplace"}
-                            {result.type === "services" && "Serviços"}
+                            {result.type === "services" && t('nav.services')}
                             {result.type === "blog" && "Blog"}
                           </span>
                       </div>
@@ -122,7 +122,7 @@ export default function Header() {
 
               {showSearchResults && searchQuery && searchResults.length === 0 && (
                 <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg p-4 text-center text-gray-500 z-50">
-                  Nenhum resultado encontrado para "{searchQuery}"
+                  {t('common.no_results')} "{searchQuery}"
                 </div>
               )}
             </div>

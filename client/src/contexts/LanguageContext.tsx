@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 type Language = 'pt' | 'en';
 
@@ -172,6 +172,47 @@ const translations = {
     'faq.subtitle': 'Encontre respostas para as dúvidas mais comuns sobre o SustainHub',
     'faq.no_answer': 'Não encontrou sua resposta?',
     'faq.contact_us': 'Entre em contato conosco',
+    'faq.category.general': 'Geral',
+    'faq.category.features': 'Funcionalidades',
+    'faq.category.account': 'Conta e Segurança',
+    'faq.category.payments': 'Pagamentos',
+    'faq.category.support': 'Suporte',
+    'faq.q1': 'O que é o SustainHub?',
+    'faq.a1': 'SustainHub é uma plataforma completa dedicada à segurança alimentar e desenvolvimento sustentável. Oferecemos ferramentas, conhecimento e recursos para ajudar produtores e empreendedores a implementar práticas sustentáveis em seus negócios.',
+    'faq.q2': 'Quem pode usar a plataforma?',
+    'faq.a2': 'Qualquer pessoa interessada em agricultura sustentável, segurança alimentar ou desenvolvimento sustentável pode usar o SustainHub. Isso inclui pequenos produtores, cooperativas, consultores, pesquisadores e consumidores conscientes.',
+    'faq.q3': 'A plataforma é gratuita?',
+    'faq.a3': 'SustainHub oferece um plano gratuito com acesso a recursos básicos. Também temos planos premium com acesso a ferramentas avançadas, consultoria especializada e conteúdo exclusivo.',
+    'faq.q4': 'Como funciona o Centro de Conhecimento?',
+    'faq.a4': 'O Centro de Conhecimento é uma biblioteca digital com artigos, vídeos, guias e pesquisas sobre agricultura sustentável. Você pode buscar por tópicos, filtrar por categoria e acessar conteúdo de especialistas.',
+    'faq.q5': 'O que é o Marketplace?',
+    'faq.a5': 'O Marketplace é um espaço onde produtores locais podem vender produtos sustentáveis diretamente aos consumidores. Todos os produtos têm indicadores de impacto ambiental e informações de origem.',
+    'faq.q6': 'Como solicitar consultoria?',
+    'faq.a6': 'Na seção de Serviços, você pode visualizar consultores disponíveis e suas especialidades. Clique em \'Solicitar Consultoria\', preencha o formulário com seus detalhes e um consultor entrará em contato em breve.',
+    'faq.q7': 'Quais são as ferramentas disponíveis?',
+    'faq.a7': 'Oferecemos calculadoras de emissões de carbono, análise de custos de produção, calculadora nutricional e dashboards para monitorar sustentabilidade. Mais ferramentas estão sendo desenvolvidas continuamente.',
+    'faq.q8': 'Como criar uma conta?',
+    'faq.a8': 'Clique no botão \'Criar Conta\' na página inicial, preencha seus dados (nome, email e senha) e confirme seu email. Sua conta estará pronta para usar imediatamente.',
+    'faq.q9': 'Meus dados estão seguros?',
+    'faq.a9': 'Sim, utilizamos criptografia de ponta a ponta e seguimos as melhores práticas de segurança de dados. Seus dados pessoais nunca são compartilhados com terceiros sem seu consentimento.',
+    'faq.q10': 'Como faço para recuperar minha senha?',
+    'faq.a10': 'Na página de login, clique em \'Esqueceu a senha?\'. Insira seu email e receberá um link para redefinir sua senha. O link é válido por 24 horas.',
+    'faq.q11': 'Posso deletar minha conta?',
+    'faq.a11': 'Sim, você pode deletar sua conta a qualquer momento nas configurações de perfil. Todos os seus dados serão removidos permanentemente após 30 dias.',
+    'faq.q12': 'Quais são os planos disponíveis?',
+    'faq.a12': 'Oferecemos 3 planos: Gratuito (recursos básicos), Premium (ferramentas avançadas) e Empresarial (consultoria dedicada). Cada plano pode ser cancelado a qualquer momento.',
+    'faq.q13': 'Como faço para fazer upgrade?',
+    'faq.a13': 'Na sua conta, acesse \'Planos e Assinatura\' e selecione o plano desejado. Você será redirecionado para a página de pagamento segura. O upgrade é imediato após o pagamento.',
+    'faq.q14': 'Vocês oferecem reembolso?',
+    'faq.a14': 'Sim, oferecemos garantia de 30 dias. Se não estiver satisfeito, você pode solicitar reembolso total dentro desse período, sem perguntas.',
+    'faq.q15': 'Quais formas de pagamento vocês aceitam?',
+    'faq.a15': 'Aceitamos cartão de crédito, transferência bancária e carteiras digitais. Todos os pagamentos são processados através de gateways seguros e certificados.',
+    'faq.q16': 'Como entro em contato com o suporte?',
+    'faq.a16': 'Você pode entrar em contato através do formulário de contato no site, enviar email para support@sustainhub.com ou usar o chat ao vivo disponível 24/7.',
+    'faq.q17': 'Qual é o tempo de resposta do suporte?',
+    'faq.a17': 'Respondemos a todas as mensagens dentro de 24 horas. Para questões urgentes, use o chat ao vivo que está disponível durante o horário comercial.',
+    'faq.q18': 'Vocês oferecem treinamento?',
+    'faq.a18': 'Sim, oferecemos webinars gratuitos, tutoriais em vídeo e documentação completa. Clientes premium também têm acesso a treinamento personalizado.',
 
     // Admin Dashboard
     'admin.title': 'Painel de Administração',
@@ -261,7 +302,18 @@ const translations = {
     'common.error': 'Erro',
     'common.success': 'Sucesso',
     'common.warning': 'Aviso',
+    
+    // Reviews
+    'reviews.error_submit': 'Erro ao enviar avaliação',
+    'reviews.login_required': 'Faça login para avaliar',
+    'reviews.rating_required': 'Selecione uma classificação',
+    
+    // Categories
+    'category.seeds': 'Sementes',
+    'category.inputs': 'Insumos',
+    'category.equipment': 'Equipamentos',
     'common.info': 'Informação',
+    'common.no_results': 'Nenhum resultado encontrado para',
 
     // Checkout
     'checkout.title': 'Finalizar Compra',
@@ -651,6 +703,47 @@ const translations = {
     'faq.subtitle': 'Find answers to common questions about SustainHub',
     'faq.no_answer': 'Did not find your answer?',
     'faq.contact_us': 'Contact us',
+    'faq.category.general': 'General',
+    'faq.category.features': 'Features',
+    'faq.category.account': 'Account & Security',
+    'faq.category.payments': 'Payments',
+    'faq.category.support': 'Support',
+    'faq.q1': 'What is SustainHub?',
+    'faq.a1': 'SustainHub is a complete platform dedicated to food safety and sustainable development. We offer tools, knowledge, and resources to help producers and entrepreneurs implement sustainable practices in their businesses.',
+    'faq.q2': 'Who can use the platform?',
+    'faq.a2': 'Anyone interested in sustainable agriculture, food security, or sustainable development can use SustainHub. This includes small producers, cooperatives, consultants, researchers, and conscious consumers.',
+    'faq.q3': 'Is the platform free?',
+    'faq.a3': 'SustainHub offers a free plan with access to basic resources. We also have premium plans with access to advanced tools, specialized consulting, and exclusive content.',
+    'faq.q4': 'How does the Knowledge Center work?',
+    'faq.a4': 'The Knowledge Center is a digital library with articles, videos, guides, and research on sustainable agriculture. You can search by topics, filter by category, and access expert content.',
+    'faq.q5': 'What is the Marketplace?',
+    'faq.a5': 'The Marketplace is a space where local producers can sell sustainable products directly to consumers. All products have environmental impact indicators and origin information.',
+    'faq.q6': 'How do I request consulting?',
+    'faq.a6': 'In the Services section, you can view available consultants and their specialties. Click \'Request Consulting\', fill out the form with your details, and a consultant will contact you soon.',
+    'faq.q7': 'What tools are available?',
+    'faq.a7': 'We offer carbon emissions calculators, production cost analysis, nutritional calculator, and dashboards to monitor sustainability. More tools are being continuously developed.',
+    'faq.q8': 'How do I create an account?',
+    'faq.a8': 'Click the \'Create Account\' button on the homepage, fill in your details (name, email, and password), and confirm your email. Your account will be ready to use immediately.',
+    'faq.q9': 'Is my data secure?',
+    'faq.a9': 'Yes, we use end-to-end encryption and follow best data security practices. Your personal data is never shared with third parties without your consent.',
+    'faq.q10': 'How do I recover my password?',
+    'faq.a10': 'On the login page, click \'Forgot password?\'. Enter your email and you will receive a link to reset your password. The link is valid for 24 hours.',
+    'faq.q11': 'Can I delete my account?',
+    'faq.a11': 'Yes, you can delete your account at any time in profile settings. All your data will be permanently removed after 30 days.',
+    'faq.q12': 'What plans are available?',
+    'faq.a12': 'We offer 3 plans: Free (basic resources), Premium (advanced tools), and Enterprise (dedicated consulting). Each plan can be canceled at any time.',
+    'faq.q13': 'How do I upgrade?',
+    'faq.a13': 'In your account, access \'Plans and Subscription\' and select the desired plan. You will be redirected to the secure payment page. The upgrade is immediate after payment.',
+    'faq.q14': 'Do you offer refunds?',
+    'faq.a14': 'Yes, we offer a 30-day guarantee. If you are not satisfied, you can request a full refund within that period, no questions asked.',
+    'faq.q15': 'What payment methods do you accept?',
+    'faq.a15': 'We accept credit cards, bank transfers, and digital wallets. All payments are processed through secure and certified gateways.',
+    'faq.q16': 'How do I contact support?',
+    'faq.a16': 'You can contact us through the contact form on the website, send an email to support@sustainhub.com, or use the live chat available 24/7.',
+    'faq.q17': 'What is the support response time?',
+    'faq.a17': 'We respond to all messages within 24 hours. For urgent issues, use the live chat available during business hours.',
+    'faq.q18': 'Do you offer training?',
+    'faq.a18': 'Yes, we offer free webinars, video tutorials, and complete documentation. Premium customers also have access to personalized training.',
 
     // Admin Dashboard
     'admin.title': 'Admin Dashboard',
@@ -740,7 +833,18 @@ const translations = {
     'common.error': 'Error',
     'common.success': 'Success',
     'common.warning': 'Warning',
+    
+    // Reviews
+    'reviews.error_submit': 'Error submitting review',
+    'reviews.login_required': 'Login to rate',
+    'reviews.rating_required': 'Select a rating',
+    
+    // Categories
+    'category.seeds': 'Seeds',
+    'category.inputs': 'Inputs',
+    'category.equipment': 'Equipment',
     'common.info': 'Information',
+    'common.no_results': 'No results found for',
 
     // Checkout
     'checkout.title': 'Checkout',
@@ -972,7 +1076,14 @@ const translations = {
 };
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguage] = useState<Language>('pt');
+  const [language, setLanguage] = useState<Language>(() => {
+    const saved = localStorage.getItem('language');
+    return (saved === 'en' || saved === 'pt') ? saved : 'pt';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('language', language);
+  }, [language]);
 
   const t = (key: string): string => {
     return translations[language][key as keyof typeof translations['pt']] || key;

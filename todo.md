@@ -467,3 +467,15 @@
 - [x] Testar bilinguismo na Home e Footer (OK)
 - [ ] Investigar problema de reset de idioma no ConsumerArea
 - [ ] Verificar e corrigir outras páginas (Admin, Marketplace, Services, Tools)
+
+## Correção Final de Bilinguismo (26/01) - CONCLUÍDO
+- [x] Adicionar localStorage para persistir idioma entre páginas
+- [x] Corrigir FAQ.tsx com 18 perguntas/respostas traduzidas
+- [x] Corrigir Footer.tsx (Email, Telefone, Localização, Parceiros, Imprensa, etc.)
+- [x] Corrigir Header.tsx (resultado de busca)
+- [x] Corrigir ConsumerBlog.tsx (placeholder de busca)
+- [x] Corrigir ProductModal.tsx (categorias)
+- [x] Corrigir ProductReviews.tsx (mensagens de erro)
+- [x] Adicionar 60+ traduções ao LanguageContext (FAQ, reviews, categories, footer)
+- [ ] Testar bilinguismo completo em todas as páginas
+- [ ] Salvar checkpoint final

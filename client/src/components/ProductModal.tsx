@@ -5,6 +5,7 @@ import { trpc } from '@/lib/trpc';
 import { toast } from 'sonner';
 import imageCompression from 'browser-image-compression';
 import { ImageCropModal } from './ImageCropModal';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface ProductModalProps {
   isOpen: boolean;
@@ -15,6 +16,7 @@ interface ProductModalProps {
 }
 
 export function ProductModal({ isOpen, onClose, product, onSuccess, language }: ProductModalProps) {
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -352,10 +354,10 @@ export function ProductModal({ isOpen, onClose, product, onSuccess, language }: 
                 required
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
               >
-                <option value="Sementes">{language === 'pt' ? 'Sementes' : 'Seeds'}</option>
-                <option value="Insumos">{language === 'pt' ? 'Insumos' : 'Inputs'}</option>
-                <option value="Equipamentos">{language === 'pt' ? 'Equipamentos' : 'Equipment'}</option>
-                <option value="Produtos Frescos">{language === 'pt' ? 'Produtos Frescos' : 'Fresh Products'}</option>
+                <option value="Sementes">{t('category.seeds')}</option>
+                <option value="Insumos">{t('category.inputs')}</option>
+                <option value="Equipamentos">{t('category.equipment')}</option>
+                <option value="Produtos Frescos">{t('marketplace.category_fresh')}</option>
               </select>
             </div>
 

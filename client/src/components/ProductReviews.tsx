@@ -21,23 +21,23 @@ export default function ProductReviews({ productId }: ProductReviewsProps) {
   const { data: reviews, refetch } = trpc.reviews.list.useQuery({ productId });
   const createReview = trpc.reviews.create.useMutation({
     onSuccess: () => {
-      toast.success("Avaliação enviada com sucesso!");
+      toast.success(t('common.success'));
       setRating(0);
       setComment("");
       refetch();
     },
     onError: (error) => {
-      toast.error(error.message || "Erro ao enviar avaliação");
+      toast.error(error.message || t('reviews.error_submit'));
     },
   });
 
   const handleSubmit = () => {
     if (!user) {
-      toast.error("Faça login para avaliar");
+      toast.error(t('reviews.login_required'));
       return;
     }
     if (rating === 0) {
-      toast.error("Selecione uma classificação");
+      toast.error(t('reviews.rating_required'));
       return;
     }
     createReview.mutate({ productId, rating, comment: comment || undefined });

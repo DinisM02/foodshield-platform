@@ -479,3 +479,13 @@
 - [x] Adicionar 60+ traduções ao LanguageContext (FAQ, reviews, categories, footer)
 - [ ] Testar bilinguismo completo em todas as páginas
 - [ ] Salvar checkpoint final
+
+## Correção de Bilinguismo - Services, Marketplace, Tools (26/01) - CONCLUÍDO
+- [x] Identificar strings hardcoded em Services.tsx (30+ strings)
+- [x] Identificar strings hardcoded em Tools.tsx (40+ strings)
+- [x] Marketplace.tsx já estava correto
+- [x] Adicionar traduções faltantes ao LanguageContext (70+ novas chaves)
+- [x] Reescrever Services.tsx com chaves de tradução (100% bilingue)
+- [x] Reescrever Tools.tsx com chaves de tradução (100% bilingue)
+- [x] Testar bilinguismo nas três páginas (Services ✅, Tools ✅, Marketplace ✅)
+- [ ] Salvar checkpoint final

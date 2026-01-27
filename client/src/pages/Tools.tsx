@@ -46,12 +46,12 @@ export default function Tools() {
         <div className="flex-1 flex items-center justify-center bg-gradient-to-br from-blue-50 to-white">
         <Card className="max-w-md w-full mx-4">
           <CardHeader>
-            <CardTitle className="text-2xl">Acesso Restrito</CardTitle>
+            <CardTitle className="text-2xl">{t('page.access_denied')}</CardTitle>
             <CardDescription>{t('auth.login_required')}</CardDescription>
           </CardHeader>
           <CardFooter>
             <a href={getLoginUrl()} className="w-full">
-              <Button className="w-full">Fazer Login</Button>
+              <Button className="w-full">{t('auth.login')}</Button>
             </a>
           </CardFooter>
         </Card>
@@ -80,15 +80,15 @@ export default function Tools() {
           <TabsList className="grid w-full grid-cols-3 mb-8">
             <TabsTrigger value="carbon" className="text-base">
               <Leaf className="w-4 h-4 mr-2" />
-              Carbono
+              {t('tools.tab_carbon')}
             </TabsTrigger>
             <TabsTrigger value="cost" className="text-base">
               <DollarSign className="w-4 h-4 mr-2" />
-              Custos
+              {t('tools.tab_cost')}
             </TabsTrigger>
             <TabsTrigger value="nutrition" className="text-base">
               <TrendingUp className="w-4 h-4 mr-2" />
-              Nutrição
+              {t('tools.tab_nutrition')}
             </TabsTrigger>
           </TabsList>
 
@@ -99,49 +99,49 @@ export default function Tools() {
                 <CardHeader>
                   <CardTitle className="text-2xl flex items-center gap-2">
                     <Leaf className="w-6 h-6 text-green-500" />
-                    Calculadora de Emissões de Carbono
+                    {t('tools.carbon.title')}
                   </CardTitle>
                   <CardDescription>
-                    Estime as emissões de CO₂ da sua operação agrícola
+                    {t('tools.carbon.description')}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={calculateCarbon} className="space-y-4">
                     <div>
-                      <Label htmlFor="area">Área Cultivada (hectares)</Label>
+                      <Label htmlFor="area">{t('tools.carbon.area_label')}</Label>
                       <Input 
                         id="area" 
                         name="area" 
                         type="number" 
                         step="0.1" 
                         required 
-                        placeholder="Ex: 10.5"
+                        placeholder={t('tools.carbon.area_placeholder')}
                       />
                     </div>
                     <div>
-                      <Label htmlFor="fuel">Combustível Usado (litros/mês)</Label>
+                      <Label htmlFor="fuel">{t('tools.carbon.fuel_label')}</Label>
                       <Input 
                         id="fuel" 
                         name="fuel" 
                         type="number" 
                         step="0.1" 
                         required 
-                        placeholder="Ex: 200"
+                        placeholder={t('tools.carbon.fuel_placeholder')}
                       />
                     </div>
                     <div>
-                      <Label htmlFor="fertilizer">Fertilizantes (kg/mês)</Label>
+                      <Label htmlFor="fertilizer">{t('tools.carbon.fertilizer_label')}</Label>
                       <Input 
                         id="fertilizer" 
                         name="fertilizer" 
                         type="number" 
                         step="0.1" 
                         required 
-                        placeholder="Ex: 150"
+                        placeholder={t('tools.carbon.fertilizer_placeholder')}
                       />
                     </div>
                     <Button type="submit" className="w-full">
-                      Calcular Emissões
+                      {t('tools.carbon.calculate')}
                     </Button>
                   </form>
                 </CardContent>
@@ -149,8 +149,8 @@ export default function Tools() {
 
               <Card className="bg-gradient-to-br from-green-50 to-blue-50 border-green-200">
                 <CardHeader>
-                  <CardTitle className="text-2xl">Resultado</CardTitle>
-                  <CardDescription>Estimativa de emissões mensais</CardDescription>
+                  <CardTitle className="text-2xl">{t('tools.carbon.result_title')}</CardTitle>
+                  <CardDescription>{t('tools.carbon.result_description')}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   {carbonResult !== null ? (
@@ -159,30 +159,18 @@ export default function Tools() {
                         <div className="text-6xl font-bold text-primary mb-2">
                           {carbonResult.toFixed(2)}
                         </div>
-                        <div className="text-xl text-muted-foreground">kg CO₂/mês</div>
+                        <div className="text-xl text-muted-foreground">{t('tools.carbon.result_value')}</div>
                       </div>
-                      <div className="space-y-3">
-                        <div className="p-4 bg-white rounded-lg">
-                          <div className="flex justify-between items-center">
-                            <span className="font-medium">Equivalente a:</span>
-                            <span className="text-lg">{(carbonResult / 411).toFixed(1)} árvores</span>
-                          </div>
-                        </div>
-                        <div className="p-4 bg-white rounded-lg">
-                          <div className="flex justify-between items-center">
-                            <span className="font-medium">Redução sugerida:</span>
-                            <span className="text-lg text-green-600">-25%</span>
-                          </div>
-                        </div>
+                      <div className="p-4 bg-white rounded-lg">
+                        <p className="text-sm text-muted-foreground">
+                          {t('tools.carbon.result_info')}
+                        </p>
                       </div>
-                      <Button variant="outline" className="w-full">
-                        Ver Recomendações
-                      </Button>
                     </div>
                   ) : (
                     <div className="text-center py-12 text-muted-foreground">
                       <Leaf className="w-16 h-16 mx-auto mb-4 opacity-50" />
-                      <p>Preencha o formulário para ver os resultados</p>
+                      <p>{t('common.no_results')}</p>
                     </div>
                   )}
                 </CardContent>
@@ -197,46 +185,46 @@ export default function Tools() {
                 <CardHeader>
                   <CardTitle className="text-2xl flex items-center gap-2">
                     <DollarSign className="w-6 h-6 text-blue-500" />
-                    Calculadora de Custos de Produção
+                    {t('tools.cost.title')}
                   </CardTitle>
                   <CardDescription>
-                    Calcule os custos totais da sua produção
+                    {t('tools.cost.description')}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={calculateCost} className="space-y-4">
                     <div>
-                      <Label htmlFor="seeds">Sementes e Mudas (MZN)</Label>
+                      <Label htmlFor="seeds">{t('tools.cost.seeds_label')}</Label>
                       <Input 
                         id="seeds" 
                         name="seeds" 
                         type="number" 
                         required 
-                        placeholder="Ex: 5000"
+                        placeholder={t('tools.cost.seeds_placeholder')}
                       />
                     </div>
                     <div>
-                      <Label htmlFor="labor">Mão de Obra (MZN)</Label>
+                      <Label htmlFor="labor">{t('tools.cost.labor_label')}</Label>
                       <Input 
                         id="labor" 
                         name="labor" 
                         type="number" 
                         required 
-                        placeholder="Ex: 15000"
+                        placeholder={t('tools.cost.labor_placeholder')}
                       />
                     </div>
                     <div>
-                      <Label htmlFor="equipment">Equipamentos e Insumos (MZN)</Label>
+                      <Label htmlFor="equipment">{t('tools.cost.equipment_label')}</Label>
                       <Input 
                         id="equipment" 
                         name="equipment" 
                         type="number" 
                         required 
-                        placeholder="Ex: 8000"
+                        placeholder={t('tools.cost.equipment_placeholder')}
                       />
                     </div>
                     <Button type="submit" className="w-full">
-                      Calcular Custos
+                      {t('tools.cost.calculate')}
                     </Button>
                   </form>
                 </CardContent>
@@ -244,8 +232,8 @@ export default function Tools() {
 
               <Card className="bg-gradient-to-br from-blue-50 to-purple-50 border-blue-200">
                 <CardHeader>
-                  <CardTitle className="text-2xl">Resultado</CardTitle>
-                  <CardDescription>Análise de custos</CardDescription>
+                  <CardTitle className="text-2xl">{t('tools.cost.result_title')}</CardTitle>
+                  <CardDescription>{t('tools.cost.result_description')}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   {costResult !== null ? (
@@ -256,28 +244,16 @@ export default function Tools() {
                         </div>
                         <div className="text-xl text-muted-foreground">MZN</div>
                       </div>
-                      <div className="space-y-3">
-                        <div className="p-4 bg-white rounded-lg">
-                          <div className="flex justify-between items-center">
-                            <span className="font-medium">Custo por hectare:</span>
-                            <span className="text-lg">{(costResult / 10).toLocaleString('pt-MZ')} MZN</span>
-                          </div>
-                        </div>
-                        <div className="p-4 bg-white rounded-lg">
-                          <div className="flex justify-between items-center">
-                            <span className="font-medium">Margem sugerida:</span>
-                            <span className="text-lg text-green-600">30%</span>
-                          </div>
-                        </div>
+                      <div className="p-4 bg-white rounded-lg">
+                        <p className="text-sm text-muted-foreground">
+                          {t('tools.cost.result_info')}
+                        </p>
                       </div>
-                      <Button variant="outline" className="w-full">
-                        Exportar Relatório
-                      </Button>
                     </div>
                   ) : (
                     <div className="text-center py-12 text-muted-foreground">
                       <DollarSign className="w-16 h-16 mx-auto mb-4 opacity-50" />
-                      <p>Preencha o formulário para ver os resultados</p>
+                      <p>{t('common.no_results')}</p>
                     </div>
                   )}
                 </CardContent>
@@ -287,24 +263,22 @@ export default function Tools() {
 
           {/* Nutrition Calculator */}
           <TabsContent value="nutrition">
-            <Card className="max-w-2xl mx-auto">
+            <Card className="hover-glow">
               <CardHeader>
                 <CardTitle className="text-2xl flex items-center gap-2">
-                  <TrendingUp className="w-6 h-6 text-orange-500" />
-                  Calculadora Nutricional
+                  <TrendingUp className="w-6 h-6 text-purple-500" />
+                  {t('tools.nutrition.title')}
                 </CardTitle>
                 <CardDescription>
-                  Em breve: Análise nutricional de produtos agrícolas
+                  {t('tools.nutrition.description')}
                 </CardDescription>
               </CardHeader>
-              <CardContent className="text-center py-12">
-                <TrendingUp className="w-24 h-24 mx-auto mb-6 text-muted-foreground opacity-50" />
-                <p className="text-lg text-muted-foreground mb-4">
-                  Esta ferramenta está em desenvolvimento
-                </p>
-                <Button variant="outline">
-                  Notificar Quando Disponível
-                </Button>
+              <CardContent className="py-12">
+                <div className="text-center text-muted-foreground">
+                  <TrendingUp className="w-16 h-16 mx-auto mb-4 opacity-50" />
+                  <h3 className="text-xl font-semibold mb-2">{t('tools.nutrition.coming_soon')}</h3>
+                  <p>{t('tools.nutrition.info')}</p>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>

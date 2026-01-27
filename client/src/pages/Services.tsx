@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -8,44 +9,60 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-const services = [
-  {
-    id: 1,
-    title: "Consultoria Técnica Agrícola",
-    description: "Especialistas em agricultura sustentável para otimizar sua produção",
-    imageUrl: "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=800",
-    features: ["Análise de solo", "Planejamento de cultivo", "Gestão de recursos"],
-    price: "A partir de 2.500 MZN/hora"
-  },
-  {
-    id: 2,
-    title: "Assessoria em Sustentabilidade",
-    description: "Desenvolva práticas sustentáveis e certificações ambientais",
-    imageUrl: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=800",
-    features: ["Certificação orgânica", "Gestão de resíduos", "Pegada de carbono"],
-    price: "A partir de 3.000 MZN/hora"
-  },
-  {
-    id: 3,
-    title: "Treinamento e Capacitação",
-    description: "Workshops e cursos práticos para sua equipe",
-    imageUrl: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=800",
-    features: ["Workshops presenciais", "Cursos online", "Material didático"],
-    price: "A partir de 5.000 MZN/dia"
-  },
-  {
-    id: 4,
-    title: "Análise de Mercado",
-    description: "Estudos de viabilidade e estratégias de comercialização",
-    imageUrl: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800",
-    features: ["Pesquisa de mercado", "Análise de concorrência", "Plano de negócios"],
-    price: "A partir de 4.000 MZN/projeto"
-  }
-];
-
 export default function Services() {
   const { t } = useLanguage();
   const { isAuthenticated } = useAuth();
+
+  const services = [
+    {
+      id: 1,
+      title: t('services.service1.title'),
+      description: t('services.service1.description'),
+      imageUrl: "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=800",
+      features: [
+        t('services.service1.feature1'),
+        t('services.service1.feature2'),
+        t('services.service1.feature3')
+      ],
+      price: t('services.service1.price')
+    },
+    {
+      id: 2,
+      title: t('services.service2.title'),
+      description: t('services.service2.description'),
+      imageUrl: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=800",
+      features: [
+        t('services.service2.feature1'),
+        t('services.service2.feature2'),
+        t('services.service2.feature3')
+      ],
+      price: t('services.service2.price')
+    },
+    {
+      id: 3,
+      title: t('services.service3.title'),
+      description: t('services.service3.description'),
+      imageUrl: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=800",
+      features: [
+        t('services.service3.feature1'),
+        t('services.service3.feature2'),
+        t('services.service3.feature3')
+      ],
+      price: t('services.service3.price')
+    },
+    {
+      id: 4,
+      title: t('services.service4.title'),
+      description: t('services.service4.description'),
+      imageUrl: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800",
+      features: [
+        t('services.service4.feature1'),
+        t('services.service4.feature2'),
+        t('services.service4.feature3')
+      ],
+      price: t('services.service4.price')
+    }
+  ];
 
   if (!isAuthenticated) {
     return (
@@ -54,12 +71,12 @@ export default function Services() {
         <div className="flex-1 flex items-center justify-center bg-gradient-to-br from-blue-50 to-white">
         <Card className="max-w-md w-full mx-4">
           <CardHeader>
-            <CardTitle className="text-2xl">Acesso Restrito</CardTitle>
+            <CardTitle className="text-2xl">{t('page.access_denied')}</CardTitle>
             <CardDescription>{t('auth.login_required')}</CardDescription>
           </CardHeader>
           <CardFooter>
             <a href={getLoginUrl()} className="w-full">
-              <Button className="w-full">Fazer Login</Button>
+              <Button className="w-full">{t('auth.login')}</Button>
             </a>
           </CardFooter>
         </Card>
@@ -123,7 +140,7 @@ export default function Services() {
               <CardFooter>
                 <Button className="w-full group-hover:bg-primary group-hover:text-white transition-colors">
                   <Calendar className="w-4 h-4 mr-2" />
-                  Agendar Consulta
+                  {t('services.schedule_consultation')}
                 </Button>
               </CardFooter>
             </Card>
@@ -133,31 +150,31 @@ export default function Services() {
         {/* Contact Section */}
         <Card className="bg-gradient-to-br from-primary to-blue-600 text-white border-none">
           <CardHeader className="text-center">
-            <CardTitle className="text-3xl mb-2">Precisa de Ajuda Personalizada?</CardTitle>
+            <CardTitle className="text-3xl mb-2">{t('services.need_help')}</CardTitle>
             <CardDescription className="text-white/90 text-lg">
-              Nossa equipe está pronta para entender suas necessidades específicas
+              {t('services.team_ready')}
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col items-center gap-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-3xl">
               <div className="text-center">
                 <MessageSquare className="w-12 h-12 mx-auto mb-3" />
-                <h4 className="font-semibold mb-1">Chat Online</h4>
-                <p className="text-sm opacity-90">Resposta em minutos</p>
+                <h4 className="font-semibold mb-1">{t('services.chat_online')}</h4>
+                <p className="text-sm opacity-90">{t('services.chat_response')}</p>
               </div>
               <div className="text-center">
                 <Calendar className="w-12 h-12 mx-auto mb-3" />
-                <h4 className="font-semibold mb-1">Agendar Reunião</h4>
-                <p className="text-sm opacity-90">Escolha melhor horário</p>
+                <h4 className="font-semibold mb-1">{t('services.schedule_meeting')}</h4>
+                <p className="text-sm opacity-90">{t('services.choose_time')}</p>
               </div>
               <div className="text-center">
                 <Users className="w-12 h-12 mx-auto mb-3" />
-                <h4 className="font-semibold mb-1">Visita Presencial</h4>
-                <p className="text-sm opacity-90">Atendimento no local</p>
+                <h4 className="font-semibold mb-1">{t('services.in_person')}</h4>
+                <p className="text-sm opacity-90">{t('services.on_site')}</p>
               </div>
             </div>
             <Button size="lg" variant="secondary" className="text-primary">
-              Entrar em Contato
+              {t('services.contact_us')}
               <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
           </CardContent>

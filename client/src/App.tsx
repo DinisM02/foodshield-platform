@@ -29,6 +29,7 @@ import ConsumerFavorites from "./pages/ConsumerFavorites";
 import About from "./pages/About";
 import Welcome from "./pages/Welcome";
 import ConsumerArea from "./pages/ConsumerArea";
+import FirebaseLogin from "./pages/FirebaseLogin";
 
 function Router() {
   return (
@@ -45,6 +46,7 @@ function Router() {
       <Route path={"/blog"} component={Blog} />
       <Route path={"/about"} component={About} />
       <Route path={"/faq"} component={FAQ} />
+      <Route path={"/firebase-login"} component={FirebaseLogin} />
       <Route path={"/admin"} component={Admin} />
       <Route path={"/@admin"} component={Admin} />
       <Route path={"/@dashboard"} component={Dashboard} />

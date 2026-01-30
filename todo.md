@@ -489,3 +489,24 @@
 - [x] Reescrever Tools.tsx com chaves de tradução (100% bilingue)
 - [x] Testar bilinguismo nas três páginas (Services ✅, Tools ✅, Marketplace ✅)
 - [ ] Salvar checkpoint final
+
+## Integração Firebase Authentication (30/01) - EM PROGRESSO
+- [ ] Instalar Firebase SDK no projeto
+- [ ] Configurar credenciais Firebase (firebaseConfig)
+- [ ] Criar hook useFirebaseAuth
+- [ ] Adicionar login com Google OAuth
+- [ ] Adicionar login com Email/Password
+- [ ] Integrar Firebase Auth com sistema tRPC existente
+- [ ] Atualizar páginas de login/registro
+- [ ] Testar autenticação completa
+- [ ] Salvar checkpoint
+
+## Integração Firebase Authentication (30/01) - CONCLUÍDO
+- [x] Instalar Firebase SDK no projeto (firebase 11.1.0)
+- [x] Criar configuração Firebase (client/src/lib/firebase.ts)
+- [x] Criar hook useFirebaseAuth (client/src/hooks/useFirebaseAuth.ts)
+- [x] Criar página de Login com Firebase Auth (client/src/pages/FirebaseLogin.tsx)
+- [x] Adicionar traduções PT/EN para autenticação (20+ chaves)
+- [x] Adicionar rota /firebase-login no App.tsx
+- [x] Testar formulário de login e cadastro (UI funcionando)
+- [x] Sistema híbrido: Firebase Auth + MySQL para dados

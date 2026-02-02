@@ -81,6 +81,46 @@ export const appRouter = router({
       await db.update(users).set({ isFirstLogin: false }).where(eq(users.id, ctx.user.id));
       return { success: true };
     }),
+    syncFirebaseUser: publicProcedure
+      .input(
+        z.object({
+          uid: z.string(),
+          email: z.string().email().nullable(),
+          displayName: z.string().nullable(),
+          photoURL: z.string().nullable(),
+        })
+      )
+      .mutation(async ({ input }) => {
+        const db = await getDb();
+        if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
+        // Check if user already exists by Firebase UID (stored in openId)
+        const existingUser = await db.select().from(users).where(eq(users.openId, input.uid)).limit(1);
+
+        if (existingUser.length > 0) {
+          // Update existing user
+          await db
+            .update(users)
+            .set({
+              name: input.displayName || existingUser[0].name,
+              email: input.email || existingUser[0].email,
+              lastSignedIn: new Date(),
+            })
+            .where(eq(users.openId, input.uid));
+          return { success: true, userId: existingUser[0].id, isNew: false };
+        } else {
+          // Create new user
+          const result = await db.insert(users).values({
+            openId: input.uid,
+            name: input.displayName || "Usuário",
+            email: input.email,
+            loginMethod: "firebase",
+            role: "user",
+            lastSignedIn: new Date(),
+          });
+          return { success: true, userId: result[0].insertId, isNew: true };
+        }
+      }),
   }),
 
   // ===== ADMIN USERS MANAGEMENT =====

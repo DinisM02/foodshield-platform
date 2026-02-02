@@ -510,3 +510,11 @@
 - [x] Adicionar rota /firebase-login no App.tsx
 - [x] Testar formulário de login e cadastro (UI funcionando)
 - [x] Sistema híbrido: Firebase Auth + MySQL para dados
+
+## Sincronização Firebase → MySQL (30/01) - CONCLUÍDO
+- [x] Criar tRPC procedure auth.syncFirebaseUser
+- [x] Atualizar useFirebaseAuth para chamar sync após login automaticamente
+- [x] Salvar uid, email, displayName, photoURL do Firebase no MySQL
+- [x] Implementar lógica de create/update (verifica se usuário existe pelo UID)
+- [x] Testar interface de login (UI funcionando)
+- [ ] Salvar checkpoint

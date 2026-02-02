@@ -123,6 +123,40 @@ export const appRouter = router({
       }),
   }),
 
+  // ===== USER PROFILE MANAGEMENT =====
+  user: router({
+    getProfile: protectedProcedure.query(async ({ ctx }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
+      const result = await db.select().from(users).where(eq(users.id, ctx.user.id)).limit(1);
+      if (result.length === 0) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "User not found" });
+      }
+      return result[0];
+    }),
+    updateProfile: protectedProcedure
+      .input(
+        z.object({
+          name: z.string().optional(),
+          phone: z.string().optional(),
+          address: z.string().optional(),
+          bio: z.string().optional(),
+          language: z.enum(["pt", "en"]).optional(),
+          emailNotifications: z.boolean().optional(),
+          orderUpdates: z.boolean().optional(),
+          promotions: z.boolean().optional(),
+        })
+      )
+      .mutation(async ({ ctx, input }) => {
+        const db = await getDb();
+        if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
+        await db.update(users).set(input).where(eq(users.id, ctx.user.id));
+        return { success: true };
+      }),
+  }),
+
   // ===== ADMIN USERS MANAGEMENT =====
   admin: router({
     users: router({

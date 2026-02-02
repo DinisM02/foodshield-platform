@@ -30,6 +30,7 @@ import About from "./pages/About";
 import Welcome from "./pages/Welcome";
 import ConsumerArea from "./pages/ConsumerArea";
 import FirebaseLogin from "./pages/FirebaseLogin";
+import FirebaseProfile from "./pages/FirebaseProfile";
 
 function Router() {
   return (
@@ -47,6 +48,7 @@ function Router() {
       <Route path={"/about"} component={About} />
       <Route path={"/faq"} component={FAQ} />
       <Route path={"/firebase-login"} component={FirebaseLogin} />
+      <Route path={"/profile"} component={FirebaseProfile} />
       <Route path={"/admin"} component={Admin} />
       <Route path={"/@admin"} component={Admin} />
       <Route path={"/@dashboard"} component={Dashboard} />

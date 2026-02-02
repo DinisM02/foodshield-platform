@@ -518,3 +518,14 @@
 - [x] Implementar lógica de create/update (verifica se usuário existe pelo UID)
 - [x] Testar interface de login (UI funcionando)
 - [ ] Salvar checkpoint
+
+## Página de Perfil Unificada Firebase (02/02) - CONCLUÍDO
+- [x] Criar tRPC procedure user.getProfile para buscar dados do MySQL
+- [x] Criar tRPC procedure user.updateProfile para atualizar dados
+- [x] Criar página FirebaseProfile.tsx com formulário de edição
+- [x] Adicionar campos: nome, email, telefone, endereço, bio, idioma
+- [x] Adicionar preferências de notificações (email, pedidos, promoções)
+- [x] Adicionar traduções PT/EN (22 chaves)
+- [x] Adicionar rota /profile no App.tsx
+- [x] Proteger rota (apenas usuários autenticados)
+- [ ] Salvar checkpoint

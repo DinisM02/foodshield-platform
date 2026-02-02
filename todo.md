@@ -529,3 +529,12 @@
 - [x] Adicionar rota /profile no App.tsx
 - [x] Proteger rota (apenas usuários autenticados)
 - [ ] Salvar checkpoint
+
+## Deploy no Vercel (02/02) - CONCLUÍDO
+- [x] Criar arquivo vercel.json com configurações de build e rewrites
+- [x] Criar api/index.js como entry point para serverless function
+- [x] Configurar rewrites para API routes (/api/* → backend)
+- [x] Criar arquivo .vercelignore
+- [x] Documentar variáveis de ambiente necessárias (DATABASE_URL, Firebase)
+- [x] Criar guia completo de deploy (DEPLOY_VERCEL.md)
+- [ ] Salvar checkpoint

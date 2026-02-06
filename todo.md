@@ -571,3 +571,10 @@
 - [ ] Verificar conexão com banco de dados em produção
 - [x] Testar todas as páginas após correções (94/94 testes passando)
 - [ ] Fazer novo deploy para Vercel e GitHub
+
+## 🗄️ Popular Banco de Dados em Produção (06/02/2026)
+- [x] Criar script de seed para produtos
+- [x] Criar script de seed para artigos de blog
+- [x] Criar script de seed para serviços
+- [x] Executar seed em produção (4 produtos, 3 blogs, 3 serviços)
+- [ ] Validar dados no Marketplace, Knowledge e Services (aguardando redeploy Vercel)

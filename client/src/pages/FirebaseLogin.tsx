@@ -5,8 +5,10 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Card } from '../components/ui/card';
-import { Mail, Lock, LogIn } from 'lucide-react';
+import { Mail, Lock, LogIn, KeyRound } from 'lucide-react';
 import { toast } from 'sonner';
+import { sendPasswordResetEmail } from 'firebase/auth';
+import { auth } from '../lib/firebase';
 
 export default function FirebaseLogin() {
   const [, setLocation] = useLocation();
@@ -18,6 +20,7 @@ export default function FirebaseLogin() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,6 +62,25 @@ export default function FirebaseLogin() {
       setLocation('/');
     } catch (error: any) {
       console.error('Google auth error:', error);
+      toast.error(error.message || t('auth.error'));
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    if (!email) {
+      toast.error(t('auth.enter_email_reset'));
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      await sendPasswordResetEmail(auth, email);
+      toast.success(t('auth.reset_email_sent'));
+      setShowForgotPassword(false);
+    } catch (error: any) {
+      console.error('Password reset error:', error);
       toast.error(error.message || t('auth.error'));
     } finally {
       setIsSubmitting(false);
@@ -186,11 +208,37 @@ export default function FirebaseLogin() {
           {t('auth.google_login')}
         </Button>
 
-        <div className="text-center">
+        <div className="text-center space-y-2">
+          {isLogin && (
+            <button
+              type="button"
+              onClick={() => setShowForgotPassword(!showForgotPassword)}
+              className="text-primary-600 hover:text-primary-700 text-sm font-medium block mx-auto"
+              disabled={isSubmitting}
+            >
+              <KeyRound className="inline h-4 w-4 mr-1" />
+              {t('auth.forgot_password')}
+            </button>
+          )}
+          
+          {showForgotPassword && isLogin && (
+            <div className="mt-4 p-4 bg-primary-50 rounded-lg">
+              <p className="text-sm text-gray-700 mb-3">{t('auth.reset_password_instructions')}</p>
+              <Button
+                type="button"
+                onClick={handleForgotPassword}
+                className="w-full"
+                disabled={isSubmitting || !email}
+              >
+                {t('auth.send_reset_email')}
+              </Button>
+            </div>
+          )}
+          
           <button
             type="button"
-            onClick={() => setIsLogin(!isLogin)}
-            className="text-primary-600 hover:text-primary-700 text-sm font-medium"
+            onClick={() => { setIsLogin(!isLogin); setShowForgotPassword(false); }}
+            className="text-primary-600 hover:text-primary-700 text-sm font-medium block mx-auto"
             disabled={isSubmitting}
           >
             {isLogin ? t('auth.no_account') : t('auth.have_account')}

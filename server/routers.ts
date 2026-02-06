@@ -7,6 +7,7 @@ import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
 import { users } from "../drizzle/schema";
 import { getDb } from "./db";
+import { uploadImage } from "./cloudinary";
 import {
   getAllUsers,
   deleteUser,
@@ -135,6 +136,32 @@ export const appRouter = router({
       }
       return result[0];
     }),
+    uploadProfilePicture: protectedProcedure
+      .input(
+        z.object({
+          base64Image: z.string(),
+        })
+      )
+      .mutation(async ({ ctx, input }) => {
+        const db = await getDb();
+        if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
+        try {
+          // Upload to Cloudinary
+          const { url } = await uploadImage(input.base64Image, 'profile_pictures');
+
+          // Update user profile with new picture URL
+          await db
+            .update(users)
+            .set({ profilePicture: url })
+            .where(eq(users.id, ctx.user.id));
+
+          return { success: true, url };
+        } catch (error) {
+          console.error('Profile picture upload error:', error);
+          throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to upload profile picture" });
+        }
+      }),
     updateProfile: protectedProcedure
       .input(
         z.object({

@@ -106,6 +106,11 @@ const translations = {
     'auth.login_success': 'Login realizado com sucesso!',
     'auth.signup_success': 'Cadastro realizado com sucesso!',
     'auth.error': 'Erro ao autenticar',
+    'auth.forgot_password': 'Esqueceu a senha?',
+    'auth.reset_password_instructions': 'Digite seu email acima e clique para receber um link de redefinição de senha.',
+    'auth.send_reset_email': 'Enviar Email de Redefinição',
+    'auth.enter_email_reset': 'Digite seu email para redefinir a senha',
+    'auth.reset_email_sent': 'Email de redefinição enviado! Verifique sua caixa de entrada.',
 
     // Pages
     'page.access_denied': 'Acesso Restrito',
@@ -566,6 +571,12 @@ const translations = {
     'profile.promotions_desc': 'Receba ofertas especiais e promoções',
     'profile.update_success': 'Perfil atualizado com sucesso!',
     'profile.update_error': 'Erro ao atualizar perfil',
+    'profile.upload_photo': 'Enviar Foto',
+    'profile.cancel': 'Cancelar',
+    'profile.photo_upload_success': 'Foto de perfil atualizada com sucesso!',
+    'profile.photo_upload_error': 'Erro ao enviar foto',
+    'profile.photo_size_error': 'A foto deve ter no máximo 5MB',
+    'profile.photo_type_error': 'Apenas imagens são permitidas',
 
     // Consumer Area (Public)
     'consumerArea.title': 'Área de Consumidor',
@@ -749,6 +760,11 @@ const translations = {
     'auth.login_success': 'Login successful!',
     'auth.signup_success': 'Sign up successful!',
     'auth.error': 'Authentication error',
+    'auth.forgot_password': 'Forgot password?',
+    'auth.reset_password_instructions': 'Enter your email above and click to receive a password reset link.',
+    'auth.send_reset_email': 'Send Reset Email',
+    'auth.enter_email_reset': 'Enter your email to reset password',
+    'auth.reset_email_sent': 'Reset email sent! Check your inbox.',
 
     // Pages
     'page.access_denied': 'Access Restricted',
@@ -1209,6 +1225,12 @@ const translations = {
     'profile.promotions_desc': 'Receive special offers and promotions',
     'profile.update_success': 'Profile updated successfully!',
     'profile.update_error': 'Error updating profile',
+    'profile.upload_photo': 'Upload Photo',
+    'profile.cancel': 'Cancel',
+    'profile.photo_upload_success': 'Profile picture updated successfully!',
+    'profile.photo_upload_error': 'Error uploading photo',
+    'profile.photo_size_error': 'Photo must be less than 5MB',
+    'profile.photo_type_error': 'Only images are allowed',
 
     // Consumer Area (Public)
     'consumerArea.title': 'Consumer Area',

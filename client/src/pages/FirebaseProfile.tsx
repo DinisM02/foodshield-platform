@@ -10,7 +10,8 @@ import { Label } from '../components/ui/label';
 import { Textarea } from '../components/ui/textarea';
 import { Switch } from '../components/ui/switch';
 import { toast } from 'sonner';
-import { Loader2, User, Mail, Phone, MapPin, Globe, Bell } from 'lucide-react';
+import { useRef } from 'react';
+import { Loader2, User, Mail, Phone, MapPin, Globe, Bell, Camera, Upload } from 'lucide-react';
 
 export default function FirebaseProfile() {
   const { user, loading: authLoading } = useFirebaseAuth();
@@ -28,6 +29,23 @@ export default function FirebaseProfile() {
     },
     onError: (error) => {
       toast.error(t('profile.update_error') + ': ' + error.message);
+    },
+  });
+
+  const [isUploading, setIsUploading] = useState(false);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const uploadMutation = trpc.user.uploadProfilePicture.useMutation({
+    onSuccess: (data) => {
+      toast.success(t('profile.photo_upload_success'));
+      refetch();
+      setPreviewImage(null);
+      setIsUploading(false);
+    },
+    onError: (error) => {
+      toast.error(t('profile.photo_upload_error') + ': ' + error.message);
+      setIsUploading(false);
     },
   });
 
@@ -77,6 +95,45 @@ export default function FirebaseProfile() {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error(t('profile.photo_size_error'));
+      return;
+    }
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast.error(t('profile.photo_type_error'));
+      return;
+    }
+
+    // Read file and convert to base64
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64 = reader.result as string;
+      setPreviewImage(base64);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleUploadPhoto = async () => {
+    if (!previewImage) return;
+    
+    setIsUploading(true);
+    uploadMutation.mutate({ base64Image: previewImage });
+  };
+
+  const handleCancelUpload = () => {
+    setPreviewImage(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   if (authLoading || isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -100,6 +157,66 @@ export default function FirebaseProfile() {
             <CardDescription>{t('profile.subtitle')}</CardDescription>
           </CardHeader>
           <CardContent>
+            {/* Profile Picture Section */}
+            <div className="flex flex-col items-center space-y-4 pb-6 border-b">
+              <div className="relative">
+                <div className="w-32 h-32 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
+                  {previewImage || profile.profilePicture ? (
+                    <img
+                      src={previewImage || profile.profilePicture || ''}
+                      alt="Profile"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <User className="w-16 h-16 text-gray-400" />
+                  )}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="absolute bottom-0 right-0 bg-[#0084B6] text-white p-2 rounded-full hover:bg-[#006a94] transition-colors"
+                  disabled={isUploading}
+                >
+                  <Camera className="w-4 h-4" />
+                </button>
+              </div>
+              
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleFileSelect}
+                className="hidden"
+              />
+
+              {previewImage && (
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    onClick={handleUploadPhoto}
+                    disabled={isUploading}
+                    size="sm"
+                  >
+                    {isUploading ? (
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    ) : (
+                      <Upload className="w-4 h-4 mr-2" />
+                    )}
+                    {t('profile.upload_photo')}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleCancelUpload}
+                    disabled={isUploading}
+                    size="sm"
+                  >
+                    {t('profile.cancel')}
+                  </Button>
+                </div>
+              )}
+            </div>
+
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Personal Information */}
               <div className="space-y-4">

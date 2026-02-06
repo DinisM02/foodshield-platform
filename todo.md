@@ -538,3 +538,10 @@
 - [x] Documentar variáveis de ambiente necessárias (DATABASE_URL, Firebase)
 - [x] Criar guia completo de deploy (DEPLOY_VERCEL.md)
 - [ ] Salvar checkpoint
+
+## Melhorias FOOD SHIELD (04/02)
+- [ ] Implementar recuperação de senha com Firebase
+- [ ] Integrar Cloudinary para upload de foto de perfil
+- [ ] Adicionar menu dropdown de usuário no Header
+- [ ] Testar todas as funcionalidades
+- [ ] Salvar checkpoint e fazer push para GitHub

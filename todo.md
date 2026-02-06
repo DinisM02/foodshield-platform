@@ -539,9 +539,35 @@
 - [x] Criar guia completo de deploy (DEPLOY_VERCEL.md)
 - [ ] Salvar checkpoint
 
-## Melhorias FOOD SHIELD (04/02)
-- [ ] Implementar recuperação de senha com Firebase
-- [ ] Integrar Cloudinary para upload de foto de perfil
-- [ ] Adicionar menu dropdown de usuário no Header
-- [ ] Testar todas as funcionalidades
-- [ ] Salvar checkpoint e fazer push para GitHub
+## Correção Erro Deploy Vercel (04/02)
+- [ ] Corrigir vercel.json (remover seção functions inválida)
+- [ ] Fazer commit e push para GitHub
+- [ ] Verificar novo deploy no Vercel
+
+## Correção Erro Invalid URL em Produção (04/02)
+- [ ] Identificar código que causa erro Invalid URL
+- [ ] Corrigir configuração de URL base do tRPC client
+- [ ] Fazer commit e push para GitHub
+- [ ] Verificar novo deploy no Vercel
+
+## Investigação Erro Invalid URL Persistente (04/02) - CONCLUÍDO
+- [x] Verificar configuração Firebase (authDomain, etc.)
+- [x] Identificar problema: getLoginUrl() usa VITE_OAUTH_PORTAL_URL undefined
+- [x] Corrigir getLoginUrl() para redirecionar para /firebase-login
+- [x] Criar documentação VERCEL_ENV_VARS.md
+- [x] Fazer push para GitHub (commit 4ca35d7)
+- [ ] Aguardar deploy no Vercel e testar
+
+## Correção Erro 404 API no Vercel (04/02)
+- [ ] Verificar api/index.js
+- [ ] Corrigir rewrites no vercel.json
+- [ ] Ajustar build do backend
+- [ ] Fazer push e testar
+
+## 🐛 Correções de Problemas em Produção (06/02/2026)
+- [x] Investigar por que Marketplace mostra "Acesso Restrito" indevidamente
+- [x] Investigar por que Centro de Conhecimento não carrega conteúdo
+- [x] Corrigir proteção de rotas públicas (Marketplace, Services, Tools e Knowledge agora são públicos)
+- [ ] Verificar conexão com banco de dados em produção
+- [x] Testar todas as páginas após correções (94/94 testes passando)
+- [ ] Fazer novo deploy para Vercel e GitHub

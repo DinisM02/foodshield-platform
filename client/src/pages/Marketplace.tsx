@@ -51,27 +51,7 @@ export default function Marketplace() {
     });
   };
 
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-screen bg-white flex flex-col">
-        <Header />
-        <div className="flex-1 flex items-center justify-center bg-gradient-to-br from-blue-50 to-white">
-        <Card className="max-w-md w-full mx-4">
-          <CardHeader>
-            <CardTitle className="text-2xl">{t('page.access_denied')}</CardTitle>
-            <CardDescription>{t('auth.login_required')}</CardDescription>
-          </CardHeader>
-          <CardFooter>
-            <a href={getLoginUrl()} className="w-full">
-              <Button className="w-full">{t('auth.login')}</Button>
-            </a>
-          </CardFooter>
-        </Card>
-        </div>
-        <Footer />
-      </div>
-    );
-  }
+  // Marketplace is now public - no authentication required
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-blue-50 flex flex-col">

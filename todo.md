@@ -577,4 +577,6 @@
 - [x] Criar script de seed para artigos de blog
 - [x] Criar script de seed para serviços
 - [x] Executar seed em produção (4 produtos, 3 blogs, 3 serviços)
-- [ ] Validar dados no Marketplace, Knowledge e Services (aguardando redeploy Vercel)
+- [ ] Configurar variáveis de ambiente no Vercel (DATABASE_URL, Firebase, Cloudinary, etc)
+- [ ] Fazer redeploy após configurar env vars
+- [ ] Validar dados no Marketplace, Knowledge e Services
